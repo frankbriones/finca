@@ -1,0 +1,292 @@
+{% load static %}{% load i18n %}
+<div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+           
+                <h5 class="modal-title text-white" id="exampleModalLabel"> Solicitud #{{solicitud.id_solicitud}} </h5>
+                <a data-id_solicitud="{{solicitud.id_solicitud}}" class="generar_documento" href="#"><i class="bx bx-printer "></i></a>
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+            
+        </div>
+
+        <div class="modal-body">
+            <div class="row text-center">
+                <h5>Informacion Principal</h5>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    Proveedor: {{solicitud.proveedor.nombres}} {{solicitud.proveedor.apellidos}}
+                </div>
+                <div class="col-md-6 col-12">
+                    <span class="font-weight-bold">email</span>: {{solicitud.proveedor.correo}}
+                </div>
+                <br>
+                <br>
+                <div class="col-md-6 col-12">
+                    fecha Solicita: {{solicitud.fecha_creacion|date:"M d, Y"}}
+                </div>
+                <div class="col-md-6 col-12">
+                    Detalles: {{solicitud.descripcion}}
+                </div>
+            </div>
+        </div>
+            <br><br>
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center align-items-center">
+                    <h3 class="text-success">Detalles</h3>
+                </div>
+                <div class="col-md-12 ">
+                    <div class="table-responsive">
+                        <table class="table table-hover" >
+                            <thead>
+                                    <th scope="col">insumo</th>
+                                    <th scope="col">categoria</th>
+                                    <th scope="col">unidad medida</th>
+                                    <th scope="col">cantidad</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody class="tbody ">
+                                {% for detalle in detalles %}
+                                    <tr>   
+                                        <td>{{detalle.producto.descripcion}}</td>
+                                        <td>{{detalle.producto.categoria.descripcion}}</td>
+                                        <td>{{detalle.producto.unidad_medida.descripcion}}</td>
+
+                                        <td>{{detalle.cantidad}}</td>
+    
+    
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        <div class="modal-footer">
+            {% if solicitud.proveedor == None %}
+                <di class="row">
+                    <div class="col-md-6 col-12">
+                    <p class="text-danger">
+                        La Orden aun no se ah culminado, por ende no se ah enviado al proveedor.
+                    </p>
+                    </div>
+                    <div class="col-md-6 col-12 text-right">
+                        <a  class="btn btn-primary " href="{% url 'trn:detalle_solicitud' solicitud.id_solicitud %}">Culminar Orden</a>
+                    </div>
+                </di>
+                
+            {% else %}
+                {% if solicitud.estado.descripcion == 'PEDIDO EN PROCESO' or solicitud.estado.descripcion == 'PEDIDO CREADO' %}
+                    <div class="row">
+                        <a data-id_solicitud="{{solicitud.id_solicitud}}"   class="btn btn-primary enviar_orden text-white"><i class="bx bxl-telegram"></i> Enviar</a>
+                    </div>
+                {% endif %}
+                {% if solicitud.estado.descripcion == 'PEDIDO ENVIADO' %}
+                    {% if request.user.proveedor %}
+                    <div class="row">
+                        <a data-id_solicitud="{{solicitud.id_solicitud}}"   class="btn btn-primary recibir_pedido text-white"><i class="bx bxs-component"></i> Recibir</a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+                {% if solicitud.estado.descripcion == 'REVISION PROVEEDOR SOLICITUD' %}
+                    <div class="row">
+                        <a data-id_solicitud="{{solicitud.id_solicitud}}"   class="btn btn-primary despachar_pedido text-white"><i class="bx bxs-component"></i> DESPACHAR</a>
+                    </div>
+                {% endif %}
+                
+                {% if solicitud.estado.descripcion == 'SOLICITUD DE PEDIDO DESPACHADA' and not request.user.proveedor %}
+                    {% if not orden_bodega %}
+                        <div class="row">
+                            <a data-id_solicitud="{{solicitud.id_solicitud}}"   class="btn btn-primary generar_orden_bodega text-white">Generar Orden Ingreso a Bodega</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                
+            {% endif %}
+        </div>
+       
+    </div>
+</div>
+
+<div class="modal fade text-left" id="modal_agregar_bodeguero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel12" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <input type="hidden" class="id_solicitud_generar">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title white" id="myModalLabel12">Asignar Personal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                Ingrese Bodeguero.
+                <select name="" class="form-control" id="id_usuarios_bodega"></select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-primary ml-1 " onclick="generarOrden()">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Generar Orden</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        
+    })
+    
+    // $('.enviar_solicitud').on('click', function(){
+    //     id_solicitud = $(this).attr('data-id_solicitud')
+    //     url = '{% url "trn:generar_orden" 0 %}'
+    //     url = url.replace(/0/, id_solicitud)
+
+    //     $.ajax({
+    //         url : url,
+    //         type: 'GET',
+    //         data: {},
+    //         success: function(response){
+    //             toastr.success(response.mensaje, "Confirmar");
+    //             setTimeout(() => {
+    //                 window.location.href = '/transacciones/ingresos-list/'
+    //             }, 600);
+    //         }
+    //     })
+    // })
+
+    $('.enviar_orden').on('click', function(){
+        id_solicitud = $(this).attr('data-id_solicitud')
+        url = '{% url "trn:enviar_orden" 0 %}'
+        url = url.replace(/0/, id_solicitud)
+
+        $.ajax({
+            url : url,
+            type: 'GET',
+            data: {},
+            success: function(response){
+                toastr.success('Pedido Enviado', "Confirmar");
+                setTimeout(() => {
+                    window.location.href = '/transacciones/pedidos-list/'
+                }, 700);
+            }
+        })
+    })
+
+    $('.recibir_pedido').on('click', function(){
+        id_solicitud = $(this).attr('data-id_solicitud')
+        url = '{% url "trn:recibir_pedido" 0 %}'
+        url = url.replace(/0/, id_solicitud)
+
+        $.ajax({
+            url : url,
+            type: 'GET',
+            data: {},
+            success: function(response){
+                toastr.success('Pedido marcado como recibido', "Confirmado");
+                setTimeout(() => {
+                    window.location.href = '/transacciones/pedidos-list/'
+                }, 700);
+            }
+        })
+    })
+
+    $('.despachar_pedido').on('click', function(){
+        id_solicitud = $(this).attr('data-id_solicitud')
+        url = '{% url "trn:despachar_pedido" 0 %}'
+        url = url.replace(/0/, id_solicitud)
+
+        $.ajax({
+            url : url,
+            type: 'GET',
+            data: {},
+            success: function(response){
+                toastr.success('Pedido marcado como recibido', "Confirmado");
+                setTimeout(() => {
+                    window.location.href = '/transacciones/pedidos-list/'
+                }, 700);
+            }
+        })
+    })
+
+    $('.generar_documento').on('click', function(){
+        url = '{% url "trn:generar_documento" 0 %}'
+        id_pedido = $(this).attr('data-id_solicitud')
+        url = url.replace(/0/, id_pedido)
+        window.open(url, '_blank')
+    })
+
+
+    $('.generar_orden_bodega').on('click', function(){
+        var solicitud_id = $(this).attr('data-id_solicitud');
+        
+        $('#modal_agregar_bodeguero .id_solicitud_generar').val(solicitud_id);
+        //$('#modalSolicitud').hide()
+
+        $('#modal_agregar_bodeguero').modal('show');
+        obtenerUsuarioBodega()
+    })
+
+    function obtenerUsuarioBodega(){
+        select = document.getElementById('id_usuarios_bodega')
+        option = document.createElement('option')
+        option.value = '0'
+        option.text = '---Selecciona bodeguero---'
+        select.add(option)
+        $.ajax({
+            url: '{% url "usr:obtener_usuarios_bodega" %}',
+            type: 'GET',
+            data: {},
+            success: function(response){
+                usuarios = response.data
+                usuarios.forEach(usuario => {
+                    option = document.createElement('option')
+                    option.value = usuario.id
+                    option.text = usuario.first_name +' '+ usuario.last_name
+                    select.add(option)
+                })
+            }
+        })
+    }
+
+
+   function generarOrden(){
+        var id_solicitud = $("#modal_agregar_bodeguero .id_solicitud_generar").val();
+        var usuario_bodega = $('option:selected', '#id_usuarios_bodega').val();
+        if(usuario_bodega === '0'){
+            toastr.error('Seleccione un usuario')
+            return false;
+        }
+        var parametros = {
+                "solicitud": id_solicitud,
+                "usuario_encargado":  usuario_bodega
+            };  
+        guardar(parametros);
+    }
+
+    function guardar(parametros){
+        $.ajax({
+            url : '{% url "trn:generar_orden_ingreso" %}',
+            type: 'GET',
+            data: parametros,
+            success: function(response){
+                toastr.success('Orden de ingreso a Bodega Generada', "Confirmado");
+                setTimeout(() => {
+                    window.location.href = '{% url "trn:pedidos_list" %}'
+                }, 900);
+            }
+        })
+    }
+    
+
+
+</script>

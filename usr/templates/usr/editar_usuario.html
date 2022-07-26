@@ -1,0 +1,103 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    .center {
+        margin-left : auto;
+        margin-right : auto;
+        display: block;
+    }
+    .inputimage {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        margin-bottom: auto;
+        opacity: 0;
+    }
+
+    .img-circle {
+        border-radius: 100%;
+    }
+
+
+</style>
+
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">
+                            Usuarios
+                        </h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt "></i></a></li>
+                                <li class="breadcrumb-item"> <a href="#">Usuario </a></li>
+                                <li class="breadcrumb-item active">Editar</li>
+
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <section id="basic-divider">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Editar Usuario </h4>
+                                <a href="" class="heading-elements-toggle">
+                                    <i class="bx bx-dots-vertical font-medium-3"></i>
+                                </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li>
+                                            <a href="" data-action="expand" title="Expandir" class="btn btn-icon rounded-circle btn-outline-primary mr-1 mb-1">
+                                                <i class="bx bx-fullscreen"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <form enctype="multipart/form-data" method="POST">
+                                        {% csrf_token %}
+                                        <div class="form-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    {{form.as_p}}
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 d-flex justify-content-end">
+                                                    <button type="submit" class="btn btn-primary mr-1 mb-1">Guardar</button>
+                                                    <a href="{% url 'bases:inicio' %}" class="btn btn-primary mr-1 mb-1">Cancelar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

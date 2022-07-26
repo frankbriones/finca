@@ -1,0 +1,274 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/vendors.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/editors/quill/quill.snow.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-file-manager.css' %}">
+
+<!-- END: Vendor CSS-->
+
+<!-- BEGIN: Theme CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap-extended.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/colors.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/components.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/dark-layout.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/semi-dark-layout.css' %}">
+<!-- END: Theme CSS-->
+
+<!-- BEGIN: Page CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/core/menu/menu-types/vertical-menu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-email.css' %}">
+<!-- END: Page CSS-->
+
+<!-- BEGIN: Custom CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/assets/css/style.css' %}">
+<!-- END: Custom CSS-->
+
+<!-- BEGIN: Vendor CSS-->
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/swiper.min.css' %}">
+<!-- END: Vendor CSS-->
+<!-- BEGIN: Page CSS--> 
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/swiper.css' %}">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">  
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/toastr.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">
+
+
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Orednes Ingreso
+                                </li>
+                                <li class="breadcrumb-item active">Listado
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title m-1">
+                <div class="row"> 
+                    <div class="col-md-6 col-12 text-left p-2">
+                        <span><h4 class="text-bold">Listado de Ingreso a Bodega</h4></span>
+                    </div>
+                    <div class="col-md-6 col-12 text-right">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="card-body m-2">
+                   
+                    <!-- Table with outer spacing -->
+                    <div class="table-responsive ">
+                        <table class="table  table-hover" id="id_ord_bodega_ingreso">
+                            <thead>
+                                <tr>
+                                    <th>FECHA</th>
+                                    <th>ENCARGADO</th>
+                                    <th>TIPO ORDEN</th>
+                                    <th>PROVEEDOR-PEDIDO</th>
+                                    <th>ESTADO</th>
+                                    <th>ACCION</th>
+                                </tr>
+                            </thead>
+                            <tbody class="">
+                                {% for orden in ordenes %}
+                                    <tr>
+                                        <td>{{orden.fecha_creacion|date:"d/m/Y H:i:s" }}</td>
+                                        <td class="text-bold-500">{{orden.encargado}}</td>
+                                        <td class="text-bold-500">{{orden.tipo.descripcion}}</td>
+                                        <td class="text-bold-500">{{orden.pedido.proveedor}}</td>
+                                        <td class="text-bold-500">{{orden.estado.descripcion}}</td>
+                                        {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
+                                            {% if orden.estado.descripcion == 'GENERADA' %}
+                                            <td>
+                                                <a >
+                                                    <i data-id_orden="{{orden.id_orden}}" class="badge-circle badge-circle-light-secondary bx bx-receipt font-medium-1 ver_detalles">
+                                                    </i>
+                                                </a>
+                                            </td>
+                                            {% else %}
+                                                <td>
+                                                    <a >
+                                                        <i data-id_orden="{{orden.id_orden}}" class="badge-circle badge-circle-light-secondary bx bx-check font-medium-1 ver_detalles" >
+                                                        </i>
+                                                    </a>
+                                                </td>
+                                            {% endif %}
+                                        {% else %}
+                                            <td>
+                                                <a >
+                                                    <i data-id_orden="{{orden.id_orden}}" class="badge-circle badge-circle-light-secondary bx bx-receipt font-medium-1 ver_detalles" >
+                                                    </i>
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loader">
+    <div class="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+<script src="{% static 'base/app-assets/jss/scripts/modal/components-modal.js' %}"></script>
+
+
+
+{% endblock %}
+
+{% block js_page %}
+<script>
+    $(document).ready(function() {
+        $('.loader').hide();
+        $('#id_ord_bodega_ingreso').DataTable(
+            {
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+            }
+        );
+    })
+
+    $(document).on('click', '.actualizar_stock', function() {
+        id_orden = $(this).attr('data-id_orden')
+        console.log(id_orden)
+        url = '{% url "trn:actualiza_stock" 0 %}';
+        url = url.replace(/0/, id_orden)
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: {},
+            success: function(response){
+                console.log(response.mensaje)
+                toastr.success(response.mensaje, "Confirmar");
+                setTimeout(() => {
+                    window.location.href = '/transacciones/ingresos-list/'
+                }, 600);
+            }
+        })
+    })
+
+    $(document).on('click', '.marcar_revision', function() {
+        id_orden = $(this).attr('data-id_orden')
+        url = '{% url "trn:marcar_orden_revisada" 0 %}';
+        url = url.replace(/0/, id_orden)
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: {},
+            success: function(response){
+                console.log(response.mensaje)
+                toastr.success(response.mensaje, "Confirmar");
+                setTimeout(() => {
+                    window.location.href = '/transacciones/ingresos-list/'
+                }, 600);
+            }
+        })
+    })
+
+
+    $('.ver_detalles').on('click', function(){
+        url = '{% url "trn:orden_ingreso_detalle" 0 %}'
+        id_orden = $(this).data('id_orden');
+        url = url.replace(/0/, id_orden)
+        abrir_modal(url)
+    })
+
+  
+</script>
+
+{% endblock js_page %}

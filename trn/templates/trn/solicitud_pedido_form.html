@@ -1,0 +1,275 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Pedidos
+                                </li>
+                                <li class="breadcrumb-item active">Detalle
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- invoice view page -->
+            <div class="col-xl-12 col-md-12 col-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body pb-0 mx-25">
+                            <!-- header section -->
+                            <div class="row">
+                                <div class="col-xl-4 col-md-12">
+                                    <span class="invoice-number mr-50">Solicitud Pedido#</span>
+                                    <span>{{solicitud.id_solicitud}}</span>
+                                </div>
+                                <div class="col-xl-8 col-md-12">
+                                    <div class="d-flex align-items-center justify-content-xl-end flex-wrap">
+                                        <div class="mr-3">
+                                            <small class="text-muted">Fecha Creacion:</small>
+                                            <span>{{solicitud.fecha_creacion}}</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- logo and title -->
+                            <div class="row my-3">
+                                <div class="col-6">
+                                    <h4 class="text-primary">Pedido</h4>
+                                    <span>Solicitud de Insumos</span>
+                                </div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <img src="{% static 'base/app-assets/images/pages/pixinvent-logo.png' %}" alt="logo" height="46" width="164">
+                                </div>
+                            </div>
+                            <hr>
+                            <!-- invoice address and contact -->
+                            <div class="row invoice-info">
+                                <div class="col-6 mt-1">
+                                    <h6 class="invoice-from">Informacion </h6>
+                                    
+                                    <form id="frmSolicitud" enctype="multipart/form-data"> 
+                                        {% csrf_token %}
+                                        {{form.as_p}}
+                                    </form>
+                                </div>
+                                <div class="col-6 mt-1">
+                                    
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <!-- product details table-->
+                        <div class="invoice-product-details table-responsive mx-md-25" id="div_tabla">
+                            <table class="table table-borderless mb-0">
+                                <thead>
+                                    <tr class="border-0">
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Insumo</th>
+                                        <th scope="col">Categoria</th>
+                                        <th scope="col">Unidad Medida</th>
+                                        <th scope="col">Cantidad</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                        {% for insumo in detalles %}
+                                        <tr>
+                                            <td>{{insumo.producto.id_producto}}</td>
+                                            <td>{{insumo.producto.descripcion}}</td>
+                                            <td>{{insumo.producto.categoria.descripcion}}</td>
+                                            <td>{{insumo.producto.unidad_medida.descripcion}}</td>
+                                            <td><input  class="form-control " step="0.01" type="number" min="0"></td>
+                                        </tr>
+                                        {% endfor %}
+                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- invoice subtotal -->
+                        <div class="card-body pt-0 mx-25">
+                            <hr>
+                            <div class="row">
+                                <div class="col-4 col-sm-6 mt-75">
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                                        standard dummy text ever since the 1500s,
+                                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                        It has survived not only five centuries, but also the leap into electronic typesetting,
+                                        remaining essentially unchanged.</p>
+                                </div>
+                                <div class="col-8 col-sm-6 d-flex justify-content-end mt-75">
+                                    <div class="invoice-subtotal">
+                                        <div class="invoice-calc d-flex justify-content-between">
+                                            <button class="btn btn-primary guardar_solicitud">Enviar Orden</button>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+               
+        
+        </div>
+    </div>
+</div>
+
+<div class="loader">
+    <div class="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+<!-- modal de edicion de datos -->
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+<script src="{% static 'base/app-assets/jss/scripts/modal/components-modal.js' %}"></script>
+
+
+
+{% endblock %}
+
+{% block js_page %}
+<script>
+    let elementos ;
+    let items ;
+
+    $(document).ready(function() {
+        $('.loader').hide();
+        
+    })
+
+    $('.guardar_solicitud').on('click', function(){
+        form = document.getElementById('frmSolicitud');
+        data = new FormData(form)
+
+        validarInsumos()
+        data.append('insumos[]', JSON.stringify(items))
+
+        //url guardar datos
+        id_solicitud = '{{solicitud.id_solicitud}}'
+        url = '{% url "trn:detalle_solicitud" 0 %}'
+        url = url.replace(/0/, id_solicitud)
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData:false,
+            success: function(response){
+                toastr.success('Solicitud Registrada', 'Correcto');
+                setTimeout(() => {
+                    url_list = '/transacciones/pedidos-list/'
+                    window.location = url_list;
+                }, 400)
+            },
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
+            }
+        })
+    })
+
+    function validarInsumos(){
+        tabla = $('#div_tabla').find('tbody');
+        filas = $(tabla).find('tr')
+        items=[]
+        $(filas).each(function() {
+            elementos = {
+                'id_insumo': '',
+                'cantidad': ''
+            }
+
+            row = ($(this).find('td')[4])
+            cantidad = $(row).find('input')
+            if($(cantidad).val() === undefined){
+                toastr.error('Verifique la cantidad en los insumos', 'Atencion');
+                return false;
+            }else{
+                elementos.cantidad =  $(cantidad).val()
+                elementos.id_insumo = ($(this).find('td')[0].innerHTML)
+                items.push(elementos)
+            }
+            
+        })
+    }
+
+</script>
+
+
+{% endblock js_page %}

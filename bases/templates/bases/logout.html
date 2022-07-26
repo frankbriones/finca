@@ -1,0 +1,20 @@
+{% load static %}{% load i18n %}
+<div class="modal-dialog modal-s">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="id_title">Salir?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            Seleccione Salir para cerrar la sesion.
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal" >
+                Cancelar
+            </button>
+            <a class="btn btn-primary" href="{% url 'bases:log_out' %}">Salir</a>
+        </div>
+    </div>
+</div>

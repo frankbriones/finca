@@ -1,0 +1,184 @@
+{% load static %}{% load i18n %}
+
+<div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+           
+                <h5 class="modal-title text-white" id="exampleModalLabel"> Detalle de Orden de Salida de Bodega</h5>
+                
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+            
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <p>
+                    Encargado del despacho: <span class="text-primary">{{orden.encargado.first_name}}</span>
+                    </p>
+                </div>
+                <div class="col-md-6 col-12">
+                    <p>
+                    Fecha Creacion: <span class="text-primary">{{orden.fecha_creacion|date:"d/m/Y H:i:s"}}</span>
+                    </p>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center">
+                <h5 class="text-success">Detalles</h5>
+            </div>
+            <div class="row">
+                <div class="table-responsive m-2">
+                    <table class="table table-hover table-scroll" id="div_tabla">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoria</th>
+                                <th>Unidad Medida</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody  >
+                            {% for producto in detalles %}
+                                <tr>
+                                    <td>{{producto.producto.descripcion}}</td>
+                                    <td>{{producto.producto.categoria}}</td>
+                                    <td>{{producto.producto.unidad_medida}}</td>
+                                    <td>{{producto.cantidad}}</td>
+                                        
+
+                                </tr>
+                                
+                            {% endfor %}
+                        </tbody>
+                        
+                    
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            
+            {% if request.user.rol.descripcion == 'BODEGUERO' %}
+                {% if orden.estado.descripcion == 'GENERADA' %}
+                <div class="row">
+                    <a data-id_solicitud="{{orden.id_orden}}"   class="btn btn-primary enviar_orden text-white marcar_revision"><i class="bx bxl-telegram"></i>REVISADA</a>
+                </div>
+                {% endif %}
+                {% if orden.estado.descripcion == 'ORDEN REVISADA BODEGA' %}
+                    <div class="row">
+                        <a data-id_solicitud="{{orden.id_orden}}"   class="btn btn-primary enviar_orden text-white entregar_insumos">Entrega Insumos</a>
+                    </div>
+                {% endif %}
+            {% endif %}
+            
+        </div>
+     
+       
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+    })
+
+
+
+    $('.crear_orden').on('click', function(){
+        lista_items = []
+        $('.item-producto').each(function(){
+            var producto = $(this);
+            check = producto.prop('checked');
+            
+            if(check){
+                lista_items.push(parseInt(producto.val()));
+            }
+        });
+        var body = {
+            "itemsSeleccionados[]": JSON.stringify(lista_items)
+        }
+        $.ajax({
+            url : '{% url "trn:orden_produccion_crear" %}',
+            type: "GET",
+            data: body,
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(){
+                $('.loader').hide();
+            },
+            success: function(response){
+                
+                toastr.success('Orden Revisada', 'Correcto');
+                setTimeout(() => {
+                    url_list = '{% url "trn:ordenes_salida_list" %}'
+                    window.location = url_list;
+                }, 400)
+            }
+        })
+        
+
+    })
+
+    
+   
+
+    $('.entregar_insumos').on('click', function(){
+        id_orden = $(this).data('id_solicitud');
+        url = '{% url "trn:actualiza_stock_salida" 0 %}'
+        url = url.replace(/0/, id_orden)
+        $.ajax({
+            url : url,
+            type: "GET",
+            data: {},
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(){
+                $('.loader').hide();
+            },
+            success: function(response){
+                toastr.success('Stock Actualizado', 'Correcto');
+                setTimeout(() => {
+                    ruta = '/transacciones/lista-ordenes/salida/'
+                    location.replace(ruta)
+                }, 800)
+
+                
+            }
+        })
+
+    })
+
+    $('.marcar_revision').on('click', function(){
+        id_orden = $(this).data('id_solicitud');
+        url = '{% url "trn:marcar_orden_revisada" 0 %}'
+        url = url.replace(/0/, id_orden)
+        $.ajax({
+            url : url,
+            type: "GET",
+            data: {},
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(){
+                $('.loader').hide();
+            },
+            success: function(response){
+                
+                toastr.success('Orden Revisada por Bodega', 'Correcto');
+                setTimeout(() => {
+                    url_list = '/transacciones/ingresos-list/'
+                    window.location = url_list;
+                }, 800)
+            }
+        })
+
+    })
+
+    
+
+
+</script>

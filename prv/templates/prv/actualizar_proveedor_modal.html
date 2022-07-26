@@ -1,0 +1,72 @@
+{% load static %}{% load i18n %}
+<div class="modal-dialog modal-dialog-centered modal-s">
+    <div class="modal-content">
+        <div class="modal-header">
+            {% if proveedor.estado.descripcion == 'ACTIVO' %}
+                <h5 class="modal-title" id="exampleModalLabel"> Inactivar Proveedor </h5>
+            {% else %}
+                <h5 class="modal-title" id="exampleModalLabel"> Activar Proveedor </h5>
+            {% endif %}
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            {% if proveedor.estado.descripcion == 'ACTIVO' %}
+                Se inactivara el proveedor seleccionado {{proveedor}}
+            {% else %}
+                Se activara el proveedor seleccionado {{proveedor}}
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal" >Cancelar</button>
+            {% if proveedor.estado.descripcion == 'ACTIVO' %}
+                <a onclick="actualizarProveedor()" class="btn btn-primary">Inactivar</a>
+            {% else %}
+                <a onclick="actualizarProveedor()" class="btn btn-primary">Activar</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+lote
+
+<script>
+    $(document).ready(function(){
+
+    })
+
+    function actualizarProveedor(){
+
+        estado = '{{proveedor.estado}}';
+        id_proveedor = '{{proveedor.id_proveedor}}'
+        var token = '{{csrf_token}}';
+        dato = {
+            'estado': estado
+        }
+
+        var datos = JSON.stringify(dato);
+
+        var url = "{% url 'prv:actualizar_proveedor_personal' 0 %}";
+        url = url.replace(/0/, id_proveedor);
+        console.log(url)
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            url: url,
+            type: 'POST',
+            data: datos,
+            success: function(response){
+                toastr.success(response, "Edicion");
+                $('#modal_editar_categoria').modal('hide')
+                setTimeout(() => {
+                    location.reload(true);
+                }, 800);
+            },
+            error: function(jqXHR, textStatus, errorThrow){
+                console.log(textStatus, errorThrow)
+            }
+        })
+    }
+</script>

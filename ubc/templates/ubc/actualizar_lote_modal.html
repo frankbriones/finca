@@ -1,0 +1,68 @@
+{% load static %}{% load i18n %}
+<div class="modal-dialog modal-dialog-centered modal-s">
+    <div class="modal-content">
+        <div class="modal-header">
+            {% if lote.estado.descripcion == 'ACTIVO' %}
+                <h5 class="modal-title" id="exampleModalLabel"> Inactivar Lote </h5>
+            {% else %}
+                <h5 class="modal-title" id="exampleModalLabel"> Activar Lote </h5>
+            {% endif %}
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            {% if lote.estado.descripcion == 'ACTIVO' %}
+                Se inactivara el lote seleccionado {{lote}}
+            {% else %}
+                Se activara el lote seleccionado {{lote}}
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal" >Cancelar</button>
+            {% if lote.estado.descripcion == 'ACTIVO' %}
+                <a onclick="actualizarLote()" class="btn btn-primary">Inactivar</a>
+            {% else %}
+                <a onclick="actualizarLote()" class="btn btn-primary">Activar</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+
+    })
+
+    function actualizarLote(){
+
+        estado = '{{lote.estado}}';
+        id_lote = {{lote.id_lote}}
+        var token = '{{csrf_token}}';
+        dato = {
+            'estado': estado
+        }
+
+        var datos = JSON.stringify(dato);
+
+        var url = "{% url 'ubc:actualizar_lote' 0 %}";
+        url = url.replace(/0/, id_lote);
+
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            url: url,
+            type: 'POST',
+            data: datos,
+            success: function(response){
+                location.reload(true)
+            },
+            error: function(jqXHR, textStatus, errorThrow){
+                console.log(textStatus, errorThrow)
+            }
+        })
+    }
+</script>

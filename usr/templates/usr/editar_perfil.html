@@ -1,0 +1,336 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Usuarios
+                                </li>
+                                <li class="breadcrumb-item active">Perfil
+                                </li>
+                                <li class="breadcrumb-item active">Editar
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- Table with outer spacing -->
+            <section id="headers">
+
+               
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="tab-content">
+                                        <form id="frmUsuario" method="POST" class="form" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div role="tabpanel" class="tab-pane active" id="account-vertical-general" aria-labelledby="account-pill-general" aria-expanded="true">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-12">
+                                                       
+                                                        <div class="form-label-group">
+                                                            <a href="javascript: void(0);" >
+                                                                <img name="imagentmp" {% if obj.img_perfil %} src="{{obj.img_perfil.url}}" {% else %} src="{% static 'base/img/profile/no_perfil.png' %}" {% endif %} class="rounded mr-75" alt="profile image" height="64" width="64">
+                                                            </a>
+                                                            <div class="col-12 px-0 d-flex flex-sm-row flex-column justify-content-start mt-2">
+                                                                <input type="file" name="img_perfil" onchange="seleccionarImagen()" id="id_img_perfil" class="btn btn-sm btn-light-primary ml-50 mb-50 mb-sm-0 dz-clickable  " value="Actualizar Foto Perfil">
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label>Username</label>
+                                                                    {{ form.usuario.username }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label>Nombres</label>
+                                                                    {{ form.usuario.first_name }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label>Apellidos</label>
+
+                                                                    {{ form.usuario.last_name }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                    <label>E-mail</label>
+
+                                                                    {{ form.usuario.email }}
+                                                                <div class="help-block"></div></div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                    <label>Telefono</label>
+                                                                    {{ form.usuario.telefono }}
+                                                                <div class="help-block"></div></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                    <label>Usuario Telegram</label>
+                                                                    {{ form.usuario.usuario_telegram }}
+                                                                <div class="help-block"></div></div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                    <label>Rol</label>
+                                                                    {{ form.usuario.rol }}
+                                                                <div class="help-block"></div></div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                    <label>Tipo Usuario</label>
+                                                                    {{ form.usuario.tipo_usuario }}
+                                                                <div class="help-block"></div></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 d-flex flex-sm-row flex-column justify-content-end pt-2">
+                                                            <button onclick="enviarFomrulario()" type="button" class="btn btn-primary glow mr-sm-1 mb-1">Guardar
+                                                                Cambios</button>
+                                                            <a href="{% url 'usr:usuarios_list' %}" class="btn btn-light mb-1">Cancelar</a>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </form>
+                                        <form id="frmContrasena" action="" class="mb-2" hidden method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group mb-2">
+                                                <label for="id_email" class="text-bold-600">Correo Electronico</label>
+                                                <input type="text" name="email" id="id_email" class="form-control">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+
+
+{% endblock %}
+
+{% block js_page %}
+<script>
+    let superuser = '{{user.is_super_user}}'.toLocaleLowerCase() === 'true';
+    let id_usuario = 0 ;
+
+    $(document).ready(function(){
+        $('.loader').hide();
+        if('{{obj}}' != 'None'){
+            $('#id_usuario-username').prop('readonly', true);
+            id_usuario = '{{obj.id}}'
+        }
+        
+        
+    })
+
+    function seleccionarImagen(){
+        var preview = document.querySelector("img[name='imagentmp']");
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function(){
+            preview.src = render.result;
+        }
+
+        if(file){
+            reader.readAsDataURL(file);
+        }else{
+            preview.src = ""
+        }
+    }
+
+
+    function enviarFomrulario(){
+        let token = '{{csrf_token}}'
+        form = document.getElementById('frmUsuario');
+        let datos = new FormData(form)
+
+        if(superuser){
+            datos.append('usuario-rol', '1');
+        }
+
+        let url = '{% url "usr:editar_perfil" 0 %}';
+        if(id_usuario != 0){
+            url = url.replace(/0/, id_usuario);
+        }
+
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            url: url,
+            type: "POST",
+            data: datos,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(res){
+                if(res.status === 200){
+                    $('.loader').show();
+                }else{
+                    $('.loader').hide();
+                }
+            },
+            success: function(response){
+                
+                if(parseInt(response.redireccion) === 1){
+                    GenerarEnlaceContrasena(response.correo)
+                }else{
+                    let url_lista = "{% url 'usr:usuarios_list' %}"
+                    window.location = url_lista
+                }
+            },
+            error: function(response){
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
+            }
+        })
+
+    }
+
+    function GenerarEnlaceContrasena(email){
+        let token = '{{csrf_token}}';
+        form = document.getElementById('frmContrasena')
+        let datos = new FormData(form);
+        datos.append('email', email)
+
+        let url = '{% url "usr:contrasena_nuevo_usuario" %}';
+        let url_lista = "{% url 'usr:usuarios_list' %}"
+
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            url: url,
+            type: 'POST',
+            data: datos,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(res){
+                if(res.status === 200){
+                    $('.loader').show();
+                }else{
+                    $('.loader').hide();
+                }
+            },
+            success: function(response){
+                $.confirm({
+                    title: 'Informacion Enviada',
+                    content: "Se ha enviado informacion del nuevo usuario al correo del mismo",
+                    theme: 'material',
+                    type: 'green',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido',
+                            action: function(){
+                                window.location = url_lista;
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+
+</script>
+{% endblock %}

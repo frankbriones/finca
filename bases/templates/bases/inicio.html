@@ -1,0 +1,61 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Bienvenido
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- default swiper start -->
+            <section id="component-swiper-default">
+                <div class="card">
+                    <div class="card-header text-center">
+                        {% if request.user.tipo_usuario.descripcion == 'USUARIO INSUMOS' %}
+                            <h4 class="card-title">Gestion de Inventario de Insumos en Finca Bananera</h4>
+                        {% endif %}
+                        {% if request.user.tipo_usuario.descripcion == 'USUARIO PRODUCCION' %}
+                            <h4 class="card-title">Modulo de Produccion en Finca Bananera</h4>
+                        {% endif %}
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="swiper-default swiper-container swiper-container-initialized swiper-container-horizontal">
+                                <div >
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <img class=" card img-fluid" width="95%" style="margin: auto; height: 350px;" src="{% static 'base/app-assets/images/fondos/banana.png' %}" alt="Inicio">
+
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+                            <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

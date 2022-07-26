@@ -1,0 +1,121 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Ubicaciones
+                                </li>
+                                <li class="breadcrumb-item active">Bodega
+                                </li>
+                                <li class="breadcrumb-item active">Detalle
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    {% if producto %}Editar {% else %} Crear {% endif %}Insumo
+                </h3>
+            </div>
+            <div class="card-content">
+               <div class="card-body">
+                <form enctyoe="multipart/form-data" method="POST"  >
+                    {% csrf_token %}
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-12">
+                                {{form.as_p}}
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mr-1 mb-1">Guardar</button>
+                                <a href="{% url 'prd:productos_list' %}" class="btn btn-primary mr-1 mb-1">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+               </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static 'base/app-assets/js/jquery-3.2.0.min.js' %}"></script>
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+
+{% endblock %}
+
+{% block js_page %}
+<script src="{% static  'base/app-assets/js/scripts/pages/app-file-manager.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $('.loader').hide();
+    })
+
+    
+</script>
+
+
+
+{% endblock js_page %}

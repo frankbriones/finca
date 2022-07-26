@@ -1,0 +1,465 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<style>
+    .listado{
+        overflow: scroll;
+    }
+    .center {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    .inputimage {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        /* width: 150px;
+        height: 150px; */
+        margin-bottom: auto;
+        opacity: 0;
+    }
+    .img-circle {
+        border-radius: 100%;
+    }
+
+    .caja {
+        font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+        color: #000000;
+        font-size: 25px;
+        font-weight: 400;
+        text-align: right;
+        ;
+        margin: 0 0 25px;
+        overflow: hidden;
+        padding: 10px;
+        /* border-radius: 35px 0px 35px 0px; 
+        -moz-border-radius: 35px 0px 35px 0px; 
+        -webkit-border-radius: 35px 0px 35px 0px;  */
+        border: 2px solid #5878ca;
+    }
+    .caja_descuento {
+        font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+        color: #000000;
+        font-size: 14px;
+        font-weight: 200;
+        text-align: center;
+        ;
+        margin: 0 0 25px;
+        overflow: hidden;
+        /* padding: auto; */
+        /* border-radius: 35px 0px 35px 0px; 
+        -moz-border-radius: 35px 0px 35px 0px; 
+        -webkit-border-radius: 35px 0px 35px 0px;  */
+        border: 2px solid #5878ca;
+    }
+</style>
+
+<!-- BEGIN: Vendor CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/vendors.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/editors/quill/quill.snow.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-file-manager.css' %}">
+
+<!-- END: Vendor CSS-->
+
+<!-- BEGIN: Theme CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap-extended.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/colors.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/components.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/dark-layout.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/semi-dark-layout.css' %}">
+<!-- END: Theme CSS-->
+
+<!-- BEGIN: Page CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/core/menu/menu-types/vertical-menu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-email.css' %}">
+<!-- END: Page CSS-->
+
+<!-- BEGIN: Custom CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/assets/css/style.css' %}">
+<!-- END: Custom CSS-->
+
+<!-- BEGIN: Vendor CSS-->
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/swiper.min.css' %}">
+<!-- END: Vendor CSS-->
+<!-- BEGIN: Page CSS--> 
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/swiper.css' %}">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">  
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/toastr.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">
+<!-- END: Page CSS-->
+<div class="app-content content mt-2">
+    <div class="content-area-wrapper">
+        <div class="sidebar-left">
+            <div class="sidebar">
+                <div class="sidebar-content email-app-sidebar d-flex">
+
+                    <span class="sidebar-close-icon">
+                        <i class="bx bx-x"></i>
+                    </span>
+
+
+                    <div class="email-app-menu">
+                        <div class="form-group form-group-compose">
+                            <label for="">Filtros</label>
+                            <select  name="" id="id_filtro" class="form-control ">
+                                <option value="1">Lo que va del mes</option>
+                                <option value="2">El mes anterior</option>
+                                <option value="3">Rango de Fechas</option>
+                            </select>
+                            <div id="div_fecha_inicio">
+                                <small>Fecha Inicio</small>
+                                <input type="date" name="" id="id_fecha_inicio"  class="form-control"   >
+                            </div>
+                            <div id="div_fecha_fin">
+                                <small>Fecha Fin</small>
+                                <input type="date" name="" id="id_fecha_fin" class="form-control">
+                            </div>
+                            <a id="btn_filtro" onclick="obtenerPedidos()">
+                                <label for="getFile " class="btn btn-primary btn-block glow my-2 add-file-btn text-capitalize"> Filtrar </label>
+                            </a>
+                        </div>
+                        <div class="sidebar-menu-list">
+                            <label class="app-file-label">{% trans "ESTADOS" %}</label>
+                                {% if not request.user.proveedor %}
+                                    <div class="list-group list-group-messages my-50">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="checkbox-input item-estado" value="6" id="id_pedido_creado">
+                                            <label for="id_pedido_creado">{% trans "PEDIDO CREADO" %}</label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="checkbox-input item-estado" value="7" id="id_pedido_proceso">
+                                            <label for="id_pedido_proceso">{% trans "EN PROCESO" %}</label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="checkbox-input item-estado" value="8" id="id_pedido_enviado">
+                                            <label for="id_pedido_enviado">{% trans "PEDIDO ENVIADO" %}</label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="checkbox-input item-estado" value="9" id="id_pedido_recibido">
+                                            <label for="id_pedido_recibido">{% trans "PEDIDO RECIBIDO" %}</label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="checkbox-input item-estado" value="15" id="id_pedido_revisado">
+                                            <label for="id_pedido_revisado">{% trans "PEDIDO REVISADO PROVEEDOR" %}</label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="checkbox-input item-estado" value="16" id="id_pedido_despachado">
+                                            <label for="id_pedido_despachado">{% trans "PEDIDOS DESPACHADOS" %}</label>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                <div class="list-group list-group-messages my-50">
+                                    <div class="checkbox">
+                                        <input type="checkbox" class="checkbox-input item-estado" value="8" id="id_pedido_creado">
+                                        <label for="id_pedido_creado">{% trans "NUEVOS PEDIDOS" %}</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" class="checkbox-input item-estado" value="15" id="id_pedido_proceso">
+                                        <label for="id_pedido_proceso">{% trans "PEDIDOS EN PROCESO" %}</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" class="checkbox-input item-estado" value="16" id="id_pedido_enviado">
+                                        <label for="id_pedido_enviado">{% trans "PEDIDOS DESPACHADOS" %}</label>
+                                    </div>
+                                   
+                                </div>
+                                {% endif %}
+                            <hr>
+                            {% if request.user.rol.descripcion != 'PROVEEDOR' %}
+                            <label class="app-file-label">{% trans "Proveedores" %}</label>
+                            <div class="list-group list-group-messages my-50">
+                                <select name="" id="id_proveedores"></select>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-right border">
+            <div class="content-wrapper">
+                    <!-- email app overlay -->
+                    <div class="app-content-overlay"></div>
+                    <div class="email-app-area">
+                        <!-- Email list Area -->
+                        <div class="email-app-list-wrapper">
+                            <div class="email-app-list">
+                                <div class="email-action">
+                                
+                                    <!-- action right start here -->
+                                    <div class="action-left d-flex flex-grow-1 align-items-center justify-content-around">
+                                        <!-- search bar  -->
+                                        <div class="email-fixed-search flex-grow-1">
+                                            <div class="sidebar-toggle d-block d-lg-none">
+                                                <i class="bx bx-menu"></i>
+                                            </div>
+                                            <h4 class="h2 p-2 text-capitalize">Listado de Solicitud de pedidos</h4>
+                                        </div>
+                                        <!-- pagination and page count -->
+                                        <span>Registros:</span>
+                                        <span class="d-none d-sm-block" id="id_cantidad"></span>
+                                        
+                                    </div>
+                                </div>
+                                <!-- / action right -->
+
+                                <!-- email user list start -->
+                                <div class="email-user-list list-group " >
+                                    <div id="id_cont_items" class="mb-4">
+                                        <div  id='tabla' class="d-flex align-items-center">
+                                            <table id="id_tabla" >
+                                               
+                                            </table>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ Email list Area -->
+
+                        <!--/ Detailed Email View -->
+                    </div>
+                </div>
+            </div>
+        </div>    
+</div>
+
+
+
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+{% endblock %}
+{% block js_page %}
+<script src="{% static  'base/app-assets/js/scripts/pages/app-file-manager.js' %}"></script>
+<script>
+    
+    let categoria_id;
+    $(document).ready(function() {
+        $('.loader').hide();
+        if('{{ request.user.rol.descripcion }}' != 'PROVEEDOR'){
+            obtenerProveedores();
+        }else{
+            obtenerPedidos();
+        }
+
+        $('#btn_filtro').hide();
+        $('#div_fecha_inicio').hide();
+        $('#div_fecha_fin').hide();
+        
+    })
+
+    $('#id_filtro').on('change', function() {
+        opcion = parseInt($(this).val());
+        if(opcion===3){
+            $('#btn_filtro').show();
+            $('#div_fecha_inicio').show();
+            $('#div_fecha_fin').show();
+        }else{
+            $('#btn_filtro').hide();
+            $('#div_fecha_inicio').hide();
+            $('#div_fecha_fin').hide();
+            obtenerPedidos();
+        }
+    })
+
+    function obtenerProveedores(){
+        $.ajax({
+            url: '{% url "trn:proveedores_ajax" %}',
+            type: 'GET',
+            data: {},
+            success: function(response){
+                select = document.getElementById('id_proveedores')
+                opt = document.createElement('option')
+                opt.value = '0'
+                opt.text = "--seleccionar proveedores--"
+                select.append(opt)
+                proveedores = response.proveedores
+                proveedores.forEach(element => {
+                    options = document.createElement('option')
+                    options.value = element.id_proveedor
+                    options.text = element.nombres+' '+element.apellidos
+                    select.append(options)
+                });
+                // select.selectedIndex = 1;
+                obtenerPedidos()
+                
+            }
+            
+        })
+        
+    }
+
+    $('input[type=checkbox]').on('click', function(){
+        obtenerPedidos()
+    })
+
+    $('#id_proveedores').on('change', function(){
+        obtenerPedidos()
+    })
+
+    $('#id_buscar').keypress(function(e){
+        if(e.which == 13){
+            buscarClave();
+        }
+    })
+
+
+    function buscarClave(){
+        obtenerPedidos();
+    }
+
+    function obtenerPedidos(){
+        estadosBusqueda = []
+
+        opcion = $('#id_filtro').val();
+        if(opcion == '3'){
+            f_inicio = $('#id_fecha_inicio').val();
+            f_fin = $('#id_fecha_fin').val();
+            if(f_inicio === '' || f_fin === ''){
+                toastr.error('Ingrese una fecha correcta');
+                return false
+            }
+        }else{
+            ahora = new Date()
+            opciones = {year: 'numeric', month: '2-digit', day: '2-digit'};
+            ahora = ahora.toLocaleString('sv-SE', opciones);
+            f_inicio = ahora
+            f_fin = ahora
+        }
+
+        $('.item-estado').each(function(){
+            var estado = $(this);
+            check = estado.prop('checked');
+            if(check){
+                estadosBusqueda.push(parseInt(estado.val()));
+            }
+        })
+        console.log('{{ request.user.rol.descripcion }}')
+        var proveedor = $('option:selected', '#id_proveedores').val();
+        if('{{ request.user.rol.descripcion }}' === 'PROVEEDOR'){
+            proveedor = '{{request.user.proveedor.id_proveedor}}'
+        }
+        
+        var body = {
+            'estadosBusqueda[]': JSON.stringify(estadosBusqueda),
+            'proveedor_id': proveedor,
+            'opcion': opcion,
+            'f_inicio': f_inicio,
+            'f_fin': f_fin
+        }
+        url = '{% url "trn:listado_pedidos_ajax" %}'
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: body,
+            success: function(response){
+                console.log(response)
+                $('#tabla').empty();
+                pedidos = response.pedidos
+                if(pedidos.length === 0){
+                    div = $('.alert-info');
+                    div.remove();
+                    div_vacio = '<div class=" row alert alert-info text-center" >No existen Pedidos relacionados a la busqueda. </div>';
+                    $('#tabla').append(div_vacio)
+                }else{
+                    var tabla = `<table class="table " id="id_tabla" >
+                            <thead>
+                                <th>FECHA CREACION</th>
+                                <th>PROVEEDOR</th>
+                                <th>ESTADO</th>
+                                <th>USUARIO</th>
+                                <th>ACCION</th>
+
+                            </thead>
+                            <tbody id="id_body_table">
+                            </tbody>                            
+                        </table>`
+                        $('#tabla').append(tabla)
+                }
+                
+                $('#id_body_table').empty();
+                pedidos.forEach(pedido => {
+                    
+                    opcionesFecha = {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}
+                    fecha_creacion = new Date(pedido.fecha_creacion)
+                    fecha_creacion = fecha_creacion.toLocaleString('ja-JP', opcionesFecha)
+                    
+                    var tr=`<tr style="cursor:pointer">
+                            <td>${fecha_creacion}</td>
+                            <td>${pedido.nombres_proveedor} ${pedido.apellidos_proveedor}</td>
+                            <td>${pedido.estado_nombre}</td>
+                            <td>${pedido.usuario_nombres}</td>
+                            
+                            <td>
+                                <a onclick="verSolicitud(${pedido.id_solicitud})">
+                                    <i  class="badge-circle badge-circle-warning bx bx-edit font-medium-1" >
+                                    </i>
+                                </a>
+                            </td>
+
+                        </tr>`;
+                    
+                        $('#id_body_table').append(tr);
+                })
+                $('#id_cantidad').text(String(pedidos.length))
+            }
+        })
+    }
+
+    function verSolicitud(id_pedido) {
+        url = '{% url "trn:solicitud_modal" 0 %}'
+        url = url.replace(/0/, id_pedido)
+        return abrir_modal(url)
+    }
+
+</script>
+{% endblock %}

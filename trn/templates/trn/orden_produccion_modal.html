@@ -1,0 +1,381 @@
+{% load static %}{% load i18n %}
+{% if orden == None %}
+<div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+           
+                <h5 class="modal-title" id="exampleModalLabel"> Generar orden produccion </h5>
+                
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+            
+        </div>
+
+        <div class="modal-body">
+           
+            <div class="row text-center m-2">
+                <h5>Detalles de produccion</h5>
+            </div>
+            <div class="row">
+                <div class="table-responsive m-2">
+                    <table class="table table-hover table-scroll" id="div_tabla">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Categoria</th>
+                                <th>Unidad Medida</th>
+                                <th>Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody  id="id_body_productos">
+
+                        </tbody>
+                    
+                    </table>
+                </div>
+            </div>
+        </div>
+            
+            
+
+        <div class="modal-footer">
+            <button class="btn btn-primary">Cancelar</button>
+            <button class="btn btn-primary crear_orden">Crear</button>
+
+        </div>
+       
+    </div>
+</div>
+{% else %}
+<div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+           
+                <h5 class="modal-title text-white" id="exampleModalLabel"> Detalle de solcitud de Produccion</h5>
+                
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+            
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6 col-12 p-1">
+                    <span >
+                    Detalles: <b>{{orden.descripcion}}</b>
+
+                    </span>
+                </div>
+                <div class="col-md-6 col-12 p-1">
+                    <span >
+                    secuencia: <b>{{orden.secuencia}}</b>
+
+                    </span>
+                </div>
+                <div class="col-md-6 col-12 p-1">
+                    <span >
+                    total orden: <b>{{orden.total_orden}}</b>
+
+                    </span>
+                </div>
+            </div>
+            <div class="row d-flwx justify-content-center align-items-center text-center m-2">
+                <h5 class="text-success">Detalles de Insumos</h5>
+            </div>
+            <div class="row">
+                <div class="table-responsive m-2">
+                    <table class="table table-hover table-scroll" id="div_tabla">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoria</th>
+                                <th>Unidad Medida</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody  >
+                            {% for producto in detalles %}
+                                <tr>
+                                    <td>{{producto.producto.descripcion}}</td>
+                                    <td>{{producto.producto.categoria}}</td>
+                                    <td>{{producto.producto.unidad_medida}}</td>
+                                    <td>{{producto.cantidad}}</td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    
+                    </table>
+                </div>
+            </div>
+        </div>
+            
+            
+        {% if request.user.tipo_usuario.descripcion == 'USUARIO INSUMOS' %}
+        {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
+        {% if orden.estado.descripcion == 'ORDEN SOLICITADA' %}
+            <div class="modal-footer">
+                <button data-id_orden="{{orden.id_solicitud}}" class="btn btn-primary revisar_orden">Marcar Revision</button>
+            </div>
+        {% endif %}
+        {% if orden.estado.descripcion == 'SOLICITUD DE PROD. REVISADA' %}
+            <div class="modal-footer">
+                <button data-id_orden="{{orden.id_solicitud}}" class="btn btn-primary generar_orden_salida">Generar Orden Salida Bodega</button>
+            </div>
+        {% endif %}
+
+        {% endif %}
+        {% endif %}
+       
+    </div>
+</div>
+{% endif %}
+
+
+<div class="modal fade text-left" id="modal_agregar_bodeguero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel12" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <input type="hidden" class="id_solicitud_generar">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title white" id="myModalLabel12">Asignar Personal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                Ingrese Bodeguero.
+                <select name="" class="form-control" id="id_usuarios_bodega"></select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-primary ml-1 " onclick="generarOrden()">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Generar Orden</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        obtenerProductos()
+    })
+
+
+    function obtenerProductos(){
+        $.ajax({
+            url: '{% url "trn:lista_productos_ajax" %}',
+            type: 'GET',
+            data: {},
+            success: function(response){
+                productos = response.data
+                productos.forEach(producto => {
+                    tr = `
+                        <tr >
+                            <td>${producto.id_producto}</td>
+                            <td>${producto.descripcion}</td>
+                            <td>${producto.categoria_descripcion}</td>
+                            <td>${producto.unidad_medida_descripcion}</td>
+                            <td>
+                                <div class="row d-flex align-items-center justify-content-center">
+                                    <input value="${producto.id_producto}"   class=" checkbox-input item-producto " type="checkbox" name="" id="checkbox1" data-descripcion="${producto.descripcion}" data-id="${producto.id_producto}">
+                                </div>
+                            </td>
+
+                        </tr>
+                    `;
+                    $('#id_body_productos').append(tr)
+                });
+
+            }
+        })
+    }
+
+
+
+    $('.crear_orden').on('click', function(){
+        lista_items = []
+        $('.item-producto').each(function(){
+            var producto = $(this);
+            check = producto.prop('checked');
+            
+            if(check){
+                lista_items.push(parseInt(producto.val()));
+            }
+        });
+        var body = {
+            "itemsSeleccionados[]": JSON.stringify(lista_items)
+        }
+        $.ajax({
+            url : '{% url "trn:orden_produccion_crear" %}',
+            type: "GET",
+            data: body,
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(){
+                $('.loader').hide();
+            },
+            success: function(response){
+                
+                id_orden = response.id_orden
+                ruta = '{% url "trn:detalle_orden_produccion" 0 %}'
+                ruta = ruta.replace(/0/, id_orden);
+                location.replace(ruta)
+            }
+        })
+        
+
+    })
+
+    $('.procesar_orden').on('click', function(){
+        id_orden = $(this).data('id_orden');
+        url = '{% url "trn:procesar_orden" 0 %}';
+        url = url.replace(/0/, id_orden);
+
+
+        
+        $.ajax({
+            url : url,
+            type: "GET",
+            data: {},
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(){
+                $('.loader').hide();
+            },
+            success: function(response){
+                if(response.estado === false){
+                    toastr.error('No existen suficientes insumos para abastecer orden');
+                    return false
+                }else{
+                    toastr.success('Generando Orden de Salida de Bodega', "Confirmado");
+                    setTimeout(() => {
+                        url = '{% url "trn:generar_orden_salida" 0 %}';
+                        url = url.replace(/0/, id_orden);
+                        window.location.href = url
+                    }, 700);
+                }
+                //mostarar el estado de la peticion
+                //en caso de ser valida se genera orden de salida a bodega y notifivca a bodeguero caso 
+                //contrario muestra mensaje con falta de insumos en stock
+
+            }
+        })
+    })
+
+    
+
+
+    $('.revisar_orden').on('click', function(){
+        id_orden = $(this).data('id_orden');
+        url = '{% url "trn:revisar_orden_produccion" 0 %}';
+        url = url.replace(/0/, id_orden);
+
+
+        
+        $.ajax({
+            url : url,
+            type: "GET",
+            data: {},
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(){
+                $('.loader').hide();
+            },
+            success: function(response){
+                if(response.estado === false){
+                    toastr.error('No existen suficientes insumos para abastecer orden');
+                    return false
+                }else{
+                    toastr.success('Orden Revisada', "Confirmado");
+                    setTimeout(() => {
+                        location.reload(true)
+                    }, 700);
+                }
+                //mostarar el estado de la peticion
+                //en caso de ser valida se genera orden de salida a bodega y notifivca a bodeguero caso 
+                //contrario muestra mensaje con falta de insumos en stock
+
+            }
+        })
+    })
+
+
+    $('.generar_orden_salida').on('click', function(){
+        var solicitud_id = $(this).data('id_orden');
+        
+        $('#modal_agregar_bodeguero .id_solicitud_generar').val(solicitud_id);
+        //$('#modalSolicitud').hide()
+
+        $('#modal_agregar_bodeguero').modal('show');
+        obtenerUsuarioBodega()
+    })
+
+    function obtenerUsuarioBodega(){
+        select = document.getElementById('id_usuarios_bodega')
+        option = document.createElement('option')
+        option.value = '0'
+        option.text = '---Selecciona bodeguero---'
+        select.add(option)
+        $.ajax({
+            url: '{% url "usr:obtener_usuarios_bodega" %}',
+            type: 'GET',
+            data: {},
+            success: function(response){
+                usuarios = response.data
+                usuarios.forEach(usuario => {
+                    option = document.createElement('option')
+                    option.value = usuario.id
+                    option.text = usuario.first_name +' '+ usuario.last_name
+                    select.add(option)
+                })
+            }
+        })
+    }
+
+    function generarOrden(){
+        var id_solicitud = $("#modal_agregar_bodeguero .id_solicitud_generar").val();
+        var usuario_bodega = $('option:selected', '#id_usuarios_bodega').val();
+        if(usuario_bodega === '0'){
+            toastr.error('Seleccione un usuario')
+            return false;
+        }
+        var parametros = {
+                "solicitud": id_solicitud,
+                "usuario_encargado":  usuario_bodega
+            }; 
+        guardar(parametros);
+    }
+
+    function guardar(parametros){
+        toastr.success('Generando Orden de Salida de Bodega', "Confirmado");
+        url = '{% url "trn:generar_orden_salida_bodega"  %}'
+        
+        $.ajax({
+            url : url,
+            type: 'GET',
+            data: parametros,
+            success: function(response){
+                toastr.success('Orden Salida de Bodega Generada', "Confirmado");
+                setTimeout(() => {
+                    window.location.href = '{% url "trn:pedidos_list" %}'
+                }, 900);
+            }
+        })
+    }
+
+    
+
+
+</script>

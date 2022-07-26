@@ -1,0 +1,199 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Usuarios
+                                </li>
+                                <li class="breadcrumb-item active">Lista
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title m-1">
+                <div class="row"> 
+                    <div class="col-md-6 col-12 text-left">
+                        <span><h4 class="text-bold">Listado de Usuarios</h4></span>
+                    </div>
+                    <div class="col-md-6 col-12 text-right">
+                        {% if perms.usr.crear_rol %}
+                            <a href="{% url 'usr:editar_perfil' 0 %}" data-toggle="tooltip" data-placement="top" title data-original-title="Crear Usuario" class="btn btn-secondary" role="button" ><i class="bx bx-plus"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-content">
+                
+                <div class="card-body">
+                        <!-- Table with outer spacing -->
+                        <div class="table-responsive">
+                            <table class="table  table-hover " id="id_tabla_usuarios">
+                                <thead>
+                                    <tr>
+                                        {% if request.user.is_superuser %}
+                                            <th>Username</th>
+                                        {% endif %}
+                                        <th>Nombres</th>
+                                        <th>Apellidos</th>
+                                        <th>ROL</th>
+                                        <th>Estado</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="">
+                                    {% for usuario in usuarios %}
+                                        <tr>
+                                            {% if request.user.is_superuser %}
+                                                <td class="text-bold-500">{{usuario.username}}</td>
+                                            {% endif %}
+                                            
+                                            <td>{{usuario.first_name}}</td>
+                                            <td class="text-bold-500">{{usuario.last_name}}</td>
+                                            <td> {{usuario.rol}}</td>
+                                            <td >
+                                                {% if usuario.estado.descripcion == 'ACTIVO' %}
+                                                    <span class="badge badge-success text-white">{{usuario.estado}}</span>
+                                                {% else %}
+                                                    <span class="badge badge-danger text-white">{{usuario.estado}}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'usr:editar_perfil' usuario.id %}">
+                                                    <i class="badge-circle badge-circle-light-secondary bx bx-edit font-medium-1">
+                                                    </i>
+                                                </a>
+                                                {% if usuario.estado.descripcion == 'ACTIVO' %}
+                                                    <a onclick="return abrir_modal('{% url 'usr:actualizar_perfil' usuario.id %}')">
+                                                        <i class="badge-circle badge-circle-light-danger bx bx-x font-medium-1">
+                                                        </i>
+                                                    </a>
+                                                {% else %}
+                                                    <a onclick="return abrir_modal('{% url 'usr:actualizar_perfil' usuario.id %}')">
+                                                        <i class="badge-circle badge-circle-light-success bx bx-check font-medium-1">
+                                                        </i>
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loader">
+    <div class="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+<script src="{% static 'base/app-assets/jss/scripts/modal/components-modal.js' %}"></script>
+
+
+
+{% endblock %}
+
+{% block js_page %}
+<script>
+    $(document).ready(function() {
+        $('.loader').hide();
+        $('#id_tabla_usuarios').DataTable(
+            {
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+            }
+        );
+    })
+
+  
+</script>
+
+{% endblock js_page %}

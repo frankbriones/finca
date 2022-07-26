@@ -1,0 +1,414 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<style>
+    .listado{
+        overflow: scroll;
+    }
+    .center {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    .inputimage {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        /* width: 150px;
+        height: 150px; */
+        margin-bottom: auto;
+        opacity: 0;
+    }
+    .img-circle {
+        border-radius: 100%;
+    }
+
+    .caja {
+        font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+        color: #000000;
+        font-size: 25px;
+        font-weight: 400;
+        text-align: right;
+        ;
+        margin: 0 0 25px;
+        overflow: hidden;
+        padding: 10px;
+        /* border-radius: 35px 0px 35px 0px; 
+        -moz-border-radius: 35px 0px 35px 0px; 
+        -webkit-border-radius: 35px 0px 35px 0px;  */
+        border: 2px solid #5878ca;
+    }
+    .caja_descuento {
+        font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+        color: #000000;
+        font-size: 14px;
+        font-weight: 200;
+        text-align: center;
+        ;
+        margin: 0 0 25px;
+        overflow: hidden;
+        /* padding: auto; */
+        /* border-radius: 35px 0px 35px 0px; 
+        -moz-border-radius: 35px 0px 35px 0px; 
+        -webkit-border-radius: 35px 0px 35px 0px;  */
+        border: 2px solid #5878ca;
+    }
+</style>
+
+<!-- BEGIN: Vendor CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/vendors.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/editors/quill/quill.snow.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-file-manager.css' %}">
+
+<!-- END: Vendor CSS-->
+
+<!-- BEGIN: Theme CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap-extended.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/colors.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/components.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/dark-layout.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/semi-dark-layout.css' %}">
+<!-- END: Theme CSS-->
+
+<!-- BEGIN: Page CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/core/menu/menu-types/vertical-menu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-email.css' %}">
+<!-- END: Page CSS-->
+
+<!-- BEGIN: Custom CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/assets/css/style.css' %}">
+<!-- END: Custom CSS-->
+
+<!-- BEGIN: Vendor CSS-->
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/swiper.min.css' %}">
+<!-- END: Vendor CSS-->
+<!-- BEGIN: Page CSS--> 
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/swiper.css' %}">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">  
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/toastr.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">
+<!-- END: Page CSS-->
+<div class="app-content content pt-1">
+    <div class="content-area-wrapper">
+        <div class="sidebar-left border p-1">
+            <div class="sidebar">
+                <div class="sidebar-content email-app-sidebar d-flex">
+                    
+                    <div class="email-app-menu">
+                        
+                        <div class="sidebar-menu-list">
+                            <label class="app-file-label">{% trans "Tipo" %}</label>
+                            <div class="list-group list-group-messages my-50">
+                                <div class="checkbox">
+                                    <input type="checkbox" class="checkbox-input item-estado" value="1" id="id_ingresada">
+                                    <label for="id_ingresada">{% trans "INTERNO" %}</label>
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" class="checkbox-input item-estado" value="2" id="id_pendiente_inicio">
+                                    <label for="id_pendiente_inicio">{% trans "EXTERNO" %}</label>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <label class="app-file-label">{% trans "Categoria" %}</label>
+                            <div class="list-group list-group-messages my-50">
+                                <select name="" id="id_categorias"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-right border">
+            <div class="content-wrapper">
+                <div class="content-header row">
+                </div>
+            <div class="content-body">
+                <!-- email app overlay -->
+                <div class="app-content-overlay"></div>
+                <div class="email-app-area">
+                    <!-- Email list Area -->
+                    <div class="email-app-list-wrapper">
+                        <div class="email-app-list">
+                            <div class="email-action">
+                            
+                                <!-- action right start here -->
+                                <div class="action-right d-flex flex-grow-1 align-items-center justify-content-around">
+                                    <!-- search bar  -->
+                                    <div class="email-fixed-search flex-grow-1">
+                                        <div class="sidebar-toggle d-block d-lg-none">
+                                            <i class="bx bx-menu"></i>
+                                        </div>
+                                        <fieldset class="form-group position-relative has-icon-left m-0">
+                                            <input type="text" class="form-control" id="id_buscar" placeholder='{% trans "Buscar empleado por nombres o apellidos" %}'>
+                                            <div class="form-control-position">
+                                                <button onclick="buscarClave()" class="btn btn-icon rounded-circle btn-outlin-primary "><i class="bx bx-search"></i></button>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <!-- pagination and page count -->
+                                    <span>Registros:</span>
+                                    <span class="d-none d-sm-block" id="id_cantidad"></span>
+                                    
+                                </div>
+                            </div>
+                            <!-- / action right -->
+
+                            <!-- email user list start -->
+                            <div class="email-user-list list-group" >
+                                <div id="id_cont_items" class="aap-file-area">
+                                    <div  id="tabla">
+                                        <table id="id_tabla" >
+                                            
+                                        </table>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/ Email list Area -->
+
+                    <!--/ Detailed Email View -->
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- modal ingresar nuevo archivo o cancelar edicion -->
+
+<div class="modal fade" id="modalEditarAnticipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Editar Anticipo de Fabricación." %}</h5>
+                <button type="button" class="close" onclick="cerrarModalEdicionAnticipo()" aria-label="Close">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    {% trans "Seleccionar Archivo de Anticipo." %}
+                    
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12 mb-1">
+                        <fieldset>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon01">{% trans "Cargar Archivo" %}</span>
+                            </div>
+                            <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="id_anticipos" aria-describedby="inputGroupFileAddon01">
+                            <label id="label_carga_anticipo" class="custom-file-label" for="inputGroupFile01">{% trans "Seleccionar Archivo" %}....</label>
+                            </div>
+                        </div>
+                        </fieldset>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button"  class="btn btn-primary ml-1 editar_anticipo">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">{% trans "Aceptar" %}</span>
+                </button>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+
+
+{% endblock %}
+{% block js_page %}
+<script src="{% static  'base/app-assets/js/scripts/pages/app-file-manager.js' %}"></script>
+<script>
+    
+    let categoria_id;
+    $(document).ready(function() {
+        $('.loader').hide();
+        obtenerCategorias();
+        
+    })
+
+    function obtenerCategorias(){
+        $.ajax({
+            url: '{% url "personal:categorias_ajax" %}',
+            type: 'GET',
+            data: {},
+            success: function(response){
+                select = document.getElementById('id_categorias')
+                opt = document.createElement('option')
+                opt.value = '0'
+                opt.text = "--seleccionar categoria--"
+                select.append(opt)
+                categorias = response.categorias
+                categorias.forEach(element => {
+                    options = document.createElement('option')
+                    options.value = element.id_categoria
+                    options.text = element.descripcion
+                    select.append(options)
+                });
+                select.selectedIndex = 1;
+                obtenerEmpleados()
+
+                
+            }
+            
+        })
+        
+    }
+
+    $('input[type=checkbox]').on('click', function(){
+        obtenerEmpleados()
+    })
+
+    $('#id_categorias').on('change', function(){
+        obtenerEmpleados()
+    })
+
+    $('#id_buscar').keypress(function(e){
+        if(e.which == 13){
+            buscarClave();
+        }
+    })
+
+
+    function buscarClave(){
+        obtenerEmpleados();
+    }
+
+    function obtenerEmpleados(){
+        estadosBusqueda = []
+        claveBusqueda = $('#id_buscar').val();
+
+        $('.item-estado').each(function(){
+            var estado = $(this);
+            check = estado.prop('checked');
+            if(check){
+                estadosBusqueda.push(parseInt(estado.val()));
+            }
+        })
+
+        categoria = $('option:selected', '#id_categorias').val();
+        
+        var body = {
+            'estadosBusqueda[]': JSON.stringify(estadosBusqueda),
+            'claveBusqueda': claveBusqueda,
+            'categoria_id': categoria
+        }
+        url = '{% url "personal:listado_empleados_ajax" %}'
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: body,
+            success: function(response){
+                console.log(response)
+                $('#tabla').empty();
+                empleados = response.empleados
+                if(empleados.length === 0){
+                    div = $('.alert-info');
+                    div.remove();
+                    div_vacio = '<div class=" row alert alert-info text-center" >No existen empleados relacionados a la busqueda. </div>';
+                    $('#tabla').append(div_vacio)
+                }else{
+                    var tabla = `<table class="table" id="id_tabla" table-hover mb-0>
+                            <thead>
+                                <th>Nombre</th>
+                                <th>Apellidos</th>
+                                <th>Tipo</th>
+                                <th>Categoria</th>
+                                <th>Fecha Creacion</th>
+                            </thead>
+                            <tbody id="id_body_table">
+                            </tbody>                            
+                        </table>`
+                        $('#tabla').append(tabla)
+                }
+                
+                $('#id_body_table').empty();
+                empleados.forEach(empleado => {
+                    console.log(empleado)
+                    opcionesFecha = {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}
+                    fecha_creacion = new Date(empleado.fecha_creacion)
+                    fecha_creacion = fecha_creacion.toLocaleString('ja-JP', opcionesFecha)
+                    
+                    var tr=`<tr style="cursor-pointer">
+                            <td>${empleado.primer_nombre}</td>
+                            <td>${empleado.primer_apellido} ${empleado.segundo_apellido}</td>
+                            <td>${empleado.tipo_descripcion}</td>
+                            <td>${empleado.categoria_descripcion}</td>
+                            <td>${fecha_creacion}</td>
+
+                        </tr>`;
+                    
+                        $('#id_body_table').append(tr);
+                })
+                $('#id_cantidad').text(String(empleados.length))
+            }
+        })
+    }
+
+</script>
+{% endblock %}

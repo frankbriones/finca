@@ -1,0 +1,10 @@
+.idea
+/.idea
+*.pyc
+/*.pyc
+/**/*.pyc
+/**/**/*.pyc
+/**/**/**/*.*.pyc
+/**/**/**/*.pyc
+media/**/*.png
+media/**/*.jpg

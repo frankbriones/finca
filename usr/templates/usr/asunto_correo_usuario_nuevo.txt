@@ -1,0 +1,2 @@
+{% load i18n %}
+Registro de Cuenta en {{site_name}}

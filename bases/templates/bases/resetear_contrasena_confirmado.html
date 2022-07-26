@@ -1,0 +1,115 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finca</title>
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Dashboard analytics - Frest - Bootstrap HTML admin template</title>
+    <link rel="apple-touch-icon" href="{% static 'base/app-assets/images/ico/apple-icon-120.png' %} ">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/app-assets/images/ico/favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/vendors.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'baseapp-assets/vendors/css/charts/apexcharts.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/dragula.min.css' %}">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/bootstrap-extended.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/colors.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/components.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/themes/dark-layout.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/themes/semi-dark-layout.css' %}">
+    <!-- END: Theme CSS-->
+
+
+</head>
+<body class="vertical-layout vertical-menu-modern dark-layout 2-columns   " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="dark-layout">
+       
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            
+                <!-- forgot password start -->
+                        <div class="card-content">
+                            <div class="row m-0">
+                                <!-- left section-forgot password -->
+                                <div class="col-12 px-0">
+                                    <div class="card disable-rounded-right mb-0 p-2">
+                                        <div class="card-header pb-1">
+
+                                        </div>
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                                <section class="row flexbox-container">
+                                                    <div class="col-xl-7 col-md-8 col-12">
+                                                        <div class="card bg-transparen shadow-none">
+                                                            <div class="card-content">
+                                                                <div class="card-body text center">
+                                                                    <img src="{% static 'base/app-assets/images/pages/maintenance-2.png' %}" class="img-fluid" alt="" width="400">
+                                                                    <h1 class="error-title my-1">
+                                                                        Correcto
+                                                                    </h1>
+                                                                    <p class="px-2">
+                                                                        Su Password ha sido establecida. Ahora puede seguir adelante e iniciar sesión. <a href="{% url 'bases:login' %}">Login</a>
+                                                                    </p>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+        </div>
+    </div>                
+
+                                
+
+ <!-- BEGIN: Vendor JS-->
+ <script src="{% static 'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+ <script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+ <script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+ <script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+ <!-- BEGIN Vendor JS-->
+
+ <!-- BEGIN: Page Vendor JS-->
+ <script src="{% static 'base/app-assets/vendors/js/charts/apexcharts.min.js' %}"></script>
+ <script src="{% static 'base/app-assets/vendors/js/extensions/dragula.min.js' %}"></script>
+ <!-- END: Page Vendor JS-->
+
+ <!-- BEGIN: Theme JS-->
+ <script src="{% static 'base/app-assets/js/scripts/configs/vertical-menu-dark.js' %}"></script>
+ <script src="{% static 'base/app-assets/js/core/app-menu.js' %}"></script>
+ <script src="{% static 'base/app-assets/js/core/app.js' %}"></script>
+ <script src="{% static 'base/app-assets/js/scripts/components.js' %}"></script>
+ <script src="{% static 'base/app-assets/js/scripts/footer.js' %}"></script>
+ <!-- END: Theme JS-->
+
+ <!-- BEGIN: Page JS-->
+ <script src="{% static 'base/app-assets/js/scripts/pages/dashboard-analytics.js' %}"></script>
+ <!-- END: Page JS-->
+
+ <!-- extras -->
+ 
+ <script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+ <script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+    
+</body>
+
+</html>

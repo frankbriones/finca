@@ -1,0 +1,378 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Ubicaciones
+                                </li>
+                                <li class="breadcrumb-item active">Bodega
+                                </li>
+                                <li class="breadcrumb-item active">Detalle
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-content">
+               <div class="card-body">
+                <form enctyoe="multipart/form-data" method="POST" id="frmBodega">
+                    {% csrf_token %}
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-12">
+                                {{form.as_p}}
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Secciones Realacionadas a la {{ bodega.descripcion }}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="#" class="contact-repeater">
+                                            <div data-repeater-list="contact">
+                                                <div class="row">
+                                                    <div class="col-12 mb-2">
+                                                        <button onclick="agregarDetalle()" class="btn btn-icon btn-primary" type="button" data-repeater-create="">
+                                                            <i class="bx bx-plus"></i>
+                                                        </button>
+                                                        <span clss="ml-1 font-weight-bold text-primary">
+                                                            Agregar Nueva Seccion.
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-12" id="id_secciones_lista">
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="button" onclick="validar()" class="btn btn-primary mr-1 mb-1">Guardar</button>
+                                <a href="{% url 'ubc:bodegas_list' %}" class="btn btn-primary mr-1 mb-1">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+               </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static 'base/app-assets/js/jquery-3.2.0.min.js' %}"></script>
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+
+{% endblock %}
+
+{% block js_page %}
+<script src="{% static  'base/app-assets/js/scripts/pages/app-file-manager.js' %}"></script>
+<script>
+    let id_bodega = '{{bodega.id_bodega}}';
+    $(document).ready(function(){
+        $('.loader').hide();
+        obtenerSecciones();
+
+    })
+
+    function obtenerSecciones(){
+        url = '{% url "ubc:secciones_bodega" 0 %}';
+        url = url.replace(/0/, id_bodega)
+        console.log(url)
+        $.ajax({
+            url : url,
+            type: 'GET',
+            data: {},
+            success: function(response){
+                secciones = response.secciones
+                secciones.forEach(seccion => {
+                    let div = `
+                        <div class="row itemDetalle">
+                            <div class="row justify-content-between" data-repeater-item="" style="">
+                                <div class="col-md-10 col-12 form-group d-flex align-items-center mb-0">
+                                    <input type="text" data-id="${seccion.id_seccion}" class="form-control inputdetalle" placeholder="descripcion de seccion" value="${seccion.descripcion}">
+
+                                </div>
+                                <div class="col-md-2 col-2 form-group" >
+                                    <button class="btn btn-icon btn-danger rounded-circle eliminardetalle" type="button" data-repeater-delete>
+                                        <i class="bx bx-x "> </i>
+                                    </button>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    `;
+                    let div1 = `
+                        <div class=" itemDetalle">
+                            <div class="row justify-content-between" data-repeater-item="" style="">
+                                <div class="col-md-12 col-12 form-group d-flex align-items-center mb-0">
+                                    <input type="text" data-id="${seccion.id_seccion}" class="form-control inputdetalle" placeholder="descripcion de seccion" value="${seccion.descripcion}">
+
+                                </div>
+                                
+                                
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                    `;
+                    
+                    $('#id_secciones_lista').append(div1);
+                    nombrarElementos();
+
+                });
+            }
+        })
+    }
+
+
+
+    // function editarCategoria(id_categoria, descripcion){
+    //     $('#modal_editar_categoria').modal('show');
+    //     $('#modal_editar_categoria .categoria_descripcion').val(descripcion);
+    //     $('#modal_editar_categoria .id_categoria').val(id_categoria)
+    // }
+
+    // $('#modal_editar_categoria .editar_categoria').click(function(){
+    //     let categoria_id = $('#modal_editar_categoria .id_categoria').val();
+    //     var descripcion = $('.categoria_descripcion').val();
+
+    //     var parametros = {
+    //         'categoria_id': categoria_id,
+    //         'descripcion': descripcion
+    //     }
+    //     editar_categoria(parametros);
+    // })
+
+    // function editar_categoria(data){
+    //     $.ajax({
+    //         url : '{% url "personal:editar_categoria" %}',
+    //         type: 'GET',
+    //         data: data,
+    //         success: function(response){
+    //             estado = response.estado
+    //             if(estado){
+    //                 toastr.success(response.mensaje, "Edicion");
+    //                 $('#modal_editar_categoria').modal('hide')
+    //                 $('.loader').show();
+    //                 setTimeout(() => {
+    //                     location.reload(true)
+    //                 }, 1000);
+    //             }
+    //         }
+    //     })
+    // }
+
+    function borrardiv(div){
+        $(div).remove();
+        nombrarElementos();
+    }
+
+    function nombrarElementos(){
+        num = 0;
+        $('div.itemDetalle').each(function (){
+            num++;
+            $(this).removeAttr('id');
+            $(this).attr('id', 'divdetalle'+num);
+            inputs = $(this).find('.inputdetalle');
+            $(inputs[0]).removeAttr('id')
+            $(inputs[0]).attr('id', 'id_seccion'+num)
+
+            buttons = $(this).find('.eliminardetalle');
+            button = buttons[0];
+
+            $(button).removeAttr('id');
+            $(button).attr('id', 'boton'+num);
+            $(button).removeAttr('onclick');
+            $(button).attr('onclick', 'borrardiv(divdetalle'+num+')');
+
+        })
+    }
+
+
+    function agregarDetalle(){
+        let div = `
+            <div class="row itemDetalle">
+                <div class="row justify-content-between" data-repeater-item="" style="">
+                    <div class="col-md-10 col-12 form-group d-flex align-items-center mb-0">
+                        <input type="text" class="form-control inputdetalle" placeholder="descripcion de seccion" >
+
+                    </div>
+                    <div class="col-md-2 col-2 form-group" >
+                        <button class="btn btn-icon btn-danger rounded-circle eliminardetalle" type="button" data-repeater-delete>
+                            <i class="bx bx-x "> </i>
+                        </button>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        `; 
+        let div1 = `
+            <div class="row itemDetalle">
+                <div class="row justify-content-between" data-repeater-item="" style="">
+                    <div class="col-md-12 col-12 form-group d-flex align-items-center mb-0">
+                        <input type="text" class="form-control inputdetalle" placeholder="descripcion de seccion" >
+
+                    </div>
+                    
+                    <br>
+                </div>
+            </div>
+        `; 
+        $('#id_secciones_lista').append(div1);
+        nombrarElementos();
+    }
+
+    function obtenerSeccionesLista(){
+        num = 0;
+        detalles = []
+        $('div.itemDetalle').each(function(){
+            num++;
+            descrip = $('#id_seccion'+num).val();
+            id_secc = $('#id_seccion'+num).attr('data-id');
+            if(id_secc === undefined){
+                id_secc = num+'nuevo'
+            }
+            detalle = {
+                'descripcion': descrip,
+                'id_seccion': id_secc
+            };
+            detalles.push(detalle)
+            
+        })
+    }
+
+    function validar(){
+        form = document.getElementById('frmBodega')
+        let datos = new FormData(form)
+        descripcion  = $('#id_descripcion').val();
+        direccion = $('#id_direccion1').val();
+        ciudad = $('option:selected',  '#id_ciudad').val();
+
+
+        obtenerSeccionesLista();
+
+        if(detalles.length == 0 ){
+            toastr.error('Agregar al menos una seccion.', 'Atencion');
+            return false;
+        }else{
+            detalles.forEach(detalle => {
+                if(detalle.descripcion === ''){
+                    toastr.error('Agregar descripcion', 'Error');
+                    return false;
+                }
+            })
+        }
+
+
+        if(descripcion === ''){
+            toastr.error('Agrege una descripcion de la bodega', 'Error' );
+            return false;
+        };
+
+        if(direccion === ''){
+            toastr.error('Agrege una direccion de bodega', 'Error' );
+            return false;
+        }
+
+        if(ciudad === ''){
+            toastr.error('Agrege una ciudad a la bodega', 'Error' );
+            return false;
+        }
+        body = {
+            'descripcion': descripcion,
+            'direccion': direccion,
+            'ciudad': ciudad,
+            'secciones[]': JSON.stringify(detalles)
+        }
+        guardar(body)
+    }
+
+    function guardar(datos){
+        url = '{% url "ubc:editar_bodega" 0 %}';
+        url = url.replace(/0/, id_bodega)
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: datos,
+            success: function(response){
+                if(response.estado == true){
+                    toastr.success(response.mensaje, 'Correcto');
+                    setTimeout(() => {
+                        window.location.href = '{% url "ubc:bodegas_list" %}';
+                    }, 800);
+                }else{
+                    toastr.error(response.mensaje, 'Error');
+                }
+            }
+        })
+    }
+</script>
+
+
+
+{% endblock js_page %}

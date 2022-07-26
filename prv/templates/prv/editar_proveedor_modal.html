@@ -1,0 +1,187 @@
+{% load static %}{% load i18n %}
+<div id="modalProveedor" class="modal-dialog modal-dialog-centered modal-s">
+    <div class="modal-content">
+        <div class="modal-header">
+           
+                <h5 class="modal-title" id="exampleModalLabel"> {% if proveedor %} Editar {% else %} Crear {% endif %}  Proveedor </h5>
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form id="form_proveedor"  >
+                {% csrf_token %}
+                {{form.as_p}}
+                
+            </form>
+            
+            <div class="row">
+                <div class="col-12">
+                    <h6>{% trans "Categorias disponibles" %}</h6>
+                </div>
+                <div class="col-12">
+                    <select id="id_categorias" class="select2 form-control" multiple="multiple">
+                        {% for categoria in categorias %}
+                            <option value="{{categoria.id_categoria}}" {% if categoria.id_categoria in categorias_disponibles %} selected {% endif %}>{{categoria.descripcion}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal" >Cancelar</button>
+            <button onclick="enviar('{% if proveedor %}{{proveedor.id_proveedor}}{% else %}0{% endif %}')" class="btn btn-primary">Guardar</button>
+        </div>
+       
+    </div>
+</div>
+<form id="frmContrasena" action="" class="mb-2" hidden method="post">
+    {% csrf_token %}
+    <div class="form-group mb-2">
+        <label for="id_email" class="text-bold-600">Correo Electronico</label>
+        <input type="text" name="email" id="id_email" class="form-control">
+    </div>
+</form>
+
+<script>
+    var categoriasDisponibles;
+    $(document).ready(function(){
+        if('{{proveedor}}' != 'None'){
+            $('#id_usuario').attr('disabled', true)
+        }
+
+    })
+    function enviar(id_proveedor){
+        correo = $('#id_correo').val();
+        if (!(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/.test(correo))){
+            
+            toastr.error("La dirección de email es incorrecta.");
+            return false
+        }
+
+        form = document.getElementById('form_proveedor')
+        var datos = new FormData(form)
+
+        categoriasDisponibles = $('#id_categorias').val();
+
+        if (categoriasDisponibles.length === 0){
+            toastr.error('{% trans "Seleccione al menos una categoria" %}', 'Atencion');
+            return false;
+        }
+        datos.append('categoriasDisponibles[]', JSON.stringify(categoriasDisponibles))
+
+        
+        var token = '{% csrf_token %}';
+        var url = "{% url 'prv:editar_proveedor_modal' 0 %}";
+        url = url.replace(/0/, id_proveedor)
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            url: url,
+            type: 'POST',
+            data: datos,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                
+                console.log(response)
+                if(response.estado == false){
+                    toastr.error(response.mensaje, "Error");
+                    return false
+                }
+                if(response.estado == true){
+                    toastr.success(response.mensaje, "Edicion");
+                    $('#modalProveedor').modal('hide')
+                    if('{{proveedor}}' === 'None'){
+                        GenerarEnlaceContrasena(response.correo)
+                    }else{
+                        setTimeout(() => {
+                            location.reload(true);
+                        }, 1000);
+                    }
+                    
+                }
+            },
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
+            }
+        })
+    }
+
+    function GenerarEnlaceContrasena(email){
+        let token = '{{csrf_token}}';
+        form = document.getElementById('frmContrasena')
+        let datos = new FormData(form);
+        datos.append('email', email)
+
+        let url = '{% url "usr:contrasena_nuevo_usuario" %}';
+        let url_lista = "{% url 'usr:usuarios_list' %}"
+
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            url: url,
+            type: 'POST',
+            data: datos,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+                $('.loader').show();
+            },
+            complete: function(res){
+                if(res.status === 200){
+                    $('.loader').show();
+                }else{
+                    $('.loader').hide();
+                }
+            },
+            success: function(response){
+                $.confirm({
+                    title: 'Informacion Enviada',
+                    content: "Se ha enviado informacion del nuevo usuario al correo del mismo",
+                    theme: 'material',
+                    type: 'green',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido',
+                            action: function(){
+                                window.location = '{% url "prv:proveedores_list" %}';
+                            }
+                        }
+                    }
+                })
+            },
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+               });
+            }
+        })
+    }
+
+</script>

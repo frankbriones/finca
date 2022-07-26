@@ -1,0 +1,14 @@
+{% load i18n %}
+Se ah Creado su cuenta en el Sitio {{site_name}}
+
+Por favor ingrese al siguiente enlace para registrar su password:
+
+{% block reset_link %}
+{{protocol }}://{{domain}}{% url 'password_reset_confirm' uidb64=uid token=token %}
+{% endblock %}
+
+Su nombre de usuario es el siguiente: {{ user.get_username }}
+
+Gracias por usar el sitio!
+
+El equipo de {{site_name}}

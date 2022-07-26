@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Resetear Password</title>
+    <link rel="apple-touch-icon" href="{% static 'base/app-assets/images/ico/apple-icon-120.png'  %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'base/app-assets/images/ico/favicon.ico'  %}">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/vendors.min.css'  %}">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/bootstrap.css'  %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/bootstrap-extended.css'  %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/colors.css'  %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/components.css'  %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/themes/dark-layout.css'  %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/themes/semi-dark-layout.css'  %}">
+    <!-- END: Theme CSS-->
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/core/menu/menu-types/vertical-menu.css'  %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/pages/authentication.css'  %}">
+    <!-- END: Page CSS-->
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/assets/css/style.css'  %}">
+    <!-- END: Custom CSS-->
+
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/toastr.css' %}">
+
+    <link href="{% static  'base/vendor/jquery_confirm/dist/jquery-confirm.min.css' %}" rel="stylesheet">
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern dark-layout 1-column  navbar-sticky footer-static bg-full-screen-image  blank-page blank-page" data-open="click" data-menu="vertical-menu-modern" data-col="1-column" data-layout="dark-layout">
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <!-- forgot password start -->
+                <section class="row flexbox-container">
+                    <div class="col-xl-7 col-md-9 col-10  px-0">
+                        <div class="card bg-authentication mb-0">
+                            <div class="row m-0">
+                                <!-- left section-forgot password -->
+                                <div class="col-md-6 col-12 px-0">
+                                    <div class="card disable-rounded-right mb-0 p-2">
+                                        <div class="card-header pb-1">
+                                            <div class="card-title"><h4>Olvidaste tu Password?</h4>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                                <div class="text-muted text-center mb-2"><small>Ingresa tu correo para enviar las instrucciones
+                                                    necesarias para recupersar la contraseña</small></div>
+                                                <form class="mb-2" id="frmPassword" method="POST" >
+                                                    {% csrf_token %}
+                                                    <div class="form-group mb-2">
+                                                        <label class="text-bold-600" for="id_email">Correo Electronico</label>
+                                                        <input type="text" class="form-control" id="id_email" name="email" placeholder="Email"></div>
+                                                    <button type="button" onclick="validarCorreo()" class="btn btn-primary glow position-relative w-100">Enviar<i id="icon-arrow" class="bx bx-right-arrow-alt"></i></button>
+                                                </form>
+                                                <div class="text-center mb-2">
+                                                    <p>
+                                                        <small class="text-muted">
+                                                            Recorde mi password
+                                                        </small>
+                                                    </p>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <div class="text-center">
+                                                        <a href="{% url 'bases:login' %}" class="card-link btn btn-outline-primary text-nowrap">Iniciar Sesion</a>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- right section image -->
+                                <div class="col-md-6 d-md-block d-none text-center align-self-center">
+                                    <img class="img-fluid" src="{% static 'base/app-assets/images/pages/forgot-password.png' %}" alt="branding logo" width="300">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- forgot password ends -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="{% static 'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+    <script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+    <script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+    <script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+    <!-- BEGIN Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="{% static 'base/app-assets/js/scripts/configs/vertical-menu-dark.js' %}"></script>
+    <script src="{% static 'base/app-assets/js/core/app-menu.js' %}"></script>
+    <script src="{% static 'base/app-assets/js/core/app.js' %}"></script>
+    <script src="{% static 'base/app-assets/js/scripts/components.js' %}"></script>
+    <script src="{% static 'base/app-assets/js/scripts/footer.js' %}"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+
+    
+    <script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+    <script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+    <!-- END: Page JS-->
+
+    <script src="{% static 'base/vendor/jquery_confirm/dist/jquery-confirm.min.js' %}"></script>
+
+    <script>
+        function validarCorreo(){
+            correo = $('#id_email').val();
+            if(correo === ''){
+                toastr.error('Ingrese Correo', 'Error')
+                return false;
+            }
+            var datos = {'correo': correo}
+            $.ajax({
+                url: '{% url "bases:verificar_correo" %}',
+                type: 'GET',
+                data: datos,
+                success: function(response){
+                    if(response.existe ===  true){
+                        solicitarContrasena();
+                    }else{
+                        toastr.error('Correo no existe', 'Error')
+                        return false;
+                    }
+                }
+            })
+        }
+
+        function solicitarContrasena(){
+            form = document.getElementById('frmPassword')
+            var datos =  new FormData(form);
+            var token = '{{csrf_token}}';
+            var url = "{% url 'password_reset' %}"
+            var url_login =  "{% url 'bases:login' %}"
+
+            $.ajax({
+                headers:  {
+                    "X-CSRFToken": token
+                },
+                url: url,
+                type: 'POST',
+                data: datos,
+                contentType: false,
+                processData: false,
+                // beforeSend: function(){
+                //     $('.loader').show();
+                // },
+                // complete: function(){
+                //     $('.loader').hide();
+                // },
+                success: function(response){
+                    $.confirm({
+                        title: 'Informacion Enviada',
+                        content:  'Se ha enviado un correo electronico con los pasos para el reestablecimineto de la password',
+                        theme: 'material',
+                        type: 'green',
+                        buttons:  {
+                            confirm: {
+                                text: 'Entendido',
+                                action: function() {
+                                    window.location = url_login;
+                                }
+                            }
+                        }
+                    })
+                },
+                error: function(jqXHR, textStatus, errorThrow){
+                    alert("error: " + errorThrow)
+                }
+            })
+        }
+    </script>
+
+</body>
+<!-- END: Body-->
+
+</html>

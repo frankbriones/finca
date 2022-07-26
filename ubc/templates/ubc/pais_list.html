@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Paises
+                                </li>
+                                <li class="breadcrumb-item active">Lista
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content-body">
+                    <!-- Table with outer spacing -->
+                    <div class="table-responsive">
+                        <table class="table  table-hover">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Id</th>
+                                    <th>Descripcion</th>
+                                    <th>Estado</th>
+                                    <th>Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody class="">
+                                {% for pais in paises %}
+                                    <tr>
+                                        
+                                        
+                                        <td>{{pais.id_pais}}</td>
+                                        <td class="text-bold-500">{{pais.descripcion}}</td>
+                                        <td>
+                                            {% if pais.estado.descripcion == 'ACTIVO' %}
+                                                <span class="badge badge-success text-white">{{pais.estado}}</span>
+                                            {% else %}
+                                                <span class="badge badge-danger text-white">{{pais.estado}}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a >
+                                                <i class="badge-circle badge-circle-light-secondary bx bx-edit font-medium-1">
+                                                </i>
+                                            </a>
+                                            {% if pais.estado.descripcion == 'ACTIVO' %}
+                                                <a onclick="return abrir_modal('{% url 'ubc:actualizar_pais' pais.id_pais %}')">
+                                                    <i class="badge-circle badge-circle-light-danger bx bx-x font-medium-1">
+                                                    </i>
+                                                </a>
+                                            {% else %}
+                                                <a onclick="return abrir_modal('{% url 'ubc:actualizar_pais' pais.id_pais %}')">
+                                                    <i class="badge-circle badge-circle-light-success bx bx-check font-medium-1">
+                                                    </i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
