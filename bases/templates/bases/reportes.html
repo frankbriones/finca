@@ -224,6 +224,10 @@
             data: body,
             
             success: function(res, textStatus, jqXHR) {
+                if(res.length != undefined){
+                    toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
+                    return false;
+                }
                 $('#modal_reporte_proveedores').modal('hide');
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
@@ -276,6 +280,11 @@
             data: body,
             
             success: function(res, textStatus, jqXHR) {
+                if(res.length != undefined){
+                    toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
+                    return false;
+                }
+                
                 $('#modal_reporte_stock').modal('hide');
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
@@ -289,6 +298,7 @@
                 var a = document.createElement('a');
                 
                 var url = window.URL.createObjectURL(res);
+                console.log(url)
                 a.href = url;
                 a.download = nombreArchivo;
                 document.body.append(a);
@@ -296,9 +306,10 @@
                 a.remove();
                 window.URL.revokeObjectURL(url);
             },
-            error: function(a, b, c) {
-                console.log(a);
-            }
+            // error: function(jqXHR, textStatus, errorThrow){
+            //     console.log('**********')
+            //     alert("error: " + errorThrow)
+            // }
         });
     }
 

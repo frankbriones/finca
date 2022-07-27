@@ -433,7 +433,6 @@
                 type: 'GET',
                 data: {},
                 success: function(response){
-                    console.log(response.main.temp)
                     var temperatura_min = response.main.temp_min
                     var temperatura_max = response.main.temp_max
 
@@ -484,21 +483,20 @@
             data = {
                 'usuario_id': usuario_id
             }
-            console.log(data)
             $.ajax({
                 url : url,
                 type: 'GET',
                 data: data,
                 success: function(response){
-                    console.log(response)
+                    //console.log(response)
                     $('.loader').hide();
                     notificacion = response.data
                     if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.orden_prd != null && notificacion.orden_prv == null && notificacion.orden_id == null){
                         
                         alerta = $.confirm({
                             lazyOpen: true,
-                            title: '{% trans "Orden de PRODUCCION" %}',
-                            content: '{% trans "Se genero una nueva orden de produccion" %}',
+                            title: '{% trans "Solicitud de Insumos" %}',
+                            content: '{% trans "Se genero una nueva solicitude insumos para trabajos de campo." %}',
                             theme: 'supervan',
                             buttons: {
                                 confirm: {
@@ -554,11 +552,32 @@
 
                     }
 
-                    if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.orden != null && notificacion.estado_id === 3){
+                    if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.orden != null && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'ENTRADA'){
                         alerta = $.confirm({
                         lazyOpen: true,
                         title: '{% trans "Orden Ingreso a Bodega Generar" %}',
-                        content: '{% trans "La oredn del proveedor fue aprobada, puede proceder al almacenamiento de los insumos." %}',
+                        content: '{% trans "Solicitud de pedido finalizada, puede proceder al almacenamiento de los insumos." %}',
+                        theme: 'supervan',
+                        buttons: {
+                            confirm: {
+                                text: '{% trans "Aceptar" %}',
+                                action: function() {
+                                    actualizarNotificacion(notificacion.id_notificacion);
+                                    
+                                }
+                            },
+                        
+                            }
+                        });
+                        alerta.open();
+
+                    }
+
+                    if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.orden != null && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'SALIDA'){
+                        alerta = $.confirm({
+                        lazyOpen: true,
+                        title: '{% trans "Orden de Salida de Bodega Generada" %}',
+                        content: '{% trans "Realizar la revision y entrega de los insumos." %}',
                         theme: 'supervan',
                         buttons: {
                             confirm: {
@@ -590,6 +609,7 @@
                 data: {'idNotificacion': id},
                 success: function(response){
                     console.log('ok')
+                    location.reload(true)
                 }
             })
 

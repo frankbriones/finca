@@ -20,10 +20,12 @@ def usuarios_list(request):
         template_name = "usr/usuarios_lista.html"
         # queryset usuarios
         if request.user.is_superuser:
-            usuarios_obj = Usuarios.objects.all().exclude(pk=request.user.pk)
+            print('******')
+            usuarios_obj = Usuarios.objects.filter(is_active=True).exclude(pk=request.user.id)
+            usuarios_obj = usuarios_obj.exclude(rol__descripcion = 'PROVEEDOR')
         else:
             usuarios_obj = Usuarios.objects.filter(is_superuser=False).\
-                exclude(pk=request.user.id)
+                exclude(pk=request.user.id, rol__descripcion = 'PROVEEDOR')
         contexto = {
             'usuarios': usuarios_obj
         }

@@ -196,7 +196,9 @@
     $(document).ready(function() {
         $('.loader').hide();
         $('#id_tabla_ord_prod').DataTable(
+            
             {
+                "ordering" : false,
                 language: {
                     "decimal": "",
                     "emptyTable": "No hay información",

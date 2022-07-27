@@ -92,10 +92,19 @@ CHANNEL_LAYERS  = {
     "default": {
         "BACKEND": "channels_rabbitmq.core.RabbitmqChannelLayer",
         "CONFIG": {
-            "host": "amqp://admin:admin@127.0.0.1",
+            "host": "amqp://guest:guest@127.0.0.1",
         },
     },
 }
+
+# CHANNEL_LAYERS  = {
+#     "default": {
+#         "BACKEND": "channels_rabbitmq.core.RabbitmqChannelLayer",
+#         "CONFIG": {
+#             "host": "amqp://admin:admin@127.0.0.1",
+#         },
+#     },
+# }
 
 
 # Database

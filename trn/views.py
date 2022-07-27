@@ -255,7 +255,7 @@ def generar_orden(request, id_solicitud=None):
 def ingresos_list(request):
     template_name = "trn/ordenes_ingreso_list.html"
     if request.user.rol.descripcion == 'ADMINISTRADOR':
-        ordenes = OrdenBodega.objects.all().order_by('-fecha_creacion')
+        ordenes = OrdenBodega.objects.filter(tipo__descripcion='ENTRADA').order_by('-fecha_creacion')
     else:
         ordenes = OrdenBodega.objects.filter(encargado_id=request.user.id, tipo__descripcion='ENTRADA').order_by('-fecha_creacion')
     contexto = {
@@ -311,7 +311,6 @@ def  listado_pedidos_ajax(request):
 
 
 def obtenerPedidos(filtros):
-    print(filtros)
     estados = filtros.get('estados')
     proveedor_id = filtros.get('proveedor_id')
     f_inicio = filtros.get('fechaInicio')
@@ -352,8 +351,6 @@ def obtenerPedidos(filtros):
                 id_estado__in = estados
             ).values('id_estado')
     if len(estados_id) >= 1:
-        print(1)
-        print('prv', type(proveedor_id))
         if proveedor_id != '0':
             pedidos = SolicitudPedido.objects.\
                 filter(
@@ -371,9 +368,6 @@ def obtenerPedidos(filtros):
                 ).order_by('-fecha_creacion')
         
     else:
-        print(2)
-        print('prv', type(proveedor_id))
-
         if proveedor_id != '0':
             pedidos = SolicitudPedido.objects.\
                 filter(
@@ -476,7 +470,6 @@ def marcar_orden_revisada(request, id_orden=None):
 
 def revisar_orden_produccion(request, id_orden=None):
     if request.method == 'GET':
-        print(id_orden)
         orden_obj = OrdenProduccion.objects.filter(id_solicitud=id_orden).first()
         orden_obj.estado = Estados.objects.filter(descripcion='SOLICITUD DE PROD. REVISADA').first()
         orden_obj.save()
@@ -590,7 +583,7 @@ def generar_documento(request, id_solicitud=None):
 def orden_produccion_list(request):
     template_name = 'trn/orden_produccion_list.html'
     contexto = {
-        'ordenes': OrdenProduccion.objects.all().order_by('-fecha_creacion')
+        'ordenes': OrdenProduccion.objects.all().order_by('-id_solicitud')
     }
     return render(request, template_name, contexto)
 
@@ -598,7 +591,6 @@ def orden_produccion_list(request):
 
 def orden_produccion_modal(request, id_orden=None):
     template_name = 'trn/orden_produccion_modal.html'
-    print('xxxxxxxxxx')
     contexto={}
     orden_obj = OrdenProduccion.objects.filter(id_solicitud=id_orden).first()
     if request.method == 'GET':
