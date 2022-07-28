@@ -847,6 +847,7 @@ def actualiza_stock_salida(request, id_orden=None):
                 prod.estado_id = 22
             if resultado >= prod.cantidad_existente:
                 prod.estado_id = 10
+            prod.cantidad_existente = resultado
             prod.save()
         orden_salida.estado_id = Estados.objects.filter(descripcion='ORDEN BODEGA PROCESADA').first()
         orden_salida.save()
