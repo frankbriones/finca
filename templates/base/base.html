@@ -552,7 +552,7 @@
 
                     }
 
-                    if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.orden != null && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'ENTRADA'){
+                    if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'ENTRADA'){
                         alerta = $.confirm({
                         lazyOpen: true,
                         title: '{% trans "Orden Ingreso a Bodega Generar" %}',
@@ -573,7 +573,7 @@
 
                     }
 
-                    if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.orden != null && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'SALIDA'){
+                    if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'SALIDA'){
                         alerta = $.confirm({
                         lazyOpen: true,
                         title: '{% trans "Orden de Salida de Bodega Generada" %}',
