@@ -58,13 +58,7 @@ def notificacion(id_orden, user_id, encargado_id):
             grupo = 'ws_neutro'
         channel_layer = get_channel_layer()
 
-        async_to_sync(channel_layer.group_send)(
-            grupo,
-            {
-                'type': 'chat_message',
-                'message': 'nuevo_registro'
-            }
-        )
+        async_to_sync(channel_layer.group_send)(grupo,{'type':'chat_message','message': 'nuevo_registro'})
 
 
 @shared_task
@@ -86,13 +80,7 @@ def notificarSolicitudDespachada(id_solicitud, user_id, encargado_id):
             grupo = 'ws_neutro'
         channel_layer = get_channel_layer()
 
-        async_to_sync(channel_layer.group_send)(
-            grupo,
-            {
-                'type': 'chat_message',
-                'message': 'nuevo_registro'
-            }
-        )
+        async_to_sync(channel_layer.group_send)(grupo,{'type':'chat_message','message': 'nuevo_registro'})
 
 
 
@@ -117,13 +105,7 @@ def notificarOrdenProduccion(encargado_id, user_id, id_orden):
             grupo = 'ws_neutro'
         channel_layer = get_channel_layer()
 
-        async_to_sync(channel_layer.group_send)(
-            grupo,
-            {
-                'type': 'chat_message',
-                'message': 'nuevo_registro'
-            }
-        )
+        async_to_sync(channel_layer.group_send)(grupo,{'type':'chat_message','message': 'nuevo_registro'})
 
 
 
@@ -148,13 +130,7 @@ def notificarOrdenProveedor(proveedor_id, user_id, solicitud_id):
             grupo = 'ws_neutro'
         channel_layer = get_channel_layer()
 
-        async_to_sync(channel_layer.group_send)(
-            grupo,
-            {
-                'type': 'chat_message',
-                'message': 'nuevo_registro'
-            }
-        )
+        async_to_sync(channel_layer.group_send)(grupo,{'type':'chat_message','message': 'nuevo_registro'})
 
 
 
@@ -183,13 +159,7 @@ def notificarBodega(id_orden, user_id, encargado_id):
             grupo = 'ws_neutro'
         channel_layer = get_channel_layer()
 
-        async_to_sync(channel_layer.group_send)(
-            grupo,
-            {
-                'type': 'chat_message',
-                'message': 'nuevo_registro'
-            }
-        )
+        async_to_sync(channel_layer.group_send)(grupo,{'type':'chat_message','message': 'nuevo_registro'})
 
 
 
