@@ -307,6 +307,20 @@
                 //en caso de ser valida se genera orden de salida a bodega y notifivca a bodeguero caso 
                 //contrario muestra mensaje con falta de insumos en stock
 
+            },
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
             }
         })
     })
