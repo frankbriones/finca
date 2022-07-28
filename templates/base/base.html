@@ -488,7 +488,7 @@
                 type: 'GET',
                 data: data,
                 success: function(response){
-                    //console.log(response)
+                    console.log(response)
                     $('.loader').hide();
                     notificacion = response.data
                     if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.orden_prd != null && notificacion.orden_prv == null && notificacion.orden_id == null){
