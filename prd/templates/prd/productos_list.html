@@ -125,6 +125,13 @@
                                                 </span>
                                             </td>
                                         {% endif %}
+                                        {% if producto.estado.descripcion == 'MENOR A EXISTENCIA MINIMA' %}
+                                            <td>
+                                                <span class="badge badge-warning text-white">
+                                                    {{producto.estado}}
+                                                </span>
+                                            </td>
+                                        {% endif %}
                                         {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
                                             <td>
                                                 <a href="{% url 'prd:detalle_producto' producto.id_producto %}">
