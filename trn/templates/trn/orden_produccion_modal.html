@@ -383,7 +383,7 @@
             success: function(response){
                 toastr.success('Orden Salida de Bodega Generada', "Confirmado");
                 setTimeout(() => {
-                    window.location.href = '{% url "trn:pedidos_list" %}'
+                    location.reload(true)
                 }, 900);
             }
         })
