@@ -475,7 +475,7 @@ def revisar_orden_produccion(request, id_orden=None):
         productos_id = DetalleOrden.objects.filter(orden_id=orden_obj.id_solicitud)
         for p in productos_id:
             prd_obj = Productos.objects.filter(id_producto=p.producto_id).first()
-            if prd_obj.existencia < p.cantidad:
+            if prd_obj.cantidad_existente < p.cantidad:
                 return JsonResponse({'mensaje': 'No exiten suficientes insumos para abastecer solicitud.'}, status=500)
 
 
