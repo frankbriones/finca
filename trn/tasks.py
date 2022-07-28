@@ -143,7 +143,7 @@ def notificarBodega(id_orden, user_id, encargado_id):
     if OrdenBodega.objects.filter(id_orden=id_orden).exists():
         orden_obj = OrdenBodega.objects.filter(id_orden=id_orden).first()
         infoNotificacion = Notificacion(
-            estado_id_id = orden_obj.estado_id,
+            estado_id_id = 3,
             orden_id = orden_obj.id_orden,
             encargado_id = encargado_id,
             usuario_crea = user_id,
