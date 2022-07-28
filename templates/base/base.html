@@ -555,7 +555,7 @@
                     if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'ENTRADA'){
                         alerta = $.confirm({
                         lazyOpen: true,
-                        title: '{% trans "Orden Ingreso a Bodega Generar" %}',
+                        title: '{% trans "Orden Ingreso a Bodega Generada" %}',
                         content: '{% trans "Solicitud de pedido finalizada, puede proceder al almacenamiento de los insumos." %}',
                         theme: 'supervan',
                         buttons: {
