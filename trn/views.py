@@ -843,9 +843,9 @@ def actualiza_stock_salida(request, id_orden=None):
                 return JsonResponse({'mensaje': 'No existe suficientes insumos para la solicitud.'}, status=500)
             if resultado == 0:
                 prod.estado_id = 11
-            if resultado > 0 and resultado < prod.cantidad_existente:
+            if resultado > 0 and resultado < prod.cantidad_minima:
                 prod.estado_id = 22
-            if resultado >= prod.cantidad_existente:
+            if resultado >= prod.cantidad_minima:
                 prod.estado_id = 10
             prod.cantidad_existente = resultado
             prod.save()
