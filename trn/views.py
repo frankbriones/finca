@@ -471,6 +471,15 @@ def marcar_orden_revisada(request, id_orden=None):
 def revisar_orden_produccion(request, id_orden=None):
     if request.method == 'GET':
         orden_obj = OrdenProduccion.objects.filter(id_solicitud=id_orden).first()
+        # query consulta de producto de la orden si existen proudctos en bodega.
+        productos_id = DetalleOrden.objects.filter(orden_id=orden_obj.id_solicitud)
+        for p in productos_id:
+            prd_obj = Productos.objects.filter(id_producto=p.producto_id).first()
+            if prd_obj.existencia < p.cantidad:
+                return JsonResponse({'mensaje': 'No exiten suficientes insumos para abastecer solicitud.'}, status=500)
+
+
+
         orden_obj.estado = Estados.objects.filter(descripcion='SOLICITUD DE PROD. REVISADA').first()
         orden_obj.save()
 
