@@ -147,6 +147,20 @@
                 }, 800)
 
                 
+            },
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
             }
         })
 

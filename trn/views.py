@@ -838,11 +838,15 @@ def actualiza_stock_salida(request, id_orden=None):
         detalles = DetalleOrdenBodega.objects.filter(orden_id=orden_salida.id_orden)
         for detalle in detalles:
             prod = Productos.objects.filter(id_producto=detalle.producto_id).first()
-            prod.cantidad_existente = float(prod.cantidad_existente) - float(detalle.cantidad)
-            if prod.cantidad_existente >= 1:
-                prod.estado_id = 10
-            else:
+            resultado = float(prod.cantidad_existente) - float(detalle.cantidad)
+            if resultado < 0:
+                return JsonResponse({'mensaje': 'No existe suficientes insumos para la solicitud.'}, status=500)
+            if resultado == 0:
                 prod.estado_id = 11
+            if resultado > 0 or resultado < prod.cantidad_existente:
+                prod.estado_id = 22
+            if resultado >= prod.cantidad_existente:
+                prod.estado_id = 10
             prod.save()
         orden_salida.estado_id = Estados.objects.filter(descripcion='ORDEN BODEGA PROCESADA').first()
         orden_salida.save()
