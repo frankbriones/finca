@@ -22,8 +22,8 @@
                     <table class="table table-hover table-scroll" id="div_tabla">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Producto</th>
+                                <th>Seccion</th>
                                 <th>Categoria</th>
                                 <th>Unidad Medida</th>
                                 <th>Seleccionar</th>
@@ -180,8 +180,8 @@
                 productos.forEach(producto => {
                     tr = `
                         <tr >
-                            <td>${producto.id_producto}</td>
                             <td>${producto.descripcion}</td>
+                            <td>${producto.seccion_descripcion}</td>
                             <td>${producto.categoria_descripcion}</td>
                             <td>${producto.unidad_medida_descripcion}</td>
                             <td>

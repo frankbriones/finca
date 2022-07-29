@@ -88,9 +88,9 @@
                         <table class="table  table-hover" id="id_tabla_ord_prod">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>FECHA CREACION</th>
+                                    <th>SECUENCIA</th>
                                     <th>DESCRIPCION</th>
+                                    <th>FECHA CREACION</th>
                                     <th>TOTAL ORDEN</th>
                                     <th>ESTADO</th>
                                     <th>ACCION</th>
@@ -99,9 +99,9 @@
                             <tbody class="">
                                 {% for orden in ordenes %}
                                     <tr>
-                                        <td>{{orden.id_solicitud}}</td>
-                                        <td class="text-bold-500">{{orden.fecha_creacion|date:"d/m/Y H:i:s"}}</td>
+                                        <td>{{orden.secuencia}}</td>
                                         <td class="text-bold-500">{% if orden.descripcion %}{{orden.descripcion}}{% else %}------{% endif %}</td>
+                                        <td class="text-bold-500">{{orden.fecha_creacion|date:"d/m/Y H:i:s"}}</td>
                                         <td class="text-bold-500">{{orden.total_orden}}</td>
                                         <td class="text-bold-500">{{orden.estado.descripcion}}</td>
                                         
