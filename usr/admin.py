@@ -6,7 +6,7 @@ from usr.models import *
 
 
 
-admin.site.register(Usuarios)
-admin.site.register(TipoUsuario)
+# admin.site.register(Usuarios)
+# admin.site.register(TipoUsuario)
 
-admin.site.register(Roles)
+# admin.site.register(Roles)

@@ -152,7 +152,7 @@
                 <li class=" nav-item"><a href=""><i class="bx bx-map"> </i><span class="menu-title">Inventario</span></a> 
                     <ul class="menu-content">
                         {% if perms.prd.crear_producto %}
-                            <li class=" nav-item"><a  href="{% url 'inv:stock_bodega' %}"><i class="bx bx-task"></i><span class="menu-item" data-i18n="File Manager">Stock Insumos</span></a>
+                            <li class=" nav-item"><a  href="{% url 'inv:stock_bodega' %}"><i class="bx bx-store-alt"></i><span class="menu-item" data-i18n="File Manager">Stock Insumos</span></a>
                             </li>
                             
                             <!-- <li><a href="{% url 'ubc:bodegas_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Bodega</span></a>
@@ -166,6 +166,8 @@
                 </li>
                 {% endif %}
                 {% endif %}
+
+
 
 
 
@@ -273,6 +275,13 @@
                     </ul>
                 </li>
                 {% endif %}
+
+
+                {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
+                <li class=" nav-item"><a onclick="sitioAdmin()"><i class='bx bx-doughnut-chart'></i><span class="menu-title">Configraciones</span></a>
+                </li>
+                {% endif %}
+
 
                 
                 
@@ -442,6 +451,14 @@
 
                 }
             })
+        }
+
+
+        function sitioAdmin(){
+            setTimeout(() => {
+                url = 'http://'+window.location.host+'/admin';
+                window.location.href = url
+            }, 200);
         }
 
         // //sockect

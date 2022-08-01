@@ -44,6 +44,7 @@ class EditarUsuarioForm(forms.ModelForm):
             'img_perfil',
             'usuario_telegram'
         ]
+        labels = {'username': "Nombre de usuario"}
     
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -80,6 +81,7 @@ class EditarPerfilForm(forms.ModelForm):
             'rol',
             'tipo_usuario'
         ]
+        labels = {'username': "Nombre de Usuario"}
  
 
 
