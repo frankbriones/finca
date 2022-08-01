@@ -36,7 +36,7 @@
                             <div class="swiper-default swiper-container swiper-container-initialized swiper-container-horizontal">
                                 <div class="row d-flex justify-content-center align-items-center p-4 ">
                         {% if request.user.rol.descripcion != 'PROVEEDOR' %}
-                            {% if request.user.tipo.descripcion == 'OPERADOR' %}
+                            {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR'  %}
                                 <div class="col-md-6 col-12 text-center">
                                     <button class="btn btn-primary btn-lg bx bx-file reporte_proveedores"><h3 class="text-white">REPORTE DE PROVEEDORES</h3></button>
                                 </div>
