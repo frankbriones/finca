@@ -4,6 +4,6 @@ from django.contrib import admin
 
 from .models import *
 
-admin.site.register(Productos)
+#admin.site.register(Productos)
 admin.site.register(CategoriaProducto)
 admin.site.register(UnidadMedida)
