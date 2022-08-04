@@ -94,7 +94,7 @@
                 {% if solicitud.estado.descripcion == 'PEDIDO ENVIADO' %}
                     {% if request.user.proveedor %}
                     <div class="row">
-                        <a data-id_solicitud="{{solicitud.id_solicitud}}"   class="btn btn-primary recibir_pedido text-white"><i class="bx bxs-component"></i> Recibir</a>
+                        <a data-id_solicitud="{{solicitud.id_solicitud}}"   class="btn btn-primary recibir_pedido text-white"><i class="bx bxs-component"></i> Marcar como revisada</a>
                     </div>
                     {% endif %}
                 {% endif %}
