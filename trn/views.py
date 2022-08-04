@@ -16,6 +16,8 @@ from trn.serializers import DetalleSolicitudSerializer, SolicitudSerializer
 from trn.models import *
 from prd.models import *
 
+from prd.serializers import *
+
 from datetime import datetime, timedelta, timezone
 
 from trn.tasks import enviarCorreoPrv, notificacion, notificarOrdenProduccion, notificarOrdenProveedor, notificarSolicitudDespachada,\
@@ -885,3 +887,12 @@ def orden_salida_detalle(request, id_orden=None):
     }
 
     return render(request, template_name, contexto)
+
+
+def lista_categorias_productos(request):
+    if request.is_ajax:
+        categorias = CategoriaProducto.objects.filter(estado__descripcion__iexact='ACTIVO')
+        # serializer
+        serializer = CategoriaProductoSerializers(categorias, many=True).data
+
+        return JsonResponse({'data': serializer})

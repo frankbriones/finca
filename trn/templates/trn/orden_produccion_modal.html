@@ -1,6 +1,6 @@
 {% load static %}{% load i18n %}
 {% if orden == None %}
-<div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+<!-- <div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
         <div class="modal-header">
            
@@ -43,6 +43,39 @@
         <div class="modal-footer">
             <button class="btn btn-primary">Cancelar</button>
             <button class="btn btn-primary crear_orden">Crear</button>
+
+        </div>
+       
+    </div>
+</div> -->
+<div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+           
+                <h5 class="modal-title" id="exampleModalLabel">Seleccionar Categoria</h5>
+                
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+            
+        </div>
+
+        <div class="modal-body">
+           
+            <div class="row">
+                <div class="col-12">
+                    <div id="insumos_id"></div>
+                </div>
+            </div>
+        </div>
+            
+            
+
+        <div class="modal-footer">
+            <button class="btn btn-primary">Cancelar</button>
+            <!-- <button class="btn btn-primary crear_orden">Aceptar</button> -->
+            <button class="btn btn-primary buscar_insumo">Buscar Insumos</button>
+
 
         </div>
        
@@ -167,7 +200,37 @@
 <script>
     $(document).ready(function(){
         obtenerProductos()
+        obtenerCategoriaProductos()
+
     })
+
+    function obtenerCategoriaProductos(){
+        select = document.createElement('select');
+        $(select).empty()
+        $(select).attr('id', 'select_id')
+
+
+        option = document.createElement('option')
+        option.value = '0'
+        option.text = 'Seleccione una categoria.'
+        $(select).append(option)
+        $('#insumos_id').append(select)
+        $.ajax({
+            url: '{% url "trn:lista_categorias_productos_ajax" %}',
+            type: 'GET',
+            data: {},
+            success: function(response){
+                categorias = response.data
+                categorias.forEach(categoria => {
+                    opt = document.createElement('option')
+                    opt.value = categoria.id_categoria
+                    opt.text = categoria.descripcion
+                    $(select).append(opt)
+                })
+
+            }
+        })
+    }
 
 
     function obtenerProductos(){

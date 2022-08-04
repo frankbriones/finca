@@ -46,6 +46,5 @@ urlpatterns = [
 
     path('detalle_orden/ingreso/<int:id_orden>/', orden_ingreso_detalle, name="orden_ingreso_detalle"),
     path('detalle_orden/salida/<int:id_orden>/', orden_salida_detalle, name="orden_salida_detalle"),
-
-
+    path('lista_categorias_productos_ajax/', lista_categorias_productos, name="lista_categorias_productos_ajax"),
 ]
