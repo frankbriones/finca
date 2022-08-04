@@ -683,7 +683,6 @@ def detalle_orden_produccion(request, id_orden=None):
             'detalles': detalles_orden
         }
     else:
-        print('XXXXXXXXX')
         descripcion = request.POST['descripcion']
         insumos = request.POST.getlist('insumos[]')
         insumos = json.loads(insumos[0])
