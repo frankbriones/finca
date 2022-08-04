@@ -704,7 +704,7 @@ def detalle_orden_produccion(request, id_orden=None):
             return JsonResponse({'mensaje': ('ingrese la descripcion')}, status=500)
         if orden:
             orden.descripcion = descripcion
-            orden.estado_id = 13
+            
             orden.usuario_recibe_pedido = personal_id
             orden.save()
             print(orden)
@@ -725,6 +725,7 @@ def detalle_orden_produccion(request, id_orden=None):
                 detalle.cantidad = insumo.get('cantidad')
                 detalle.save()
                 total_orden = total_orden + int(insumo.get('cantidad'))
+            orden.estado_id = 13
             orden.total_orden = total_orden
             orden.save()
 
