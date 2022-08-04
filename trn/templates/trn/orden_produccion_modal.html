@@ -1,6 +1,6 @@
 {% load static %}{% load i18n %}
 {% if orden == None %}
-<!-- <div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+<!-- <div id="modalInsumosCategorias" class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
         <div class="modal-header">
            
@@ -48,7 +48,7 @@
        
     </div>
 </div> -->
-<div id="modalSolicitud" class="modal-dialog modal-dialog-centered modal-lg">
+<div id="modalCategorias" class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
         <div class="modal-header">
            
@@ -75,6 +75,53 @@
             <button class="btn btn-primary">Cancelar</button>
             <!-- <button class="btn btn-primary crear_orden">Aceptar</button> -->
             <button class="btn btn-primary buscar_insumo">Buscar Insumos</button>
+
+
+        </div>
+       
+    </div>
+</div>
+<div id="modalInsumosCategorias" class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+           
+                <h5 class="modal-title" id="exampleModalLabel">Seleccionar Insumo a solicitar</h5>
+                
+            <button class="close" type="button" data-dismiss="modal" araia-label="Close">
+                <span aria-hidden="true">x</span>
+            </button>
+            
+        </div>
+
+        <div class="modal-body">
+           
+            <div class="row">
+                <div class="table-responsive m-2">
+                    <table class="table table-hover table-scroll" id="div_tabla">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Categoria</th>
+                                <th>Unidad Medida</th>
+                                <th>Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody  id="id_insumos">
+
+                        </tbody>
+                    
+                    </table>
+                </div>
+            </div>
+        </div>
+            
+            
+
+        <div class="modal-footer">
+            <button class="btn btn-primary">Cancelar</button>
+            <button class="btn btn-primary crear_orden">Aceptar</button>
+            
 
 
         </div>
@@ -114,6 +161,14 @@
 
                     </span>
                 </div>
+                {% if encargado %}
+                <div class="col-md-6 col-12 p-1">
+                    <span >
+                        Usuario recibira insumos: <b>{{encargado}}</b>
+
+                    </span>
+                </div>
+                {% endif %}
             </div>
             <div class="row d-flwx justify-content-center align-items-center text-center m-2">
                 <h5 class="text-success">Detalles de Insumos</h5>
@@ -199,7 +254,7 @@
 
 <script>
     $(document).ready(function(){
-        obtenerProductos()
+        //obtenerProductos()
         obtenerCategoriaProductos()
 
     })
@@ -208,6 +263,7 @@
         select = document.createElement('select');
         $(select).empty()
         $(select).attr('id', 'select_id')
+        $(select).addClass('form-control')
 
 
         option = document.createElement('option')
@@ -232,12 +288,30 @@
         })
     }
 
+    $('.buscar_insumo').on('click', function(){
+        
 
-    function obtenerProductos(){
+        var categoria = $('option:selected', '#select_id').val();
+        if(categoria === '0' || categoria === 0){
+            toastr.error('seleccionar una categoria')
+            return true;
+        }else{
+            $('#modalCategorias').hide()
+            $('#modalInsumosCategorias').show()
+            obtenerProductos(categoria)
+        }
+        
+
+    })
+
+
+
+    function obtenerProductos(categoria){
+
         $.ajax({
             url: '{% url "trn:lista_productos_ajax" %}',
             type: 'GET',
-            data: {},
+            data: {'categoria_id': categoria},
             success: function(response){
                 productos = response.data
                 productos.forEach(producto => {
@@ -255,13 +329,14 @@
 
                         </tr>
                     `;
-                    $('#id_body_productos').append(tr)
+                    $('#id_insumos').append(tr)
                 });
 
             }
         })
     }
 
+    
 
 
     $('.crear_orden').on('click', function(){

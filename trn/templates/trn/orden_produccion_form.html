@@ -68,6 +68,15 @@
                                         {% csrf_token %}
                                         {{form.as_p}}
                                     </form>
+                                    <div class="">
+                                        <label for="">Personal recibira los insumos</label>
+                                        <select name="" class="form-control" id="id_empleados">
+                                            <option value="">--- Seleccionar Personal ---</option>
+                                            {% for e in empleados %}
+                                                <option value="{{e.id_personal}}">{{e.nombres}} {{e.apellidos}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-6 mt-1">
                                     
@@ -210,6 +219,14 @@
 
         validarInsumos()
         data.append('insumos[]', JSON.stringify(items))
+
+        var personal_finca = $('option:selected', '#id_empleados').val();
+        if(personal_finca === ''){
+            toastr.error('seleccione personal que recibira la entrega del pedido')
+            return false
+        }
+
+        data.append('personal_id', personal_finca);
 
         //url guardar datos
         id_orden = '{{orden.id_solicitud}}'

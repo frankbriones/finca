@@ -109,6 +109,10 @@ class OrdenProduccion(ClaseModelo):
     estado = models.ForeignKey(Estados, on_delete=models.CASCADE, blank=True, null=True )
     total_orden = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0)
 
+    #nuevos campos
+    usuario_recibe_pedido = models.IntegerField(blank=True, null=True)
+    usuario_despacha_pedido = models.IntegerField(blank=True, null=True)
+
     def __str__(self):
         return '{}'.format(self.descripcion)
     

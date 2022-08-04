@@ -12,7 +12,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
 from trn.serializers import DetalleSolicitudSerializer, SolicitudSerializer
-
+from personal.models import *
 from trn.models import *
 from prd.models import *
 
@@ -606,9 +606,14 @@ def orden_produccion_modal(request, id_orden=None):
     orden_obj = OrdenProduccion.objects.filter(id_solicitud=id_orden).first()
     if request.method == 'GET':
         if orden_obj:
+            encargado_recibir_insumos = ''
+            if orden_obj.usuario_recibe_pedido != '':
+                empleado = PersonalFinca.objects.filter(id_personal=orden_obj.usuario_recibe_pedido).first()
+                encargado_recibir_insumos = empleado.nombres + ' ' +empleado.apellidos
             contexto = {
                 'orden': orden_obj,
-                'detalles': DetalleOrden.objects.filter(orden_id=orden_obj.id_solicitud)
+                'detalles': DetalleOrden.objects.filter(orden_id=orden_obj.id_solicitud),
+                'encargado': encargado_recibir_insumos
             }
         else:
             form = OrdenProduccionForm()
@@ -623,9 +628,12 @@ from prd.serializers import ProductosSerializer
 
 def lista_productos_ajax(request):
     if request.method == 'GET':
+        categoria_id = request.GET['categoria_id']
+        if categoria_id:
+
         #obtener los productos para mostrar en el listado de orden de pruccion
-        productos = Productos.objects.all()
-        serializer = ProductosSerializer(productos, many=True).data
+            productos = Productos.objects.filter(categoria_id=categoria_id)
+            serializer = ProductosSerializer(productos, many=True).data
 
         return JsonResponse({'data': serializer})
 
@@ -675,23 +683,29 @@ def detalle_orden_produccion(request, id_orden=None):
 
     orden = OrdenProduccion.objects.filter(id_solicitud=id_orden).first()
     if request.method == 'GET':
+        empleados = PersonalFinca.objects.all()
         if orden:
+            
             form_class = OrdenProduccionForm(instance=orden)
             detalles_orden = DetalleOrden.objects.filter(orden_id=orden.id_solicitud)
 
         contexto = {
             'form': form_class,
             'orden': orden,
-            'detalles': detalles_orden
+            'detalles': detalles_orden,
+            'empleados': empleados,
         }
     else:
         descripcion = request.POST['descripcion']
         insumos = request.POST.getlist('insumos[]')
         insumos = json.loads(insumos[0])
-        
+        personal_id = request.POST['personal_id']
+        if descripcion == '':
+            return JsonResponse({'mensaje': ('ingrese la descripcion')}, status=500)
         if orden:
             orden.descripcion = descripcion
             orden.estado_id = 13
+            orden.usuario_recibe_pedido = personal_id
             orden.save()
             print(orden)
             total_orden = 0
@@ -700,6 +714,9 @@ def detalle_orden_produccion(request, id_orden=None):
                 insumo_obj = Productos.objects.filter(id_producto=insumo.get('id_insumo')).first()
                 if insumo.get('cantidad') == '':
                     return JsonResponse({'mensaje': ('ingrese la cantidad para el insumo {}').format(insumo_obj.descripcion)}, status=500)
+                else:
+                    if float(insumo_obj.cantidad_existente) < float(insumo.get('cantidad')):
+                        return JsonResponse({'mensaje': ('cantidad es mayor a la existente, cantidad disponible {}').format(insumo_obj.cantidad_existente)}, status=500)
                 detalle = DetalleOrden.objects.\
                     filter(
                         producto_id=insumo.get('id_insumo'),
