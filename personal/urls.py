@@ -23,10 +23,10 @@ urlpatterns = [
         name="categorias_ajax"
         ),
     
-    path('lista-empleados/ajax',
-        listado_empleados_ajax,
-        name="listado_empleados_ajax"
-        ),
+    # path('lista-empleados/ajax',
+    #     listado_empleados_ajax,
+    #     name="listado_empleados_ajax"
+    #     ),
     path('actualizar-categoria/personal/<int:id_categoria>',
         actualizar_categoria_personal,
         name="actualizar_categoria_personal"

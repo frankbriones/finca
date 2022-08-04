@@ -2,9 +2,26 @@ from django import forms
 from django.contrib.auth.models import *
 
 from prd.models import *
+from ubc.models import *
 
 
 class ProductoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProductoForm, self ).__init__( *args, **kwargs )
+        self.request = kwargs.pop('request', None)
+        self.fields['bodega'] = forms.ModelChoiceField(queryset = Bodegas.objects.all(),empty_label="Escoger una bodega", 
+            widget=forms.Select(attrs={'placeholder':'Bodegas', 'onChange':"getSecciones(this.value)"}))
+        self.fields['seccion'] = forms.ModelChoiceField(queryset = Secciones.objects.none(), empty_label="Escoger una seccion")
+
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+
+    def modificarQuerySet(self, bodega_id):
+        if bodega_id not in ('', None):
+            self.fields['seccion'].queryset = Secciones.objects.filter(bodega_id = bodega_id)
 
     class Meta:
         model = Productos
@@ -17,15 +34,9 @@ class ProductoForm(forms.ModelForm):
             'seccion',
         ]
     
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super().__init__(*args, **kwargs)
-        for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control'
-            })
 
     def clean_descripcion(self):
+        
         descripcion = self.cleaned_data.get("descripcion")
         if Productos.objects.filter(descripcion=descripcion).exists():
             raise forms.ValidationError("Descripcion ya existe.")
@@ -52,6 +63,7 @@ class ProductoForm(forms.ModelForm):
 
     def clean_seccion(self):
         seccion = self.cleaned_data.get("seccion")
+        print(seccion)
         if seccion is None:
             raise forms.ValidationError("seleccione la seccion donde se almacenara el insumo.")
         return seccion

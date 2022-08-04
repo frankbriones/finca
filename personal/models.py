@@ -34,29 +34,29 @@ class TipoPersonal(ClaseModelo):
         }
 
 
-class PersonalFinca(ClaseModelo):
-    id_personal = models.AutoField(primary_key=True)
-    primer_nombre = models.CharField(max_length=350)
-    segundo_nombre = models.CharField(max_length=350)
-    primer_apellido = models.CharField(max_length=350)
-    segundo_apellido = models.CharField(max_length=350)
-    direccion = models.CharField(max_length=400)
-    telefono = models.CharField(max_length=15)
-    tipo = models.ForeignKey(TipoPersonal, on_delete=models.CASCADE, blank=True, null=True)
-    categoria = models.ForeignKey(CategoriaPersonal, on_delete=models.CASCADE, blank=True, null=True)
+# class PersonalFinca(ClaseModelo):
+#     id_personal = models.AutoField(primary_key=True)
+#     primer_nombre = models.CharField(max_length=350)
+#     segundo_nombre = models.CharField(max_length=350)
+#     primer_apellido = models.CharField(max_length=350)
+#     segundo_apellido = models.CharField(max_length=350)
+#     direccion = models.CharField(max_length=400)
+#     telefono = models.CharField(max_length=15)
+#     tipo = models.ForeignKey(TipoPersonal, on_delete=models.CASCADE, blank=True, null=True)
+#     categoria = models.ForeignKey(CategoriaPersonal, on_delete=models.CASCADE, blank=True, null=True)
 
-    def __str__(self):
-        return '{} {} - {}'.format(
-            self.primer_nombre,
-            self.primer_apellido,
-            self.categoria
-        )
-    class Meta:
-        permissions = {
-            ('crear_personal', ('Crear Personal')),
-            ('editar_personal', ('Editar Personal')),
-            ('actualizar_personal', ('Actualizar Personal')),
-        }
+#     def __str__(self):
+#         return '{} {} - {}'.format(
+#             self.primer_nombre,
+#             self.primer_apellido,
+#             self.categoria
+#         )
+#     class Meta:
+#         permissions = {
+#             ('crear_personal', ('Crear Personal')),
+#             ('editar_personal', ('Editar Personal')),
+#             ('actualizar_personal', ('Actualizar Personal')),
+#         }
 
 
 

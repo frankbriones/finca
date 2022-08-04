@@ -683,6 +683,7 @@ def detalle_orden_produccion(request, id_orden=None):
             'detalles': detalles_orden
         }
     else:
+        print('XXXXXXXXX')
         descripcion = request.POST['descripcion']
         insumos = request.POST.getlist('insumos[]')
         insumos = json.loads(insumos[0])
@@ -695,6 +696,9 @@ def detalle_orden_produccion(request, id_orden=None):
             total_orden = 0
             for insumo in insumos:
                 print(insumo)
+                insumo_obj = Productos.objects.filter(id_producto=insumo.get('id_insumo')).first()
+                if insumo.get('cantidad') == '':
+                    return JsonResponse({'mensaje': ('ingrese la cantidad para el insumo {}').format(insumo_obj.descripcion)}, status=500)
                 detalle = DetalleOrden.objects.\
                     filter(
                         producto_id=insumo.get('id_insumo'),

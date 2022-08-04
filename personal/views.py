@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect, JsonResponse, HttpResponse
 
 from bases.models import Estados
-from personal.models import PersonalFinca, TipoPersonal, CategoriaPersonal
-from personal.serializers import CategoriaSerializers, PersonalSerializers
+from personal.models import  TipoPersonal, CategoriaPersonal
+from personal.serializers import CategoriaSerializers
 
 # Create your views here.
 
@@ -45,65 +45,65 @@ def categorias_ajax(request):
     return JsonResponse({'categorias': serializers})
 
 
-@login_required(login_url='/login/')
-def listado_empleados_ajax(request):
-    if request.is_ajax and request.method == 'GET':
-        estados = request.GET['estadosBusqueda[]']
-        estados = json.loads(estados)
+# @login_required(login_url='/login/')
+# def listado_empleados_ajax(request):
+#     if request.is_ajax and request.method == 'GET':
+#         estados = request.GET['estadosBusqueda[]']
+#         estados = json.loads(estados)
 
-        datos = (json.loads(json.dumps(request.GET)))
-        categoria = request.GET['categoria_id']
-        if categoria != None:
-            categoria = request.GET['categoria_id']
-        body = {
-            'estados': estados,
-            'claveBusqueda': datos['claveBusqueda'],
-            'categoria_id': categoria
-        }
+#         datos = (json.loads(json.dumps(request.GET)))
+#         categoria = request.GET['categoria_id']
+#         if categoria != None:
+#             categoria = request.GET['categoria_id']
+#         body = {
+#             'estados': estados,
+#             'claveBusqueda': datos['claveBusqueda'],
+#             'categoria_id': categoria
+#         }
         
-        employee = obtenerEmpleados(body)
-        serializer = PersonalSerializers(employee, many=True).data
-        return JsonResponse({'empleados': serializer, 'registros': employee.count()})
+#         employee = obtenerEmpleados(body)
+#         serializer = PersonalSerializers(employee, many=True).data
+#         return JsonResponse({'empleados': serializer, 'registros': employee.count()})
 
 
-def obtenerEmpleados(filtros):
-    palabra_busqueda = filtros.get('claveBusqueda')
-    estados = filtros.get('estados')
-    categoria_id = filtros.get('categoria_id')
-    tipos_id = {}
-    if len(estados):
-        tipos_id = TipoPersonal.objects.\
-            filter(
-                id_tipo__in = estados
-            ).values('id_tipo')
-    if len(tipos_id) >= 1:
-        empleados = PersonalFinca.objects.\
-            filter(
-                tipo_id__in=tipos_id,
-                categoria_id=categoria_id
-            ).order_by('-fecha_creacion')
-        if palabra_busqueda != None:
-            empleados = empleados.\
-                filter(
-                    primer_nombre__icontains=palabra_busqueda
-                ) | empleados.\
-                filter(
-                    primer_apellido__icontains = palabra_busqueda
-                )
-    else:
-        empleados = PersonalFinca.objects.\
-            filter(
-                categoria_id=categoria_id
-            ).order_by('-fecha_creacion')
-        if palabra_busqueda != None:
-            empleados = empleados.\
-                filter(
-                    primer_nombre__icontains=palabra_busqueda
-                ) | empleados.\
-                filter(
-                    primer_apellido__icontains = palabra_busqueda
-                )
-    return empleados
+# def obtenerEmpleados(filtros):
+#     palabra_busqueda = filtros.get('claveBusqueda')
+#     estados = filtros.get('estados')
+#     categoria_id = filtros.get('categoria_id')
+#     tipos_id = {}
+#     if len(estados):
+#         tipos_id = TipoPersonal.objects.\
+#             filter(
+#                 id_tipo__in = estados
+#             ).values('id_tipo')
+#     if len(tipos_id) >= 1:
+#         empleados = PersonalFinca.objects.\
+#             filter(
+#                 tipo_id__in=tipos_id,
+#                 categoria_id=categoria_id
+#             ).order_by('-fecha_creacion')
+#         if palabra_busqueda != None:
+#             empleados = empleados.\
+#                 filter(
+#                     primer_nombre__icontains=palabra_busqueda
+#                 ) | empleados.\
+#                 filter(
+#                     primer_apellido__icontains = palabra_busqueda
+#                 )
+#     else:
+#         empleados = PersonalFinca.objects.\
+#             filter(
+#                 categoria_id=categoria_id
+#             ).order_by('-fecha_creacion')
+#         if palabra_busqueda != None:
+#             empleados = empleados.\
+#                 filter(
+#                     primer_nombre__icontains=palabra_busqueda
+#                 ) | empleados.\
+#                 filter(
+#                     primer_apellido__icontains = palabra_busqueda
+#                 )
+#     return empleados
 
 
 

@@ -114,8 +114,14 @@ def editar_proveedor_modal(request, id_proveedor=None):
                         'mensaje': "Nombre de usuario no disponible"
                     }, status=500)
         else:
-            username = proveedor.usuario.username
-            usuario_obj = proveedor.usuario
+            try:
+
+                username = proveedor.usuario.username
+                usuario_obj = proveedor.usuario
+            except AttributeError:
+                return JsonResponse({
+                        'mensaje': "Ingrese el nombre de ususario"
+                    }, status=500)
 
 
         categorias = request.POST.getlist('categoriasDisponibles[]')

@@ -4,8 +4,8 @@ from django.db import models
 # Create your models here.
 class ClaseModelo(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    usuario_crea = models.IntegerField(blank=False,
-                                        null=False)
+    usuario_crea = models.IntegerField(blank=True,
+                                        null=True)
     fecha_modificacion = models.DateTimeField(auto_now=True)
     usuario_modifica = models.IntegerField(blank=True)
 

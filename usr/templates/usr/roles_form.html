@@ -3,23 +3,60 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/vendors.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/vendors/css/editors/quill/quill.snow.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-file-manager.css' %}">
+
+<!-- END: Vendor CSS-->
+
+<!-- BEGIN: Theme CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/bootstrap-extended.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/colors.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/components.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/dark-layout.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/themes/semi-dark-layout.css' %}">
+<!-- END: Theme CSS-->
+
+<!-- BEGIN: Page CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/core/menu/menu-types/vertical-menu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static  'base/app-assets/css/pages/app-email.css' %}">
+<!-- END: Page CSS-->
+
+<!-- BEGIN: Custom CSS-->
+<link rel="stylesheet" type="text/css" href="{% static  'base/assets/css/style.css' %}">
+<!-- END: Custom CSS-->
+
+<!-- BEGIN: Vendor CSS-->
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/swiper.min.css' %}">
+<!-- END: Vendor CSS-->
+<!-- BEGIN: Page CSS--> 
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/swiper.css' %}">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">  
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/vendors/css/extensions/toastr.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'base/app-assets/css/plugins/extensions/toastr.min.css' %}">
+
+
+
 <div class="app-content content">
     <div class="content-overlay"></div>
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-12 mb-2 mt-2">
+            <div class="content-header-left col-12 mb-2 mt-1">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
-                        <h5 class="content-header-title float left pr-1 mb-0">
-                            Roles y Permisos
-                        </h5>
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
                         <div class="breadcrumb-wrapper col-12">
                             <ol class="breadcrumb p-0 mb-0">
                                 <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
-                                </li>   
-                                <li class="breadcrumb-item active">Usuarios
                                 </li>
-                                <li class="breadcrumb-item active">Roles
+                                
+                                <li class="breadcrumb-item active">Roles y Permisos
                                 </li>
                                 <li class="breadcrumb-item active">Crear/Editar
                                 </li>
@@ -126,42 +163,50 @@
     <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
 
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+<script src="{% static 'base/app-assets/jss/scripts/modal/components-modal.js' %}"></script>
+
+
 
 {% endblock %}
 
 {% block js_page %}
 
 {% load static  %}
-<!-- BEGIN: Vendor JS-->
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-
-<script src="{% static 'base/app-assets/vendors/js/vendors.min.js' %}"></script>
-<script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
-<script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
-<script src="{% static 'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
-<!-- BEGIN Vendor JS-->
-
-<!-- BEGIN: Page Vendor JS-->
-<script src="{% static 'base/app-assets/vendors/js/charts/apexcharts.min.js' %}"></script>
-<script src="{% static 'base/app-assets/vendors/js/extensions/dragula.min.js' %}"></script>
-<!-- END: Page Vendor JS-->
-
-<!-- BEGIN: Theme JS-->
-<script src="{% static 'base/app-assets/js/scripts/configs/vertical-menu-dark.js' %}"></script>
-<script src="{% static 'base/app-assets/js/core/app-menu.js' %}"></script>
-<script src="{% static 'base/app-assets/js/core/app.js' %}"></script>
-<script src="{% static 'base/app-assets/js/scripts/components.js' %}"></script>
-<script src="{% static 'base/app-assets/js/scripts/footer.js' %}"></script>
-<!-- END: Theme JS-->
-
-<!-- BEGIN: Page JS-->
-<script src="{% static 'base/app-assets/js/scripts/pages/dashboard-analytics.js' %}"></script>
-<!-- END: Page JS-->
-
-<!-- extras -->
-
-<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
-<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
 
 <script>
     

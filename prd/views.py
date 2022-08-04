@@ -32,11 +32,14 @@ def detalle_producto(request, id_producto=None):
     if request.method == 'GET':
         
         form_class = ProductoForm(instance=producto)
+        if producto:
+            form_class.modificarQuerySet(producto.bodega_id)
         contexto = {
             'form': form_class,
             'producto': producto
         }
     else:
+        print(request.POST)
         # form_class = ProductoForm(request.POST)
         # if form_class.is_valid():
         #     producto = form_class.save(commit=False)
@@ -60,6 +63,7 @@ def detalle_producto(request, id_producto=None):
         cantidad_minima = request.POST['cantidad_minima']
         bodega = request.POST['bodega']
         seccion = request.POST['seccion']
+
         if id_producto:
             producto.descripcion = descripcion
             producto.categoria_id = categoria
@@ -73,40 +77,44 @@ def detalle_producto(request, id_producto=None):
                     producto.estado_id = 11
             producto.save()
             request.session['mensaje'] = "Edicion de Insumo {}".format(descripcion)
+            return HttpResponseRedirect('/products/productos_list/')
         else:
             
-            # infProducto = Productos(
-            #     descripcion = descripcion,
-            #     categoria_id = categoria,
-            #     unidad_medida_id = unidad_medida,
-            #     cantidad_minima = cantidad_minima,
-            #     seccion_id = seccion,
-            #     usuario_crea=request.user.id,
-            #     usuario_modifica = request.user.id,
-            #     estado_id=1
-            # )
-            # if infProducto:
-            #     infProducto.save()
+            infProducto = Productos(
+                descripcion = descripcion,
+                categoria_id = categoria,
+                unidad_medida_id = unidad_medida,
+                cantidad_minima = cantidad_minima,
+                seccion_id = seccion,
+                usuario_crea=request.user.id,
+                usuario_modifica = request.user.id,
+                estado_id=1
+            )
+            if infProducto:
+                infProducto.save()
 
-            form_class = ProductoForm(request.POST)
-            if form_class.is_valid():
-                producto = form_class.save(commit=False)
-                producto.usuario_crea = request.user.id
-                producto.usuario_modifica = request.user.id
-                producto.estado_id = 11
-                producto.save()
-                if producto.cantidad_existente >= producto.cantidad_minima:
-                    producto.estado_id = 10
-                    producto.save()
+            # form_class = ProductoForm(request.POST)
+            # if form_class.is_valid():
+            #     print('asdasdad')
+            #     producto = form_class.save(commit=False)
+            #     producto.usuario_crea = request.user.id
+            #     producto.usuario_modifica = request.user.id
+            #     producto.estado_id = 11
+            #     producto.save()
+            #     if producto.cantidad_existente >= producto.cantidad_minima:
+            #         producto.estado_id = 10
+            #         producto.save()
 
 
                 request.session['mensaje'] = "Nuevo insumo registrado"
                 return HttpResponseRedirect('/products/productos_list/')
-            contexto = {
-                'form': form_class
-            }
-            return render(request, template_name, contexto)
-        return HttpResponseRedirect('/products/productos_list/')
+            else:
+                print(form_class)
+                contexto = {
+                    'form': form_class
+                }
+            
+        
     return render(request, template_name, contexto)
 
 
@@ -151,3 +159,15 @@ def BusquedaProductos(filtros):
         fecha_creacion__lte=fecha_final
     ).order_by('-fecha_creacion')
     return productos
+
+
+def secciones_bodega(request):
+    if request.method == 'POST' and "bodega_id" in request.POST:
+        bodega_id = request.POST["bodega_id"]
+        if bodega_id not in ('', None):
+            secciones = Secciones.objects.filter(bodega_id = bodega_id)
+            return JsonResponse([{'id':'0', 'descripcion':'Escoger una Seccion'}] + [{'id': seccion.id_seccion, 'descripcion':seccion.descripcion} for seccion in secciones], safe=False)
+        else:
+            return JsonResponse([{'id':'', 'descripcion':'Escoger una Seccion'}], safe=False)
+    else:
+        return HttpResponseBadRequest("Se ha realizado un mal requerimiento")
