@@ -356,8 +356,25 @@
         obtenerPedidos();
     }
 
+    $('#id_fecha_fin').on('change', function(){
+        f = new Date($(this).val())
+        f_actual = new Date();
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
+        
+
+    })
+
     function obtenerPedidos(){
         estadosBusqueda = []
+        f = new Date($('#id_fecha_fin').val())
+        f_actual = new Date();
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
 
         opcion = $('#id_filtro').val();
         if(opcion == '3'){

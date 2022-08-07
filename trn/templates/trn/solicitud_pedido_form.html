@@ -80,10 +80,11 @@
                             <table class="table table-borderless mb-0">
                                 <thead>
                                     <tr class="border-0">
-                                        <th scope="col">Id</th>
+                                        <th scope="col" hidden>Id</th>
                                         <th scope="col">Insumo</th>
                                         <th scope="col">Categoria</th>
-                                        <th scope="col">Unidad Medida</th>
+                                        <th scope="col">Unidad/Medida</th>
+                                        <th scope="col">Minimo a solicitar</th>
                                         <th scope="col">Cantidad</th>
 
                                     </tr>
@@ -92,11 +93,12 @@
                                     
                                         {% for insumo in detalles %}
                                         <tr>
-                                            <td>{{insumo.producto.id_producto}}</td>
+                                            <td hidden>{{insumo.producto.id_producto}}</td>
                                             <td>{{insumo.producto.descripcion}}</td>
                                             <td>{{insumo.producto.categoria.descripcion}}</td>
                                             <td>{{insumo.producto.unidad_medida.descripcion}}</td>
-                                            <td><input  class="form-control " step="0.01" type="number" min="0"></td>
+                                            <td><b>{{insumo.producto.cantidad_minima}}</b></td>
+                                            <td><input  class="form-control "  type="number" min="0"></td>
                                         </tr>
                                         {% endfor %}
                                     
@@ -229,7 +231,6 @@
                 }, 400)
             },
             error: function(response){
-                console.log(response)
                 $.confirm({
                     title: 'Error',
                     content: response.responseJSON.mensaje,
@@ -255,7 +256,7 @@
                 'cantidad': ''
             }
 
-            row = ($(this).find('td')[4])
+            row = ($(this).find('td')[5])
             cantidad = $(row).find('input')
             if($(cantidad).val() === undefined){
                 toastr.error('Verifique la cantidad en los insumos', 'Atencion');

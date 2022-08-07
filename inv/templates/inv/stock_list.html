@@ -86,18 +86,24 @@
                             <thead>
                                 <tr>
                                     <th>DESCRIPCION</th>
-                                    <th>ESTADO</th>
                                     <th>CATEGORIA</th>
+                                    <th>UNIDAD/MEDIDA</th>
                                     <th>CANT MINIMA</th>
                                     <th>EXISTENCIA</th>
+                                    <th>ESTADO</th>
+                                    {% if request.user.rol.descripcion != 'BODEGUERO' %}
                                     <th>ABASTECER</th>
-
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody class="">
                                 {% for producto in inventario %}
                                     <tr>
                                         <td class="text-bold-500">{{producto.descripcion}}</td>
+                                        <td>{{producto.categoria.descripcion}}</td>
+                                        <td>{{producto.unidad_medida.descripcion}}</td>
+                                        <td>{{producto.cantidad_minima}}</td>
+                                        <td>{{producto.cantidad_existente}}</td>
                                         <td>
                                             {% if producto.estado.descripcion == 'DISPONIBLE' %}
                                                 <span class="badge badge-success text-white">{{producto.estado}}</span>
@@ -107,24 +113,13 @@
                                                 <span class="badge badge-warning text-white">{{producto.estado}}</span>
                                             {% endif %}
                                         </td>
-                                        <td>{{producto.categoria.descripcion}}</td>
-                                        <td>{{producto.cantidad_minima}}</td>
-                                        <td>{{producto.cantidad_existente}}</td>
                                         {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
                                         <td>
                                             <div class="row d-flex align-items-center justify-content-center">
                                                 <input value="{{producto.id_producto}}" {% if producto.estado.descripcion == 'NO DISPONIBLE' or producto.estado.descripcion == 'MENOR A EXISTENCIA MINIMA' %}{% else %} disabled="disabled"{% endif %}  class=" checkbox-input item-producto " type="checkbox" name="" id="checkbox1" data-descripcion="{{producto.descripcion}}" data-id="{{producto.id_producto}}">
                                             </div>
                                         </td>
-                                        {% else %}
-                                        <td>
-                                            <div class="row d-flex align-items-center justify-content-center">
-                                                <div class="checkbox">
-                                                    <input value="{{producto.id_producto}}" disabled="disabled"  class=" checkbox-input item-producto " type="checkbox" name="" id="checkbox1">
-                                                </div>
-                                                
-                                            </div>
-                                        </td>
+                                        
                                         {% endif %}
                                     </tr>
                                 {% endfor %}

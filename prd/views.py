@@ -171,3 +171,18 @@ def secciones_bodega(request):
             return JsonResponse([{'id':'', 'descripcion':'Escoger una Seccion'}], safe=False)
     else:
         return HttpResponseBadRequest("Se ha realizado un mal requerimiento")
+
+
+
+def validar_cantidad_produccion(request):
+    if request.is_ajax and request.method == 'GET':
+        id_insumo = request.GET['id_insumo']
+        if id_insumo:
+            insumo_obj = Productos.objects.filter(id_producto=id_insumo).first()
+            data = {
+                'cantidad_existente':  insumo_obj.cantidad_existente,
+                'descripcion': insumo_obj.descripcion
+            }
+            return JsonResponse({'data': data}, status=200)
+        else:
+            return JsonResponse({'mensaje': 'Insumo no existe, por favor verifique'}, status=500)

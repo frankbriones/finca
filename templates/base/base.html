@@ -147,18 +147,20 @@
                 {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
                 <li class=" nav-item"><a href="{% url 'prv:proveedores_list' %}"><i  class="bx bx-truck"> </i><span class="menu-title">Proveedores</span></a> 
                 {% endif %}
-                {% if perms.prd.crear_producto %}
+                
+                {% if perms.prd.crear_producto or request.user.rol.descripcion == 'BODEGUERO'   %}
                 {% if request.user.rol.descripcion != 'PROVEEDOR' %}
                 <li class=" nav-item"><a href=""><i class="bx bx-map"> </i><span class="menu-title">Inventario</span></a> 
                     <ul class="menu-content">
-                        {% if perms.prd.crear_producto %}
+                        {% if request.user.rol.descripcion == 'BODEGUERO'  or  perms.prd.crear_producto %}
+                            
                             <li class=" nav-item"><a  href="{% url 'inv:stock_bodega' %}"><i class="bx bx-store-alt"></i><span class="menu-item" data-i18n="File Manager">Stock Insumos</span></a>
                             </li>
                             
-                            <!-- <li><a href="{% url 'ubc:bodegas_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Bodega</span></a>
-                            </li> -->
+                            {% if perms.prd.crear_producto %}
                             <li><a href="{% url 'prd:productos_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Insumos</span></a>
                             </li>
+                            {% endif %}
                         {% endif %}
                         
                         
@@ -262,7 +264,7 @@
                     </ul>
                 </li>
                 {% endif %}
-                {% if request.user.rol.descripcion != 'PROVEEDOR' %}
+                
                 
                 <li class=" nav-item"><a href=""><i class="bx bx-file"> </i><span class="menu-title">Reportes</span></a> 
                     <ul class="menu-content">
@@ -274,7 +276,6 @@
                         
                     </ul>
                 </li>
-                {% endif %}
 
 
                 {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
@@ -613,7 +614,6 @@
                                 text: '{% trans "Aceptar" %}',
                                 action: function() {
                                     actualizarNotificacion(notificacion.id_notificacion);
-                                    
                                 }
                             },
                         
@@ -638,7 +638,7 @@
                 data: {'idNotificacion': id},
                 success: function(response){
                     console.log('ok')
-                    location.reload(true)
+                    // location.reload(true)
                 }
             })
 

@@ -716,7 +716,7 @@ def detalle_orden_produccion(request, id_orden=None):
                     return JsonResponse({'mensaje': ('ingrese la cantidad para el insumo {}').format(insumo_obj.descripcion)}, status=500)
                 else:
                     if float(insumo_obj.cantidad_existente) < float(insumo.get('cantidad')):
-                        return JsonResponse({'mensaje': ('cantidad es mayor a la existente, cantidad disponible {}').format(insumo_obj.cantidad_existente)}, status=500)
+                        return JsonResponse({'mensaje': ('cantidad es mayor a la existente, cantidad disponible {}, insumo: {}').format(insumo_obj.cantidad_existente, insumo_obj.descripcion)}, status=500)
                 detalle = DetalleOrden.objects.\
                     filter(
                         producto_id=insumo.get('id_insumo'),
@@ -914,3 +914,21 @@ def lista_categorias_productos(request):
         serializer = CategoriaProductoSerializers(categorias, many=True).data
 
         return JsonResponse({'data': serializer})
+
+
+
+
+def eliminar_insumo_solic_produccion(request):
+    if request.is_ajax:
+        id_insumo = request.GET['id_insumo']
+        id_orden = request.GET['id_orden']
+        if id_insumo:
+            detalle_orden = DetalleOrden.objects.filter(orden_id=id_orden, producto_id=id_insumo).first()
+            detalle_orden.delete()
+            estado = 1
+        else:
+            estado = 2
+        data = {
+            'estado': estado
+        }
+        return JsonResponse({'data': data})
