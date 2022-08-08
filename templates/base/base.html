@@ -169,7 +169,7 @@
                 </li>
                 {% endif %}
                 {% endif %}
-                {% if perms.prd.crear_producto or request.user.rol.descripcion == 'BODEGUERO'   %}
+                {% if perms.prd.crear_producto or request.user.rol.descripcion == 'ADMINISTRADOR'   %}
                 <li class=" nav-item"><a href=""><i class="bx bx-store-alt "> </i><span class="menu-title">GESTIÓN DE INSUMOS</span></a> 
                     <ul class="menu-content">
                         {% if perms.prd.crear_producto %}
