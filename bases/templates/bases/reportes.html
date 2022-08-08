@@ -38,7 +38,7 @@
                                     {% if request.user.rol.descripcion != 'PROVEEDOR' %}
                                         {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR'  %}
                                         <div class="col-md-6 col-12 text-center">
-                                            <button class="btn btn-primary btn-lg bx bx-file reporte_proveedores"><h3 class="text-white">REPORTE DE PROVEEDORES</h3></button>
+                                            <button class="btn btn-primary btn-lg bx bx-file reporte_proveedores"><h3 class="text-white">REPORTE PROVEEDORES</h3></button>
                                         </div>
                                         {% endif %}
                                     {% endif %}
@@ -47,9 +47,12 @@
                                             <button class="btn btn-success btn-lg bx bx-file reporte_stock"><h3 class="text-white">REPORTE DE STOCK</h3></button>
                                         </div>
                                     {% endif %}
-                                        <div class="col-md-6 col-12 text-center">
+                                        <div class="col-md-6 col-12 text-center p-2">
                                             <button class="btn btn-success btn-lg bx bx-file reporte_pedidos"><h3 class="text-white">REPORTE DE PEDIDOS</h3></button>
                                         </div>
+                                        <div class="col-md-6 col-12 text-center">
+                                        </div>
+
                                 </div>
                                 <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                             </div>

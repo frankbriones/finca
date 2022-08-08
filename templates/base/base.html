@@ -123,12 +123,9 @@
                         </li>
                     </ul>
                 </li> -->
-                {% if request.user.tipo_usuario.descripcion == 'USUARIO INSUMOS' %}
-                <li class=" navigation-header"><span>Apps</span>
-                </li>
-                {% endif %}
+                
                 {% if perms.usr.crear_rol or perms.usr.crear_usuarios %}
-                <li class=" nav-item"><a href="#"><i class="bx  bx-user"></i><span class="menu-title" data-i18n="Invoice">Usuarios y Roles</span></a>
+                <li class=" nav-item"><a href="#"><i class="bx  bx-user"></i><span class="menu-title" data-i18n="Invoice">GESTIÓN DE USUARIOS</span></a>
                     <ul class="menu-content">
                         {% if perms.usr.crear_usuarios %}
                             <li><a href="{% url 'usr:usuarios_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice List">Usuarios</span></a>
@@ -145,22 +142,26 @@
                 
                 
                 {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
-                <li class=" nav-item"><a href="{% url 'prv:proveedores_list' %}"><i  class="bx bx-truck"> </i><span class="menu-title">Proveedores</span></a> 
+                <li class=" nav-item"><a href="#"><i class="bx  bx-truck"></i><span class="menu-title" data-i18n="Invoice">GESTIÓN DE PROVEED.</span></a>
+                    <ul class="menu-content">
+                        <li class=" nav-item"><a href="{% url 'prv:proveedores_list' %}"><i  class="bx bx-right-arrow-alt"> </i><span class="menu-title">Proveedores</span></a> 
+                            <li><a href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Categorias Prov.</span></a>
+                            </li>
+                        </ul>
+                </li>
+                
                 {% endif %}
 
                 {% if perms.prd.crear_producto or request.user.rol.descripcion == 'BODEGUERO'   %}
                 {% if request.user.rol.descripcion != 'PROVEEDOR' %}
-                <li class=" nav-item"><a href=""><i class="bx bx-map"> </i><span class="menu-title">Inventario</span></a> 
+                <li class=" nav-item"><a href=""><i class="bx bx-book-content "> </i><span class="menu-title">INVENTARIO</span></a> 
                     <ul class="menu-content">
                         {% if request.user.rol.descripcion == 'BODEGUERO'  or  perms.prd.crear_producto %}
                             
-                            <li class=" nav-item"><a  href="{% url 'inv:stock_bodega' %}"><i class="bx bx-store-alt"></i><span class="menu-item" data-i18n="File Manager">Stock Insumos</span></a>
+                            <li class=" nav-item"><a  href="{% url 'inv:stock_bodega' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="File Manager">Stock Insumos</span></a>
                             </li>
                             
-                            {% if perms.prd.crear_producto %}
-                            <li><a href="{% url 'prd:productos_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Insumos</span></a>
-                            </li>
-                            {% endif %}
+                            
                         {% endif %}
                         
                         
@@ -168,7 +169,18 @@
                 </li>
                 {% endif %}
                 {% endif %}
-
+                {% if perms.prd.crear_producto or request.user.rol.descripcion == 'BODEGUERO'   %}
+                <li class=" nav-item"><a href=""><i class="bx bx-store-alt "> </i><span class="menu-title">GESTIÓN DE INSUMOS</span></a> 
+                    <ul class="menu-content">
+                        {% if perms.prd.crear_producto %}
+                        <li><a href="{% url 'prd:productos_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Insumos</span></a>
+                        </li>
+                        {% endif %}
+                        <li><a href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Categorias/Insumos.</span></a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
 
 
 
@@ -225,10 +237,10 @@
                 </li>
                 {% endif %}
                 
-                <li class="navigation-header d-block"><span>Transacciones</span></li>
                
-                
-                {% if perms.trn.ver_ordenes_proveedor or perms.trn.crear_orden_produccion %}
+                <li class=" nav-item"><a href=""><i class="bx bx-transfer-alt"> </i><span class="menu-title">TRANSACCIONES</span></a> 
+                    <ul class="menu-content">
+                        {% if perms.trn.ver_ordenes_proveedor or perms.trn.crear_orden_produccion %}
                 <li class=" nav-item"><a href=""><i class="bx bx-copy-alt"> </i><span class="menu-title">Solicitudes</span></a> 
                     <ul class="menu-content">
                         {% if perms.trn.ver_ordenes_proveedor  %}
@@ -246,7 +258,7 @@
                 </li>
                 {% endif %}
                 {% if perms.trn.ver_orden_ingreso  %}
-                <li class=" nav-item"><a href=""><i class="bx bx-transfer-alt"> </i><span class="menu-title">Historial Bodega</span></a> 
+                <li class=" nav-item"><a href=""><i class="bx bx-transfer-alt"> </i><span class="menu-title">Gestión de Bodega</span></a> 
                     <ul class="menu-content">
                         
                         {% if perms.trn.ver_orden_ingreso  %}
@@ -264,9 +276,31 @@
                     </ul>
                 </li>
                 {% endif %}
+                    </ul>
+                </li>
                 
                 
-                <li class=" nav-item"><a href=""><i class="bx bx-file"> </i><span class="menu-title">Reportes</span></a> 
+                
+                
+
+
+                {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
+                
+                <li class=" nav-item"><a ><i class='bx bx-doughnut-chart'></i><span class="menu-title">MANTENIMIENTO</span></a>
+                    <ul class="menu-content">
+                        <li><a href="{% url 'ubc:bodegas_list' %}"><i class="bx bx-map"></i><span class="menu-item" data-i18n="Invoice">Bodega</span></a>
+                        </li>
+                        <!-- <li><a onclick="sitioAdmin()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Configuraciones Generales</span></a>
+                        </li> -->
+                        <li><a href="{% url 'ubc:ciudad_list' %}"><i class="bx bx-map"></i><span class="menu-item" data-i18n="Invoice">Ciudades</span></a>
+                        </li>
+                        <li><a href="{% url 'ubc:pais_list' %}"><i class="bx bx-map"></i><span class="menu-item" data-i18n="Invoice List">Pais</span></a>
+                        </li>
+                    </ul>
+                </li>
+                
+                {% endif %}
+                <li class=" nav-item"><a href=""><i class="bx bx-file"> </i><span class="menu-title">REPORTES</span></a> 
                     <ul class="menu-content">
                        
                         
@@ -276,24 +310,6 @@
                         
                     </ul>
                 </li>
-
-
-                {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
-                
-                <li class=" nav-item"><a ><i class='bx bx-doughnut-chart'></i><span class="menu-title">Mantenimiento</span></a>
-                    <ul class="menu-content">
-                        <li><a href="{% url 'ubc:bodegas_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Bodega</span></a>
-                        </li>
-                        <!-- <li><a onclick="sitioAdmin()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Configuraciones Generales</span></a>
-                        </li> -->
-                        <li><a href="{% url 'ubc:ciudad_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Ciudades</span></a>
-                        </li>
-                        <li><a href="{% url 'ubc:pais_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice List">Pais</span></a>
-                        </li>
-                    </ul>
-                </li>
-                
-                {% endif %}
 
 
                 
