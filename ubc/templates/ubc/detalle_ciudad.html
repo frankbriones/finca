@@ -1,0 +1,169 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Ubicaciones
+                                </li>
+                                <li class="breadcrumb-item active">Ciudades
+                                </li>
+                                <li class="breadcrumb-item active">Detalle
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-content">
+               <div class="card-body">
+                <form enctyoe="multipart/form-data" method="POST" id="frmBodega">
+                    {% csrf_token %}
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-12">
+                                {{form.as_p}}
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="button" onclick="validar()" class="btn btn-primary mr-1 mb-1">Guardar</button>
+                                <a href="{% url 'ubc:bodegas_list' %}" class="btn btn-primary mr-1 mb-1">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+               </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static 'base/app-assets/js/jquery-3.2.0.min.js' %}"></script>
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+
+{% endblock %}
+
+{% block js_page %}
+<script src="{% static  'base/app-assets/js/scripts/pages/app-file-manager.js' %}"></script>
+<script>
+    let id_ciudad = '{{ciudad.id_ciudad}}';
+    $(document).ready(function(){
+        $('.loader').hide();
+
+    })
+
+
+
+
+
+
+    function validar(){
+        form = document.getElementById('frmBodega')
+        let datos = new FormData(form)
+        descripcion  = $('#id_descripcion').val();
+        pais = $('option:selected',  '#id_pais').val();
+
+        if(descripcion === ''){
+            toastr.error('Agrege una descripcion de la ciudad', 'Error' );
+            return false;
+        };
+
+        if(pais === ''){
+            toastr.error('Seleccionar pais', 'Error' );
+            return false;
+        }
+        body = {
+            'descripcion': descripcion,
+            'pais': pais
+        }
+        guardar(body)
+    }
+
+    function guardar(datos){
+        url = '{% url "ubc:detalle_ciudad" 0 %}';
+        if(id_ciudad){
+            url = url.replace(/0/, id_ciudad)
+        }
+        
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: url,
+            type: 'POST',
+            data: datos,
+            success: function(response){
+                if(response.estado == true){
+                    toastr.success(response.mensaje, 'Correcto');
+                    setTimeout(() => {
+                        window.location.href = '/ubicaciones/list/ciudades/';
+                    }, 600);
+                }else{
+                    toastr.error(response.mensaje, 'Error');
+                }
+            }
+        })
+    }
+</script>
+
+
+
+{% endblock js_page %}

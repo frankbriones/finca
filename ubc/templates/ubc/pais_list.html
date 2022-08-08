@@ -26,59 +26,162 @@
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="content-body">
-                    <!-- Table with outer spacing -->
-                    <div class="table-responsive">
-                        <table class="table  table-hover">
-                            <thead>
-                                <tr>
-                                    
-                                    <th>Id</th>
-                                    <th>Descripcion</th>
-                                    <th>Estado</th>
-                                    <th>Accion</th>
-                                </tr>
-                            </thead>
-                            <tbody class="">
-                                {% for pais in paises %}
-                                    <tr>
+        <div class="content-body">
+            <section>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">{% trans "Listado de Paises" %}</h4>
+                                <a class="heading-elements-toggle">
+                                    <i class='bx bx-dots-vertical font-medium-3'></i>
+                                </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
                                         
-                                        
-                                        <td>{{pais.id_pais}}</td>
-                                        <td class="text-bold-500">{{pais.descripcion}}</td>
-                                        <td>
-                                            {% if pais.estado.descripcion == 'ACTIVO' %}
-                                                <span class="badge badge-success text-white">{{pais.estado}}</span>
-                                            {% else %}
-                                                <span class="badge badge-danger text-white">{{pais.estado}}</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <a >
-                                                <i class="badge-circle badge-circle-light-secondary bx bx-edit font-medium-1">
-                                                </i>
+                                        <li>
+                                            <a onclick="abrir_modal('{% url "ubc:modal_crear_pais"  %}')" title='{% trans "Nuevo Registro" %}' class="btn btn-icon rounded-circle btn-outline-primary mr-1 mb-1">
+                                                <i class="bx bx-plus"></i>
                                             </a>
-                                            {% if pais.estado.descripcion == 'ACTIVO' %}
-                                                <a onclick="return abrir_modal('{% url 'ubc:actualizar_pais' pais.id_pais %}')">
-                                                    <i class="badge-circle badge-circle-light-danger bx bx-x font-medium-1">
-                                                    </i>
-                                                </a>
-                                            {% else %}
-                                                <a onclick="return abrir_modal('{% url 'ubc:actualizar_pais' pais.id_pais %}')">
-                                                    <i class="badge-circle badge-circle-light-success bx bx-check font-medium-1">
-                                                    </i>
-                                                </a>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                
-                            </tbody>
-                        </table>
-                    </div>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        <!-- Table with outer spacing -->
+                        <div class="content-body m-1">
+                            <div class="table-responsive">
+                                <table class="table  table-hover" id="id_tabla_pais">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>Id</th>
+                                            <th>Descripcion</th>
+                                            <th>Estado</th>
+                                            <th>Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="">
+                                        {% for pais in paises %}
+                                            <tr>
+                                                
+                                                
+                                                <td>{{pais.id_pais}}</td>
+                                                <td class="text-bold-500">{{pais.descripcion}}</td>
+                                                <td>
+                                                    {% if pais.estado.descripcion == 'ACTIVO' %}
+                                                        <span class="badge badge-success text-white">{{pais.estado}}</span>
+                                                    {% else %}
+                                                        <span class="badge badge-danger text-white">{{pais.estado}}</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a onclick="abrir_modal('{% url "ubc:modal_editar_pais" pais.id_pais  %}')" class="btn btn-icon rounded-circle btn-outline-warning mr-1 mb-1" 
+                                                        data-toggle="tooltip"  data-placement="top"  title="Editar" 
+                                                        role="button"><i class="bx bx-edit">
+                                                    </i></a>
+                                                    {% if pais.estado.descripcion == 'ACTIVO' %}
+                                                        <a onclick="return abrir_modal('{% url 'ubc:actualizar_pais' pais.id_pais %}')">
+                                                            <i class="badge-circle badge-circle-light-danger bx bx-x font-medium-1">
+                                                            </i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a onclick="return abrir_modal('{% url 'ubc:actualizar_pais' pais.id_pais %}')">
+                                                            <i class="badge-circle badge-circle-light-success bx bx-check font-medium-1">
+                                                            </i>
+                                                        </a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
             </div>
+            </div>
+            </section>
         </div>
     </div>
 </div>
 {% endblock %}
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+
+
+{% block js_page %}
+<script src="{% static  'base/app-assets/js/scripts/pages/app-file-manager.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $('.loader').hide();
+    
+        
+        $('#id_tabla_pais').DataTable(
+            {
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+            }
+        );
+    })
+</script>
+{% endblock js_page %}

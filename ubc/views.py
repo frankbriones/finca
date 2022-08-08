@@ -176,17 +176,8 @@ def detalle_bodega(request, id_bodega=None):
         }
     else:
         print(request.POST)
-        # json_data = json.loads(request.body)
-        # estado = json_data['estado']
-
-        # if estado == 'ACTIVO':
-        #     estado = Estados.objects.filter(descripcion='INACTIVO').first()
-        # if estado == 'INACTIVO':
-        #     estado = Estados.objects.filter(descripcion='ACTIVO').first()
-        # print(bodega)
-        # lote.estado = estado
-        # lote.save()
-        return HttpResponse('Lote Actualizado')
+        
+        return HttpResponse('Bodega Ingresada')
     return render(request, template_name, contexto)
 
 
@@ -207,11 +198,10 @@ def editar_bodega(request, id_bodega=None):
     
         secciones = request.GET.getlist('secciones[]')
         secciones = json.loads(secciones[0])
-        print(secciones)
         if id_bodega:
             bodega_obj = Bodegas.objects.filter(id_bodega=id_bodega).first()
             bodega_obj.descripcion = descripcion
-            bodega_obj.direccion = direccion
+            bodega_obj.direccion1 = direccion
             bodega_obj.ciudad_id = ciudad_id
             bodega_obj.save()
 
@@ -230,7 +220,7 @@ def editar_bodega(request, id_bodega=None):
                         seccion.bodega_id = bodega_obj.id_bodega
                         seccion.save()
                 except ValueError:
-                    seccion_existe = Secciones.objects.filter(descripcion = secc.get('descripcion')).exists()
+                    seccion_existe = Secciones.objects.filter(descripcion = secc.get('descripcion'), bodega_id=bodega_obj.id_bodega).exists()
                     if seccion_existe:
                         return JsonResponse({'mensaje': 'Existen Secciones Repetidas', 'estado': False})
                     infoSeccion = Secciones(
@@ -241,4 +231,150 @@ def editar_bodega(request, id_bodega=None):
                         infoSeccion.save()
             return JsonResponse({'mensaje': 'Bodega Editada', 'estado': True})
         else:
-            return JsonResponse({'mensaje': 'Revisar informacion', 'estado': False})
+            infoBodega = Bodegas(
+                descripcion = descripcion,
+                direccion1=direccion,
+                ciudad_id=ciudad_id,
+                estado=Estados.objects.filter(descripcion__iexact='ACTIVO').first()
+            )
+            if infoBodega:
+                infoBodega.save()
+                for secc in secciones:
+                    try:
+                        id_seccion = int(secc.get('id_seccion'))
+                        seccion_obj = Secciones.objects.filter(id_seccion = secc.get('id_seccion')).exists()
+                        if seccion_obj:
+                            # return JsonResponse({'mensaje': 'Existen Secciones Repetidas', 'estado': False})
+
+                            seccion = Secciones.objects.filter(id_seccion=secc.get('id_seccion')).first()
+                            seccion.descripcion = secc.get('descripcion')
+                            seccion.bodega_id = infoBodega.id_bodega
+                            seccion.save()
+                    except ValueError:
+                        seccion_existe = Secciones.objects.filter(descripcion = secc.get('descripcion'), bodega_id=infoBodega.id_bodega).exists()
+                        if seccion_existe:
+                            return JsonResponse({'mensaje': 'Existen Secciones Repetidas', 'estado': False})
+                        infoSeccion = Secciones(
+                            descripcion = secc.get('descripcion'),
+                            bodega_id = infoBodega.id_bodega
+                        )
+                        if infoSeccion:
+                            infoSeccion.save()
+
+            return JsonResponse({'mensaje': 'Bodega Registrada', 'estado': True})
+
+
+def modal_editar_pais(request, id_pais=None):
+    template_name = 'ubc/editar_pais_modal.html'
+    contexto = {}
+    if request.method == 'GET':
+        if id_pais:
+            pais_obj = Pais.objects.filter(id_pais=id_pais).first()
+            contexto = {
+                'pais': pais_obj
+            }
+    return render(request, template_name, contexto)
+
+
+
+def editar_pais(request):
+    if request.is_ajax:
+        id_pais = request.GET['pais_id']
+        descripcion = request.GET['descripcion']
+        prefijo = request.GET['prefijo']
+        if id_pais:
+            pais_obj = Pais.objects.filter(id_pais=id_pais).first()
+            pais_obj.descripcion = str(descripcion)
+            pais_obj.prefijo_cel = str(prefijo)
+            pais_obj.save()
+
+            return JsonResponse({'mensaje': 'Pais editado'}, status=200)
+
+
+def modal_crear_pais(request):
+    template_name = 'ubc/crear_pais_modal.html'
+    contexto = {}
+    
+    return render(request, template_name, contexto)
+
+
+def crear_pais(request):
+    if request.method == 'GET':
+        descripcion = request.GET['descripcion']
+        prefijo = request.GET['prefijo']
+
+        infoPais = Pais(
+            descripcion = descripcion,
+            estado = Estados.objects.filter(descripcion__iexact='ACTIVO').first(),
+            prefijo_cel= str(prefijo)
+        )
+        if infoPais:
+            infoPais.save()
+        return JsonResponse({'mensaje': 'Pais Creado'}, status=200)
+
+
+
+def crear_bodega(request):
+    template_name = "ubc/detalle_bodega.html"
+    contexto = {}
+    form = BodegaForm
+    contexto = {
+        'form': form
+    }
+
+    return render(request, template_name, contexto)
+
+
+
+def detalle_ciudad(request, id_ciudad=None):
+    template_name = 'ubc/detalle_ciudad.html'
+    contexto = {}
+    form_class = CiudadForm
+    ciudad = Ciudades.objects.filter(id_ciudad=id_ciudad).first()
+    
+    if request.method == 'GET':
+        form_class = CiudadForm(instance=ciudad)
+        contexto = {
+            'ciudad': ciudad,
+            'form': form_class
+        }
+    else:
+        descripcion = request.POST['descripcion']
+        pais_id = request.POST['pais']
+        if ciudad:
+            ciudad.descripcion = descripcion
+            ciudad.pais_id = pais_id
+            ciudad.save()
+
+            estado = True
+            mensaje = 'Ciudad Editada'
+
+        else:
+            infoCiudad = Ciudades(
+                descripcion=descripcion,
+                pais_id=pais_id,
+                estado=Estados.objects.filter(descripcion__iexact='ACTIVO').first(),
+                codigo_api_ciudad=''
+            )
+            if infoCiudad:
+                infoCiudad.save()
+            estado=True
+            mensaje = 'Ciudad Registrada'
+        return JsonResponse({
+            'mensaje': mensaje,
+            'estado': estado
+        }, status=200)
+        
+        
+    return render(request, template_name, contexto)
+
+
+def crear_ciudad(request):
+    template_name = "ubc/detalle_ciudad.html"
+    contexto = {}
+    form = CiudadForm
+    contexto = {
+        'form': form
+    }
+
+    return render(request, template_name, contexto)

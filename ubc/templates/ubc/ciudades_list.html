@@ -27,6 +27,18 @@
             </div>
         </div>
         <div class="card">
+            <div class="card-title m-1">
+                <div class="row"> 
+                    <div class="col-md-6 col-12 text-left p-2">
+                        <span><h4 class="text-bold">Listado de Ciudades</h4></span>
+                    </div>
+                    <div class="col-md-6 col-12 text-right">
+                        <a onclick="crearCiudad()" title='{% trans "Nuevo Registro" %}' class="btn btn-icon rounded-circle btn-outline-primary mr-1 mb-1">
+                            <i class="bx bx-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
             <div class="content-body">
                     <!-- Table with outer spacing -->
                     <div class="table-responsive">
@@ -55,7 +67,7 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            <a >
+                                            <a href="{% url 'ubc:detalle_ciudad' ciudad.id_ciudad %}">
                                                 <i class="badge-circle badge-circle-light-secondary bx bx-edit font-medium-1">
                                                 </i>
                                             </a>
@@ -82,3 +94,13 @@
     </div>
 </div>
 {% endblock %}
+
+{% block js_page %}
+<script>
+    function crearCiudad(){
+        url =  '{% url "ubc:crear_ciudad" %}'
+        window.location = url
+        
+    }
+</script>
+{% endblock js_page %}

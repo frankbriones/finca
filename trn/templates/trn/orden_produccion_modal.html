@@ -157,7 +157,7 @@
                 </div>
                 <div class="col-md-6 col-12 p-1">
                     <span >
-                    total orden: <b>{{orden.total_orden}}</b>
+                    Cantidad solicitud: <b>{{orden.total_orden}}</b>
 
                     </span>
                 </div>
@@ -203,13 +203,13 @@
             
             
         {% if request.user.tipo_usuario.descripcion == 'USUARIO INSUMOS' %}
-        {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
-        {% if orden.estado.descripcion == 'ORDEN SOLICITADA' %}
+        {% if request.user.rol.descripcion == 'BODEGUERO' or request.user.rol.descripcion == 'ADMINISTRADOR'  %}
+        {% if orden.estado.descripcion == 'ORDEN SOLICITADA' and  request.user.rol.descripcion == 'ADMINISTRADOR'%}
             <div class="modal-footer">
                 <button data-id_orden="{{orden.id_solicitud}}" class="btn btn-primary revisar_orden">Marcar Revision</button>
             </div>
         {% endif %}
-        {% if orden.estado.descripcion == 'SOLICITUD DE PROD. REVISADA' %}
+        {% if orden.estado.descripcion == 'SOLICITUD DE PROD. REVISADA' and request.user.rol.descripcion == 'BODEGUERO' %}
             <div class="modal-footer">
                 <button data-id_orden="{{orden.id_solicitud}}" class="btn btn-primary generar_orden_salida">Generar Orden Salida Bodega</button>
             </div>

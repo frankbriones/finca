@@ -1,0 +1,93 @@
+{% load i18n %}
+{% load static %}
+
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-l">
+    <div class="modal-content">
+        <div class="modal-header">
+            Crear Pais
+        </div>
+
+        <div class="modal-body">
+            <form method="POST" class="form">
+                {% csrf_token %}
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-12 col-12">
+                            <div class="form-label-group">
+                                <input class="form-control" type="text" name="" id="id_pais" >
+                                <label for="city-column">{% trans "Descripcion" %}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-12">
+                            <div class="form-label-group">
+                                <input  class="form-control" type="text" name="" id="id_prefijo">
+                                <label for="city-column">{% trans "Prefijo Telefono" %}</label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal" >Cancelar</button>
+            <button class="btn btn-primary text-white crear_pais" type="button" data-dismiss="modal" >Guardar</button>
+
+            
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        var token = '{{ csrf_token }}';
+
+        
+    });
+
+    $(".crear_pais").on('click', function(e){
+
+        var url = "{% url 'ubc:crear_pais' %}";
+        
+
+        descripcion = $('#id_pais').val();
+        
+        if(descripcion === ''  ){
+            toastr.error('Debe ingresar descripcion del pais', 'Error');
+            return false;
+        }
+
+        var prefijo = $('#id_prefijo').val();
+        if(prefijo === ''  ){
+            toastr.error('Debe ingresar prefijo del pais', 'Error');
+            return false;
+        }
+
+
+        var data = {
+            "descripcion": descripcion,
+            "prefijo": prefijo
+        };
+        // data = JSON.stringify(data);
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: data,
+            success: function(response){
+                $('.loader').show()
+                toastr.success(response.mensaje, 'Registro');
+                cerrar_modal();
+                setTimeout(function () {
+                    location.reload(true);
+                }, 400);
+                
+            },
+            error: function(response, jqXHR, textStatus, errorThrow){
+                mensaje = response.responseJSON.mensaje;
+                toastr.error(mensaje, 'Error');
+                return false;
+                mensaje(errorThrow,'red');
+                cerrar_modal();
+            }
+        });
+    });
+</script>

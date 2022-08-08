@@ -16,6 +16,12 @@ urlpatterns = [
    path('actualizar-lote/<int:id_lote>/', actualizar_lote, name="actualizar_lote"),
    path('detalle-bodega/<int:id_bodega>/', detalle_bodega, name="detalle_bodega"),
    path('editar-bodega/<int:id_bodega>/', editar_bodega, name="editar_bodega"),
-   path('secciones-bodega/<int:id_bodega>/ajax/', secciones_bodega, name="secciones_bodega")
-
+   path('secciones-bodega/<int:id_bodega>/ajax/', secciones_bodega, name="secciones_bodega"),
+   path('modal_editar_pais/<int:id_pais>', modal_editar_pais, name="modal_editar_pais"),
+   path('editar_pais/ajax/', editar_pais, name="editar_pais"),
+   path('crear_pais_modal/ajax/', modal_crear_pais, name="modal_crear_pais"),
+   path('crear_pais/ajax/', crear_pais, name="crear_pais"),
+   path('crear_bodega/', crear_bodega, name="crear_bodega"),
+   path('detalle-ciudad/<int:id_ciudad>/', detalle_ciudad, name="detalle_ciudad"),
+   path('crear_ciudad/', crear_ciudad, name="crear_ciudad"),
 ]

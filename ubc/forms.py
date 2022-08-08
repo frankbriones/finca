@@ -21,3 +21,23 @@ class BodegaForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
+
+
+
+
+class CiudadForm(forms.ModelForm):
+
+    class Meta:
+        model = Ciudades
+        fields = [
+            'descripcion',
+            'pais',
+        ]
+    
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })

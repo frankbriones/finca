@@ -44,7 +44,7 @@
                             <div class="col-md-12 col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Secciones Realacionadas a la {{ bodega.descripcion }}</h4>
+                                        <h4>Secciones Realacionadas {% if bodega %}a la {{ bodega.descripcion }} {% endif %}</h4>
                                     </div>
                                     <div class="card-body">
                                         <form action="#" class="contact-repeater">
@@ -354,7 +354,10 @@
 
     function guardar(datos){
         url = '{% url "ubc:editar_bodega" 0 %}';
-        url = url.replace(/0/, id_bodega)
+        if(id_bodega){
+            url = url.replace(/0/, id_bodega)
+        }
+        
         $.ajax({
             url: url,
             type: 'GET',

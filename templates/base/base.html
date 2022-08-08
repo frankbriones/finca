@@ -147,7 +147,7 @@
                 {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
                 <li class=" nav-item"><a href="{% url 'prv:proveedores_list' %}"><i  class="bx bx-truck"> </i><span class="menu-title">Proveedores</span></a> 
                 {% endif %}
-                
+
                 {% if perms.prd.crear_producto or request.user.rol.descripcion == 'BODEGUERO'   %}
                 {% if request.user.rol.descripcion != 'PROVEEDOR' %}
                 <li class=" nav-item"><a href=""><i class="bx bx-map"> </i><span class="menu-title">Inventario</span></a> 
@@ -284,12 +284,12 @@
                     <ul class="menu-content">
                         <li><a href="{% url 'ubc:bodegas_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Bodega</span></a>
                         </li>
-                        <li><a onclick="sitioAdmin()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Configuraciones Generales</span></a>
-                        </li>
-                        <!-- <li><a href="{% url 'ubc:ciudad_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Ciudades</span></a>
+                        <!-- <li><a onclick="sitioAdmin()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Configuraciones Generales</span></a>
+                        </li> -->
+                        <li><a href="{% url 'ubc:ciudad_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Ciudades</span></a>
                         </li>
                         <li><a href="{% url 'ubc:pais_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice List">Pais</span></a>
-                        </li> -->
+                        </li>
                     </ul>
                 </li>
                 

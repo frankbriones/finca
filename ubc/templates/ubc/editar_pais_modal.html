@@ -1,0 +1,77 @@
+{% load static %}{% load i18n %}
+<div class="modal-dialog modal-dialog-centered modal-s">
+    <div class="modal-content">
+        <div class="modal-header">
+            Editar Pais
+        </div>
+
+        <div class="modal-body">
+            <form method="POST" class="form">
+                {% csrf_token %}
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-12 col-12">
+                            <div class="form-label-group">
+                                <input class="form-control" type="text" name="" id="id_pais" value="{{pais.descripcion}}">
+                                <label for="city-column">{% trans "Descripcion" %}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-12">
+                            <div class="form-label-group">
+                                <input value="{{pais.prefijo_cel}}" class="form-control" type="text" name="" id="id_prefijo">
+                                <label for="city-column">{% trans "Prefijo Telefono" %}</label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal" >Cancelar</button>
+            <button class="btn btn-primary text-white guardar_edicion" type="button" data-dismiss="modal" >Guardar</button>
+
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+
+    })
+
+    $('.guardar_edicion').on('click', function(){
+        var pais_id = '{{pais.id_pais}}'
+        var token = '{{csrf_token}}';
+        dato = {
+            'pais_id': pais_id,
+            'descripcion': $('#id_pais').val(),
+            'prefijo': $('#id_prefijo').val()
+        }
+        // var datos = JSON.stringify(dato);
+        var url = "{% url 'ubc:editar_pais' %}";
+
+        $.ajax({
+            // headers: {
+            //     "X-CSRFToken": token
+            // },
+            url: url,
+            type: 'GET',
+            data: dato,
+            success: function(response){
+                $('.loader').show();
+                toastr.success('Pais Editado', "Confirmado");
+                    setTimeout(() => {
+                        url = '/ubicaciones/list/pais';
+                        window.location.href = url
+                    }, 700);
+            },
+            error: function(jqXHR, textStatus, errorThrow){
+                console.log(textStatus, errorThrow)
+            }
+        })
+    })
+
+</script>

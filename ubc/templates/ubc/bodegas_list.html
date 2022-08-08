@@ -33,7 +33,9 @@
                         <span><h4 class="text-bold">Listado de Bodegas</h4></span>
                     </div>
                     <div class="col-md-6 col-12 text-right">
-                        
+                        <a onclick="crearBodega()" title='{% trans "Nuevo Registro" %}' class="btn btn-icon rounded-circle btn-outline-primary mr-1 mb-1">
+                            <i class="bx bx-plus"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -224,6 +226,12 @@
                 }
             }
         })
+    }
+
+    function crearBodega(){
+        url =  '{% url "ubc:crear_bodega" %}'
+        window.location = url
+        
     }
 </script>
 

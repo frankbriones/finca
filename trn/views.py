@@ -607,7 +607,8 @@ def orden_produccion_modal(request, id_orden=None):
     if request.method == 'GET':
         if orden_obj:
             encargado_recibir_insumos = ''
-            if orden_obj.usuario_recibe_pedido != '':
+            print(orden_obj.usuario_recibe_pedido)
+            if orden_obj.usuario_recibe_pedido != None:
                 empleado = PersonalFinca.objects.filter(id_personal=orden_obj.usuario_recibe_pedido).first()
                 encargado_recibir_insumos = empleado.nombres + ' ' +empleado.apellidos
             contexto = {
@@ -750,7 +751,7 @@ def detalle_orden_produccion(request, id_orden=None):
 
             #     correo = [str(correo_proveedor)]
             
-            encargado_obj = Usuarios.objects.filter(rol__descripcion='ADMINISTRADOR').first()
+            encargado_obj = Usuarios.objects.filter(rol__descripcion='BODEGUERO').first()
             notificarOrdenProduccion.delay(encargado_obj.id, request.user.id, orden.id_solicitud) 
 
     return render(request, template_name, contexto)
@@ -925,6 +926,21 @@ def eliminar_insumo_solic_produccion(request):
         if id_insumo:
             detalle_orden = DetalleOrden.objects.filter(orden_id=id_orden, producto_id=id_insumo).first()
             detalle_orden.delete()
+            estado = 1
+        else:
+            estado = 2
+        data = {
+            'estado': estado
+        }
+        return JsonResponse({'data': data})
+
+
+def eliminar_solicitud_prod(request):
+    if request.is_ajax:
+        id_orden = request.GET['id_solicitud']
+        if id_orden:
+            orden_obj = OrdenProduccion.objects.filter(id_solicitud=id_orden).first()
+            orden_obj.delete()
             estado = 1
         else:
             estado = 2

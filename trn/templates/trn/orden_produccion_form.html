@@ -126,7 +126,8 @@
                                 <div class="col-8 col-sm-6 d-flex justify-content-end mt-75">
                                     <div class="invoice-subtotal">
                                         <div class="invoice-calc d-flex justify-content-between">
-                                            <button class="btn btn-primary guardar_solicitud">Enviar Orden</button>
+                                            <button class="btn btn-primary guardar_solicitud" id="id_enviar_btn">Enviar Solicitud</button>
+                                            <button class="btn btn-danger eliminar_solicitud" id="id_eliminar_btn">Eliminar Solicitud</button>
                                         </div>
                                         
                                     </div>
@@ -235,6 +236,7 @@
 
     $(document).ready(function() {
         $('.loader').hide();
+        $('#id_eliminar_btn').hide()
         
     })
 
@@ -244,48 +246,56 @@
 
         validarInsumos()
         console.log(items)
-        data.append('insumos[]', JSON.stringify(items))
+        if(items.length >= 1 ){
+            data.append('insumos[]', JSON.stringify(items))
 
-        var personal_finca = $('option:selected', '#id_empleados').val();
-        if(personal_finca === ''){
-            toastr.error('seleccione personal que recibira la entrega del pedido')
+            var personal_finca = $('option:selected', '#id_empleados').val();
+            if(personal_finca === ''){
+                toastr.error('seleccione personal que recibira la entrega del pedido')
+                return false
+            }
+
+            data.append('personal_id', personal_finca);
+
+            //url guardar datos
+            id_orden = '{{orden.id_solicitud}}'
+            url = '{% url "trn:detalle_orden_produccion" 0 %}'
+            url = url.replace(/0/, id_orden)
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData:false,
+                success: function(response){
+                    toastr.success('Orden Registrada', 'Correcto');
+                    setTimeout(() => {
+                        url_list = '/transacciones/orden-produccion-list/'
+                        window.location = url_list;
+                    }, 400)
+                },
+                error: function(response){
+                    console.log(response)
+                    $.confirm({
+                        title: 'Error',
+                        content: response.responseJSON.mensaje,
+                        theme: 'material',
+                        type: 'red',
+                        buttons: {
+                            confirm: {
+                                text: 'Entendido'
+                            },
+                        }
+                    });
+                }
+            })
+        }else{
+            $('#id_enviar_btn').hide()
+            $('#id_eliminar_btn').show()
+            toastr.error('No se tienen insumos en esta solicitud', 'Error');
             return false
         }
-
-        data.append('personal_id', personal_finca);
-
-        //url guardar datos
-        id_orden = '{{orden.id_solicitud}}'
-        url = '{% url "trn:detalle_orden_produccion" 0 %}'
-        url = url.replace(/0/, id_orden)
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: data,
-            contentType: false,
-            processData:false,
-            success: function(response){
-                toastr.success('Orden Registrada', 'Correcto');
-                setTimeout(() => {
-                    url_list = '/transacciones/orden-produccion-list/'
-                    window.location = url_list;
-                }, 400)
-            },
-            error: function(response){
-                console.log(response)
-                $.confirm({
-                    title: 'Error',
-                    content: response.responseJSON.mensaje,
-                    theme: 'material',
-                    type: 'red',
-                    buttons: {
-                        confirm: {
-                            text: 'Entendido'
-                        },
-                    }
-                });
-            }
-        })
+        
     })
 
     function validarInsumos(){
@@ -308,9 +318,6 @@
         })
         if(items.length >= 1){
             return items
-        }else{
-            toastr.error('Verifique la cantidad en los insumos', 'Atencion');
-            return false;
         }
 
     }
@@ -333,7 +340,7 @@
                 producto = response.data
                 var cant_ingresdada = parseFloat($('#'+input).val())
                 if(parseFloat(producto.cantidad_existente) < cant_ingresdada){
-                    toastr.info(('La cantidad ingreada es menor a la existente, del insumo: '+ producto.descripcion+', cantidad existentne: '+producto.cantidad_existente), {timeOut: 8000})
+                    toastr.info(('La cantidad ingresada es menor a la existente, del insumo: '+ producto.descripcion+', cantidad existentne: '+producto.cantidad_existente), {timeOut: 8000})
                     return false
                 }
 
@@ -402,6 +409,34 @@
         })
 
     }
+
+    $('#id_eliminar_btn').on('click', function(){
+        $('.loader').show();
+        $.ajax({
+            url: '{% url "trn:eliminar_solicitud_prod" %}',
+            type: 'GET',
+            data: {'id_solicitud': '{{orden.id_solicitud}}'},
+            success: function(data){
+                console.log(data)
+                if(data.data.estado==1){
+                    // toastr.success('Color Eliminado', 'Dato Eliminado');
+                    url_list = '/transacciones/orden-produccion-list/'
+                    toastr.success('Se elimino la solicitud', 'Correcto');
+                    setTimeout(() => {
+                        url_list = '/transacciones/orden-produccion-list/'
+                        window.location = url_list;
+                    }, 400)
+
+                }else if(data.data.estado==2){
+                    $('#modal_eliminarinsumo').modal('hide');
+                    toastr.error("Insumo no puede ser eliminado.",'Error');
+                }
+                else{
+                    toastr.error("Insumo No existe",'Error');
+                }
+            }
+        })
+    })
 
 
 
