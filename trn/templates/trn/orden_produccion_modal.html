@@ -256,6 +256,9 @@
     $(document).ready(function(){
         //obtenerProductos()
         obtenerCategoriaProductos()
+        $('#modalInsumosCategorias').hide();
+        $('#modalCategorias').hide();
+    
 
     })
 
@@ -264,6 +267,8 @@
         $(select).empty()
         $(select).attr('id', 'select_id')
         $(select).addClass('form-control')
+
+        $('#modalCategorias').show();
 
 
         option = document.createElement('option')
@@ -290,6 +295,8 @@
 
     $('.buscar_insumo').on('click', function(){
         
+        $('#modalCategorias').hide();
+        $('#modalInsumosCategorias').show();
 
         var categoria = $('option:selected', '#select_id').val();
         if(categoria === '0' || categoria === 0){
