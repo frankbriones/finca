@@ -193,6 +193,6 @@ EMAIL_USE_SSL = False
 
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 3600  # Tiempo de caducidad de la sesión
+SESSION_COOKIE_AGE = 360  # Tiempo de caducidad de la sesión
 # dado en segundos
 SESSION_SAVE_EVERY_REQUEST = True
