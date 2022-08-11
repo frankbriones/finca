@@ -28,6 +28,13 @@ def proveedores_list(request):
     return render(request, template_name, contexto)
 
 
+def categorias_prov_list(request):
+    template_name = 'prv/categorias_proveedor_list.html'
+    contexto = {
+        'categorias': CategoriaProveedor.objects.all()
+    }
+    return render(request, template_name, contexto)
+
 
 @login_required(login_url='/login/')
 def actualizar_proveedor_personal(request, id_proveedor=None):
@@ -56,12 +63,63 @@ def actualizar_proveedor_personal(request, id_proveedor=None):
 
 
 @login_required(login_url='/login/')
+def actualizar_categoria_proveedor(request, id_categoria=None):
+    template_name = 'prv/actualizar_categoria_modal.html'
+    contexto={}
+    categoria = CategoriaProveedor.objects.filter(id_categoria=id_categoria).first()
+
+    if request.method == 'GET':
+        contexto = {
+            'categoria': categoria
+        }
+    else:
+        json_data = json.loads(request.body)
+        estado = json_data['estado']
+
+        if estado == 'ACTIVO':
+            estado = Estados.objects.filter(descripcion='INACTIVO').first()
+        if estado == 'INACTIVO':
+            estado = Estados.objects.filter(descripcion='ACTIVO').first()
+        categoria.estado = estado
+        categoria.save()
+        return HttpResponse('Categoria de Proveedor Actualizada')
+    
+    return render(request, template_name, contexto)
+
+
+def editar_categoria(request):
+    if request.method == 'GET':
+        descripcion = request.GET['descripcion']
+        id_categoria = request.GET['categoria_id']
+
+        if id_categoria != '0':
+            categoria_obj = CategoriaProveedor.objects.filter(id_categoria=id_categoria).first()
+            categoria_obj.descripcion = descripcion
+            categoria_obj.save()
+            estado = True
+
+            return JsonResponse({'mensaje': 'Categoria Editada', 'estado': estado}, status=200)
+        else:
+            infoCategoria = CategoriaProveedor(
+                descripcion = descripcion,
+                usuario_crea=request.user.pk,
+                usuario_modifica=request.user.pk,
+                estado = Estados.objects.filter(descripcion__iexact='ACTIVO').first()
+            )
+            if infoCategoria:
+                infoCategoria.save()
+            estado = True
+            return JsonResponse({'mensaje': 'Categoria Creada', 'estado': estado}, status=200)
+
+
+
+@login_required(login_url='/login/')
 def editar_proveedor_modal(request, id_proveedor=None):
     template_name = 'prv/editar_proveedor_modal.html'
     contexto={}
     form_class = ProveedoresForm()
     proveedor = Proveedores.objects.filter(id_proveedor=id_proveedor).first()
-    categorias = CategoriaProveedor.objects.all()
+    categorias = CategoriaProveedor.objects.filter(estado__descripcion='ACTIVO')
     categorias_disponibles = [categoria.categoria.id_categoria for categoria in CategoriasProveedor.objects.filter(proveedor_id=id_proveedor)]
         
     if request.method == 'GET':

@@ -16,4 +16,17 @@ urlpatterns = [
         ProveedoresReporte.as_view(),
         name="proveedores_reporte"
     ),
+    path('proveedores-categorias/list/',
+        categorias_prov_list,
+        name="categorias_prov_list"
+    ),
+    path('actualizar_categoria_proveedor/<int:id_categoria>',
+        actualizar_categoria_proveedor,
+        name="actualizar_categoria_proveedor"
+    ),
+    path('editar-categoria_proveedor/',
+        editar_categoria,
+        name="editar_categoria"
+    ),
+
 ]

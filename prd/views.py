@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponseRedirect
 
@@ -186,3 +188,66 @@ def validar_cantidad_produccion(request):
             return JsonResponse({'data': data}, status=200)
         else:
             return JsonResponse({'mensaje': 'Insumo no existe, por favor verifique'}, status=500)
+
+
+
+
+
+
+
+def categorias_insumos_list(request):
+    template_name = 'prd/categorias_insumos_list.html'
+    contexto = {
+        'categorias': CategoriaProducto.objects.all()
+    }
+    return render(request, template_name, contexto)
+
+
+def actualizar_categoria_insumo(request, id_categoria=None):
+    template_name = 'prd/actualizar_categoria_modal.html'
+    contexto={}
+    categoria = CategoriaProducto.objects.filter(id_categoria=id_categoria).first()
+
+    if request.method == 'GET':
+        contexto = {
+            'categoria': categoria
+        }
+    else:
+        json_data = json.loads(request.body)
+        estado = json_data['estado']
+
+        if estado == 'ACTIVO':
+            estado = Estados.objects.filter(descripcion='INACTIVO').first()
+        if estado == 'INACTIVO':
+            estado = Estados.objects.filter(descripcion='ACTIVO').first()
+        categoria.estado = estado
+        categoria.save()
+        return HttpResponse('Categoria de Proveedor Actualizada')
+    
+    return render(request, template_name, contexto)
+
+
+def editar_categoria(request):
+    if request.method == 'GET':
+        descripcion = request.GET['descripcion']
+        id_categoria = request.GET['categoria_id']
+
+        if id_categoria != '0':
+            categoria_obj = CategoriaProducto.objects.filter(id_categoria=id_categoria).first()
+            categoria_obj.descripcion = descripcion
+            categoria_obj.save()
+            estado = True
+
+            return JsonResponse({'mensaje': 'Categoria Editada', 'estado': estado}, status=200)
+        else:
+            infoCategoria = CategoriaProducto(
+                descripcion = descripcion,
+                usuario_crea=request.user.pk,
+                usuario_modifica=request.user.pk,
+                estado = Estados.objects.filter(descripcion__iexact='ACTIVO').first()
+            )
+            if infoCategoria:
+                infoCategoria.save()
+            estado = True
+            return JsonResponse({'mensaje': 'Categoria Creada', 'estado': estado}, status=200)
+

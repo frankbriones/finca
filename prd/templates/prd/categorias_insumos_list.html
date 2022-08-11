@@ -1,0 +1,253 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">    
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Frutyfi</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'bases:inicio' %}"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                
+                                <li class="breadcrumb-item active">Insumos
+                                </li>
+                                <li class="breadcrumb-item active">Lista
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-title m-1">
+                        <div class="row"> 
+                            <div class="col-md-6 col-12 text-left p-2">
+                                <span><h4 class="text-bold">Categorias de Insumos</h4></span>
+                            </div>
+                            <div class="col-md-6 col-12 text-right">
+                                <div class="text-right card-body">
+                                    <a onclick="editarCategoria(0, '')" data-toggle="tooltip" data-placement="top" title data-original-title="Crear Categoria" class="btn btn-secondary text-white" role="button" ><i class="bx bx-plus"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-body m-1">
+                            <!-- Table with outer spacing -->
+                            <div class="table-responsive">
+                                <table class="table  table-hover" id="id_tabla_proveedores">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>DESCRIPCION</th>
+                                            <th>ESTADO</th>
+                                            <th>ACCIONES</th>
+        
+                                        </tr>
+                                    </thead>
+                                    <tbody class="">
+                                        {% for categoria in categorias %}
+                                            <tr>
+                                                <td>{{categoria.id_categoria}}</td>
+                                                <td class="text-bold-500">{{categoria.descripcion}}</td>
+        
+                                                <td>
+                                                    {% if categoria.estado.descripcion == 'ACTIVO' %}
+                                                        <span class="badge badge-success text-white">{{categoria.estado}}</span>
+                                                    {% else %}
+                                                        <span class="badge badge-danger text-white">{{categoria.estado}}</span>
+                                                    {% endif %}
+                                                </td>
+                                                <!--    acciones -->
+                                                <td>
+                                                    
+                                                    <a onclick="editarCategoria('{{categoria.id_categoria}}','{{categoria.descripcion}}')" >
+                                                        <i class="badge-circle badge-circle-light-secondary bx bx-edit font-medium-1">
+                                                        </i>
+                                                    </a> 
+                                                    {% if categoria.estado.descripcion == 'ACTIVO' %}
+                                                        <a onclick="return abrir_modal('{% url 'prd:actualizar_categoria_insumo' categoria.id_categoria %}')">
+                                                            <i class="badge-circle badge-circle-light-danger bx bx-x font-medium-1">
+                                                            </i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a onclick="return abrir_modal('{% url 'prd:actualizar_categoria_insumo' categoria.id_categoria %}')" >
+                                                            <i class="badge-circle badge-circle-light-success bx bx-check font-medium-1">
+                                                            </i>
+                                                        </a>
+                                                    {% endif %}
+                                                </td>
+                                               
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left" id="modal_editar_categoria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel12" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <input type="hidden" name="" class="id_categoria">
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title white">Editar Categoria Proveedor</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x"> </i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-label-group">
+                    <input type="text" class="form-control categoria_descripcion">
+                    <label for="" >Descripcion Categoria</label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-light-primary ml-1 editar_categoria" data-dismiss="modal">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+
+<!-- END: Content-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+
+
+<!-- BEGIN: Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+<script src="{% static  'base/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static  'base/app-assets/vendors/js/editors/quill/quill.min.js' %}"></script>
+
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static  'base/app-assets/js/scripts/pages/app-email.js' %}"></script>
+<!-- END: Page JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'base/app-assets/vendors/js/extensions/swiper.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
+<!-- BEGIN: Page JS-->
+<script src="{% static 'base/app-assets/js/scripts/extensions/swiper.js' %}"></script>
+<!-- END: Page JS-->
+
+
+<script src="{% static 'base/app-assets/vendors/js/extensions/toastr.min.js' %}"></script>
+
+<script src="{% static 'base/app-assets/js/scripts/extensions/toastr.js' %}"></script>
+
+
+{% endblock %}
+
+{% block js_page %}
+<script src="{% static  'base/app-assets/js/scripts/pages/app-file-manager.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $('.loader').hide();
+        $('#id_tabla_proveedores').DataTable(
+            {
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+            }
+        );
+    })
+
+    function editarCategoria(id_categoria, descripcion){
+        $('#modal_editar_categoria').modal('show');
+        $('#modal_editar_categoria .categoria_descripcion').val(descripcion);
+        $('#modal_editar_categoria .id_categoria').val(id_categoria)
+    }
+
+    $('#modal_editar_categoria .editar_categoria').click(function(){
+        let categoria_id = $('#modal_editar_categoria .id_categoria').val();
+        var descripcion = $('.categoria_descripcion').val();
+
+        if(descripcion === ''){
+            toastr.error('No puede estar el campo vacio')
+            return false
+        }
+
+        var parametros = {
+            'categoria_id': categoria_id,
+            'descripcion': descripcion
+        }
+        editar_categoria(parametros);
+    })
+
+    function editar_categoria(data){
+        $.ajax({
+            url : '{% url "prd:editar_categoria" %}',
+            type: 'GET',
+            data: data,
+            success: function(response){
+                estado = response.estado
+                if(estado){
+                    toastr.success(response.mensaje, "Edicion");
+                    $('#modal_editar_categoria').modal('hide')
+                    $('.loader').show();
+                    setTimeout(() => {
+                        location.reload(true);
+                    }, 1000);
+                }
+            }
+        })
+    }
+</script>
+
+{% endblock js_page %}

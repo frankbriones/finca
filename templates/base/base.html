@@ -145,7 +145,7 @@
                 <li class=" nav-item"><a href="#"><i class="bx  bx-truck"></i><span class="menu-title" data-i18n="Invoice">GESTIÓN DE PROVEED.</span></a>
                     <ul class="menu-content">
                         <li class=" nav-item"><a href="{% url 'prv:proveedores_list' %}"><i  class="bx bx-right-arrow-alt"> </i><span class="menu-title">Proveedores</span></a> 
-                            <li><a href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Categorias Prov.</span></a>
+                            <li><a href="{% url 'prv:categorias_prov_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Categorias Prov.</span></a>
                             </li>
                         </ul>
                 </li>
@@ -176,7 +176,7 @@
                         <li><a href="{% url 'prd:productos_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Insumos</span></a>
                         </li>
                         {% endif %}
-                        <li><a href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Categorias/Insumos.</span></a>
+                        <li><a href="{% url 'prd:categorias_insumos_list' %}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Invoice">Categorias/Insumos.</span></a>
                         </li>
                     </ul>
                 </li>
