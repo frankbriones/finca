@@ -13,7 +13,7 @@ class ProductoForm(forms.ModelForm):
         self.fields['bodega'] = forms.ModelChoiceField(queryset = Bodegas.objects.all(),empty_label="Escoger una bodega", 
             widget=forms.Select(attrs={'placeholder':'Bodegas', 'onChange':"getSecciones(this.value)"}))
         self.fields['seccion'] = forms.ModelChoiceField(queryset = Secciones.objects.none(), empty_label="Escoger una seccion")
-
+        self.fields['categoria'] = forms.ModelChoiceField(queryset = CategoriaProducto.objects.filter(estado__descripcion="ACTIVO"), empty_label="Escoger una seccion")
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
