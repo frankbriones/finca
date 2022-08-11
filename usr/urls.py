@@ -11,7 +11,7 @@ urlpatterns = [
    path('roles/list/',roles_list, name="roles_list"),
    path('roles/crear/<int:rol_id>/', RolesPermisos, name="roles_crear"),
    path('editar-perfil/<int:id_usuario>', editar_perfil, name="editar_perfil"),
-   path('editar-user/<int:pk>', EditUser.as_view(), name="edit_user"),#editar user logeado
+   path('editar-user/<int:pk>', EditUser, name="edit_user"),#editar user logeado
    #path('editar-user/<int:pk>', EditUser, name="edit_user"),#editar user logeado
 
    path('actualizar-perfil/<int:pk>', actualizar_perfil, name="actualizar_perfil"),

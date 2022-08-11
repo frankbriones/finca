@@ -28,13 +28,6 @@ def proveedores_list(request):
     return render(request, template_name, contexto)
 
 
-def categorias_prov_list(request):
-    template_name = 'prv/categorias_proveedor_list.html'
-    contexto = {
-        'categorias': CategoriaProveedor.objects.all()
-    }
-    return render(request, template_name, contexto)
-
 
 @login_required(login_url='/login/')
 def actualizar_proveedor_personal(request, id_proveedor=None):
@@ -61,6 +54,14 @@ def actualizar_proveedor_personal(request, id_proveedor=None):
     return render(request, template_name, contexto)
 
 
+
+
+def categorias_prov_list(request):
+    template_name = 'prv/categorias_proveedor_list.html'
+    contexto = {
+        'categorias': CategoriaProveedor.objects.all()
+    }
+    return render(request, template_name, contexto)
 
 @login_required(login_url='/login/')
 def actualizar_categoria_proveedor(request, id_categoria=None):

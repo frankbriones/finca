@@ -2,6 +2,7 @@ import json
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 from prd.resources import ProductoResource
 
@@ -24,7 +25,7 @@ def productos_list(request):
     }
     return render(request, template_name, contexto)
 
-
+@login_required(login_url='/login/')
 def detalle_producto(request, id_producto=None):
     template_name = 'prd/editar_producto.html'
     contexto = {}

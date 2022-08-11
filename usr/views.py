@@ -9,6 +9,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse_lazy
 
+from django.contrib.auth.decorators import login_required
+
+
 from usr.models import *
 from usr.serializers import *
 from usr.forms import *
@@ -360,26 +363,28 @@ def actualizar_perfil(request, pk):
     return render(request, template_name, contexto)
 
 
-class EditUser(LoginRequiredMixin, generic.UpdateView):
+# class EditUser(LoginRequiredMixin, generic.UpdateView):
 
-    model = Usuarios
-    template_name = "usr/editar_usuario.html"
-    context_objects_name = "usuario"
-    form_class = EditarUsuarioForm
-    success_url = reverse_lazy('bases:inicio')
-    login_url = 'bases:login'
-
-# def EditUser(request, pk=None):
+#     model = Usuarios
 #     template_name = "usr/editar_usuario.html"
-#     form = EditarUsuarioForm
-#     usuario_obj = Usuarios.objects.filter(id=pk).first()
+#     context_objects_name = "usuario"
+#     form_class = EditarUsuarioForm
+#     success_url = reverse_lazy('bases:inicio')
+#     login_url = 'bases:login'
 
 
-#     if request.method == 'GET':
-#         print(pk)
-#         contexto = {
-#             'form': EditarUsuarioForm(instance=usuario_obj)
-#         }
+@login_required(login_url='/login/')
+def EditUser(request, pk=None):
+    template_name = "usr/editar_usuario.html"
+    form = EditarUsuarioForm
+    usuario_obj = Usuarios.objects.filter(id=pk).first()
+
+
+    if request.method == 'GET':
+        print(pk)
+        contexto = {
+            'form': EditarUsuarioForm(instance=usuario_obj)
+        }
 
 #     if request.method == 'POST':
 #         imagen_perfil = request.POST['img_perfil']
@@ -402,7 +407,7 @@ class EditUser(LoginRequiredMixin, generic.UpdateView):
 
         
     
-#     return render(request, template_name, contexto)
+    return render(request, template_name, contexto)
 
 
 def obtener_usuarios_bodega(request):
