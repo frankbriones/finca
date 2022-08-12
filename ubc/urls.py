@@ -24,4 +24,5 @@ urlpatterns = [
    path('crear_bodega/', crear_bodega, name="crear_bodega"),
    path('detalle-ciudad/<int:id_ciudad>/', detalle_ciudad, name="detalle_ciudad"),
    path('crear_ciudad/', crear_ciudad, name="crear_ciudad"),
+   path('eliminar_seccion_bodega/', eliminar_seccion_bodega, name="eliminar_seccion_bodega"),
 ]

@@ -167,11 +167,17 @@
                         </div>
                     `;
                     let div1 = `
-                        <div class=" itemDetalle">
+                        <div class="itemDetalle">
                             <div class="row justify-content-between" data-repeater-item="" style="">
-                                <div class="col-md-12 col-12 form-group d-flex align-items-center mb-0">
+                                <div class="col-md-10 col-10 form-group d-flex align-items-center mb-0">
                                     <input type="text" data-id="${seccion.id_seccion}" class="form-control inputdetalle" placeholder="descripcion de seccion" value="${seccion.descripcion}">
 
+                                </div>
+                                <div class="col-md-2 col-2 form-group" >
+                                    
+                                    <button class="btn btn-icon btn-danger rounded-circle eliminardetalle" type="button" data-repeater-delete>
+                                        <i class="bx bx-trash "> </i>
+                                    </button>
                                 </div>
                                 
                                 
@@ -228,8 +234,41 @@
     // }
 
     function borrardiv(div){
-        $(div).remove();
-        nombrarElementos();
+        input = $(div).find('.inputdetalle');
+        var id_seccion = $(input).data('id')
+        console.log(id_seccion)
+        data = {
+            'id_seccion': id_seccion
+        }
+        $.ajax({
+            url: '{% url "ubc:eliminar_seccion_bodega" %}',
+            type: 'GET',
+            data: data,
+            success: function(response){
+                //console.log(response)
+                toastr.success('Seccion eliminada');
+
+                $(div).remove();
+                nombrarElementos();
+
+            },
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
+            }
+        })
+
+        
     }
 
     function nombrarElementos(){
@@ -272,16 +311,17 @@
             </div>
         `; 
         let div1 = `
-            <div class="row itemDetalle">
+        <div class="itemDetalle">
                 <div class="row justify-content-between" data-repeater-item="" style="">
-                    <div class="col-md-12 col-12 form-group d-flex align-items-center mb-0">
+                    <div class="col-md-8 col-8 form-group d-flex align-items-center mb-0">
                         <input type="text" class="form-control inputdetalle" placeholder="descripcion de seccion" >
 
                     </div>
                     
+                    
                     <br>
                 </div>
-            </div>
+                <div class="row itemDetalle">
         `; 
         $('#id_secciones_lista').append(div1);
         nombrarElementos();
@@ -293,7 +333,7 @@
         $('div.itemDetalle').each(function(){
             num++;
             descrip = $('#id_seccion'+num).val();
-            id_secc = $('#id_seccion'+num).attr('data-id');
+            id_secc = $('#id_seccion'+num).data('id');
             if(id_secc === undefined){
                 id_secc = num+'nuevo'
             }

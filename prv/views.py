@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 
 from .models import *
 from usr.models import *
@@ -20,6 +20,7 @@ from .serializers import *
 from .resources import *
 # Create your views here.
 
+@login_required(login_url='/login/')
 def proveedores_list(request):
     template_name = 'prv/proveedores_list.html'
     contexto = {
@@ -55,13 +56,14 @@ def actualizar_proveedor_personal(request, id_proveedor=None):
 
 
 
-
+@login_required(login_url='/login/')
 def categorias_prov_list(request):
     template_name = 'prv/categorias_proveedor_list.html'
     contexto = {
         'categorias': CategoriaProveedor.objects.all()
     }
     return render(request, template_name, contexto)
+
 
 @login_required(login_url='/login/')
 def actualizar_categoria_proveedor(request, id_categoria=None):
@@ -88,8 +90,9 @@ def actualizar_categoria_proveedor(request, id_categoria=None):
     return render(request, template_name, contexto)
 
 
+@login_required(login_url='/login/')
 def editar_categoria(request):
-    if request.method == 'GET':
+    if request.method == 'GET' and request.user.is_authenticated:
         descripcion = request.GET['descripcion']
         id_categoria = request.GET['categoria_id']
 
@@ -111,6 +114,8 @@ def editar_categoria(request):
                 infoCategoria.save()
             estado = True
             return JsonResponse({'mensaje': 'Categoria Creada', 'estado': estado}, status=200)
+    else:
+        return HttpResponseRedirect('/')
 
 
 
@@ -335,22 +340,6 @@ def editar_proveedor_modal(request, id_proveedor=None):
     return render(request, template_name, contexto)
 
 
-# #pruebas
-# def nuevo_estudiante(request, estudiante_id = None):
-# 	template ='taller/nuevo_estudiante.html'
-
-# 	form = SignupForm()
-# 	estudiante= None
-	
-# 	if request.method == 'POST':
-# 		form = SignupForm(request.POST, request.FILES)
-# 		(form.data)
-# 		if form.is_valid():
-# 			estudiante = form.save()
-# 			request.session['msge'] = "Ingreso de Estudiante Realizado!"
-# 			return HttpResponseRedirect(reverse('tallers:taller'))
-# 	return render(request, template, {'form':form})
-
 
 @login_required(login_url='/login/')
 def proveedores_ajax(request):
@@ -388,6 +377,7 @@ class ProveedoresReporte(APIView):
         return response
 
 
+@login_required(login_url='/login/')
 def BusquedaProveedores(filtros):
     fecha_inicial = filtros.POST['query']
     fecha_final = filtros.POST['query2']

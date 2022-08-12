@@ -3,6 +3,9 @@ import json
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect, JsonResponse, HttpResponse
 
+from prd.models import Productos
+from prd.resources import ProductoResource
+
 from ubc.models import *
 from ubc.forms import *
 from ubc.serializers import *
@@ -209,6 +212,7 @@ def editar_bodega(request, id_bodega=None):
             #     seccion.delete()
 
             for secc in secciones:
+                print('xxxx', secc.get('descripcion'))
                 try:
                     id_seccion = int(secc.get('id_seccion'))
                     seccion_obj = Secciones.objects.filter(id_seccion = secc.get('id_seccion')).exists()
@@ -223,12 +227,16 @@ def editar_bodega(request, id_bodega=None):
                     seccion_existe = Secciones.objects.filter(descripcion = secc.get('descripcion'), bodega_id=bodega_obj.id_bodega).exists()
                     if seccion_existe:
                         return JsonResponse({'mensaje': 'Existen Secciones Repetidas', 'estado': False})
-                    infoSeccion = Secciones(
-                        descripcion = secc.get('descripcion'),
-                        bodega_id = bodega_obj.id_bodega
-                    )
-                    if infoSeccion:
-                        infoSeccion.save()
+                    if secc.get('descripcion') != None:
+                        infoSeccion = Secciones(
+                            descripcion = secc.get('descripcion'),
+                            bodega_id = bodega_obj.id_bodega
+                        )
+                        if infoSeccion:
+                            infoSeccion.save()
+                    else:
+                        pass
+                
             return JsonResponse({'mensaje': 'Bodega Editada', 'estado': True})
         else:
             infoBodega = Bodegas(
@@ -378,3 +386,17 @@ def crear_ciudad(request):
     }
 
     return render(request, template_name, contexto)
+
+
+
+def eliminar_seccion_bodega(request):
+    if request.is_ajax:
+        id_seccion = request.GET['id_seccion']
+        if id_seccion:
+            producto_seccion = Productos.objects.filter(seccion_id = id_seccion).exists()
+            if producto_seccion:
+                return JsonResponse({'mensaje': 'No se puede eliminar la seccion, esta relacionada a uno o varios insumos.'}, status=500)
+            else:
+                seccion_obj = Secciones.objects.filter(id_seccion=id_seccion).first()
+                seccion_obj.delete()
+                return JsonResponse({'mensaje': 'seccion eliminada'}, status=200)

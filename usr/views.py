@@ -17,6 +17,7 @@ from usr.serializers import *
 from usr.forms import *
 # Create your views here.
 
+@login_required(login_url='/login/')
 def usuarios_list(request):
     """obtener el listado de usuarios por pais"""
     if request.user.is_authenticated:
@@ -37,6 +38,7 @@ def usuarios_list(request):
         return HttpResponseRedirect('/login/')
 
 
+@login_required(login_url='/login/')
 def roles_list(request):
     template_name = "usr/roles_lista.html"
     if request.user.is_authenticated:
@@ -52,6 +54,8 @@ def roles_list(request):
         return HttpResponseRedirect('/')
 
 
+
+@login_required(login_url='/login/')
 def RolesPermisos(request, rol_id=None):
     template_name = "usr/roles_form.html"
     rol_obj = Roles.objects.filter(id_rol=rol_id).first()
@@ -168,6 +172,7 @@ def RolesPermisos(request, rol_id=None):
     return render(request, template_name, contexto)
 
 
+@login_required(login_url='/login/')
 def editar_perfil(request, id_usuario=None): 
     template_name = 'usr/editar_perfil.html'
     contexto = {}
@@ -339,6 +344,7 @@ def editar_perfil(request, id_usuario=None):
     return render(request, template_name, contexto)
 
 
+@login_required(login_url='/login/')
 def actualizar_perfil(request, pk):
     template_name = 'usr/actualizar_usuario_modal.html'
     contexto = {}
