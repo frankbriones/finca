@@ -935,11 +935,44 @@ def eliminar_insumo_solic_produccion(request):
         return JsonResponse({'data': data})
 
 
+def eliminar_insumo_solic_pedido(request):
+    if request.is_ajax:
+        id_insumo = request.GET['id_insumo']
+        id_orden = request.GET['id_orden']
+        if id_insumo:
+            detalle_orden = ProductosSolicitud.objects.filter(solicitud_id=id_orden, producto_id=id_insumo).first()
+            detalle_orden.delete()
+            estado = 1
+        else:
+            estado = 2
+        data = {
+            'estado': estado
+        }
+        return JsonResponse({'data': data})
+
+
 def eliminar_solicitud_prod(request):
     if request.is_ajax:
         id_orden = request.GET['id_solicitud']
         if id_orden:
             orden_obj = OrdenProduccion.objects.filter(id_solicitud=id_orden).first()
+            orden_obj.delete()
+            estado = 1
+        else:
+            estado = 2
+        data = {
+            'estado': estado
+        }
+        return JsonResponse({'data': data})
+
+
+
+
+def eliminar_solicitud_pedido(request):
+    if request.is_ajax:
+        id_solicitud = request.GET['id_solicitud']
+        if id_solicitud:
+            orden_obj = SolicitudPedido.objects.filter(id_solicitud=id_solicitud).first()
             orden_obj.delete()
             estado = 1
         else:

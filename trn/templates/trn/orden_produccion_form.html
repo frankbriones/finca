@@ -245,7 +245,6 @@
         data = new FormData(form)
 
         validarInsumos()
-        console.log(items)
         if(items.length >= 1 ){
             data.append('insumos[]', JSON.stringify(items))
 

@@ -252,3 +252,62 @@ def editar_categoria(request):
             estado = True
             return JsonResponse({'mensaje': 'Categoria Creada', 'estado': estado}, status=200)
 
+
+
+def unidades_medidas_list(request):
+    template_name = 'prd/unidades_medidas_list.html'
+    contexto = {
+        'unidades': UnidadMedida.objects.all()
+    }
+    return render(request, template_name, contexto)
+
+
+
+
+def actualizar_unidad_medida(request, id_categoria=None):
+    template_name = 'prd/actualizar_unidad_modal.html'
+    contexto={}
+    medida = UnidadMedida.objects.filter(id_categoria=id_categoria).first()
+
+    if request.method == 'GET':
+        contexto = {
+            'medida': medida
+        }
+    else:
+        json_data = json.loads(request.body)
+        estado = json_data['estado']
+
+        if estado == 'ACTIVO':
+            estado = Estados.objects.filter(descripcion='INACTIVO').first()
+        if estado == 'INACTIVO':
+            estado = Estados.objects.filter(descripcion='ACTIVO').first()
+        medida.estado = estado
+        medida.save()
+        return HttpResponse('Unidad de Medida Actualizada')
+    
+    return render(request, template_name, contexto)
+
+
+def editar_unidad_medida(request):
+    if request.method == 'GET':
+        descripcion = request.GET['descripcion']
+        id_categoria = request.GET['categoria_id']
+
+        if id_categoria != '0':
+            medida_obj = UnidadMedida.objects.filter(id_categoria=id_categoria).first()
+            medida_obj.descripcion = descripcion
+            medida_obj.save()
+            estado = True
+
+            return JsonResponse({'mensaje': 'Unidad Medida Editada', 'estado': estado}, status=200)
+        else:
+            infoCategoria = UnidadMedida(
+                descripcion = descripcion,
+                usuario_crea=request.user.pk,
+                usuario_modifica=request.user.pk,
+                estado = Estados.objects.filter(descripcion__iexact='ACTIVO').first()
+            )
+            if infoCategoria:
+                infoCategoria.save()
+            estado = True
+            return JsonResponse({'mensaje': 'Unidad Medida Creada', 'estado': estado}, status=200)

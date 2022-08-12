@@ -84,7 +84,7 @@
                                         <th scope="col">Insumo</th>
                                         <th scope="col">Categoria</th>
                                         <th scope="col">Unidad/Medida</th>
-                                        <th scope="col">Minimo a solicitar</th>
+                                        <th class="text-center" scope="col">Minimo a solicitar</th>
                                         <th scope="col">Cantidad</th>
 
                                     </tr>
@@ -97,8 +97,10 @@
                                             <td>{{insumo.producto.descripcion}}</td>
                                             <td>{{insumo.producto.categoria.descripcion}}</td>
                                             <td>{{insumo.producto.unidad_medida.descripcion}}</td>
-                                            <td><b>{{insumo.producto.cantidad_minima}}</b></td>
+                                            <td class="text-center"><b>{{insumo.producto.cantidad_minima}}</b></td>
                                             <td><input  class="form-control "  type="number" min="0"></td>
+                                            
+                                            <td><a ><i data-descripcion="{{insumo.producto.descripcion}}" data-insumo="{{insumo.producto.id_producto}}" class=" badge-circle badge-circle-danger bx bx-trash font-medium-1 modal_eliminar"></i></a></td>
                                         </tr>
                                         {% endfor %}
                                     
@@ -112,16 +114,13 @@
                             <hr>
                             <div class="row">
                                 <div class="col-4 col-sm-6 mt-75">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-                                        standard dummy text ever since the 1500s,
-                                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic typesetting,
-                                        remaining essentially unchanged.</p>
+                                    <p></p>
                                 </div>
                                 <div class="col-8 col-sm-6 d-flex justify-content-end mt-75">
                                     <div class="invoice-subtotal">
                                         <div class="invoice-calc d-flex justify-content-between">
-                                            <button class="btn btn-primary guardar_solicitud">Enviar Orden</button>
+                                            <button id="id_enviar_btn" class="btn btn-primary guardar_solicitud">Enviar Solicitud</button>
+                                            <button class="btn btn-danger eliminar_solicitud" id="id_eliminar_btn">Eliminar Solicitud</button>
                                         </div>
                                         
                                     </div>
@@ -136,6 +135,38 @@
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade text-left" id="modal_eliminarinsumo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel12" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <input type="hidden" class="id_insumo_eliminar">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title white" id="myModalLabel12">Confirmacion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                Desea eliminar el registro <span class="nombre_insumo"> </span> de la solicitud.?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">No</span>
+                </button>
+                <button type="button" class="btn btn-danger ml-1 delete_insumo">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">si</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <div class="loader">
     <div class="lds-spinner">
@@ -203,6 +234,8 @@
 
     $(document).ready(function() {
         $('.loader').hide();
+        $('#id_eliminar_btn').hide()
+
         
     })
 
@@ -211,39 +244,46 @@
         data = new FormData(form)
 
         validarInsumos()
-        data.append('insumos[]', JSON.stringify(items))
+        if(items.length >= 1 ){
+            data.append('insumos[]', JSON.stringify(items))
 
-        //url guardar datos
-        id_solicitud = '{{solicitud.id_solicitud}}'
-        url = '{% url "trn:detalle_solicitud" 0 %}'
-        url = url.replace(/0/, id_solicitud)
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: data,
-            contentType: false,
-            processData:false,
-            success: function(response){
-                toastr.success('Solicitud Registrada', 'Correcto');
-                setTimeout(() => {
-                    url_list = '/transacciones/pedidos-list/'
-                    window.location = url_list;
-                }, 400)
-            },
-            error: function(response){
-                $.confirm({
-                    title: 'Error',
-                    content: response.responseJSON.mensaje,
-                    theme: 'material',
-                    type: 'red',
-                    buttons: {
-                        confirm: {
-                            text: 'Entendido'
-                        },
-                    }
-                });
-            }
-        })
+            //url guardar datos
+            id_solicitud = '{{solicitud.id_solicitud}}'
+            url = '{% url "trn:detalle_solicitud" 0 %}'
+            url = url.replace(/0/, id_solicitud)
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData:false,
+                success: function(response){
+                    toastr.success('Solicitud Registrada', 'Correcto');
+                    setTimeout(() => {
+                        url_list = '/transacciones/pedidos-list/'
+                        window.location = url_list;
+                    }, 400)
+                },
+                error: function(response){
+                    $.confirm({
+                        title: 'Error',
+                        content: response.responseJSON.mensaje,
+                        theme: 'material',
+                        type: 'red',
+                        buttons: {
+                            confirm: {
+                                text: 'Entendido'
+                            },
+                        }
+                    });
+                }
+            })
+        }else{
+            $('#id_enviar_btn').hide()
+            $('#id_eliminar_btn').show()
+            toastr.error('No se tienen insumos en esta solicitud', 'Error');
+            return false
+        }
     })
 
     function validarInsumos(){
@@ -269,6 +309,81 @@
             
         })
     }
+
+    
+    $(document).on('click', '.modal_eliminar', function(){
+        var id_insumo = $(this).attr('data-insumo');
+        var descripcion = $(this).attr('data-descripcion');
+        data = {
+            'insumo_id': id_insumo
+        }
+        $('#modal_eliminarinsumo .nombre_insumo').text(descripcion);
+        $('#modal_eliminarinsumo .id_insumo_eliminar').val(id_insumo);
+
+        $('#modal_eliminarinsumo').modal('show');
+    })
+
+    $("#modal_eliminarinsumo .delete_insumo").click(function ()
+    {
+        var insumo_id = $("#modal_eliminarinsumo .id_insumo_eliminar").val();
+        var parametros = {
+                "id_insumo": insumo_id,
+                'id_orden': '{{solicitud.id_solicitud}}'
+            };
+        eliminar_insumo(parametros);
+        
+    })
+
+    function eliminar_insumo(parametros)
+    {
+        $.ajax({
+            url: '{% url "trn:eliminar_insumo_solic_pedido" %}',
+            type: 'GET',
+            data: parametros,
+
+            success: function(data){
+                if(data.data.estado==1){
+                    // toastr.success('Color Eliminado', 'Dato Eliminado');
+                    $('#modal_eliminarinsumo').modal('hide');
+                    location.reload(true)
+                }else if(data.data.estado==2){
+                    $('#modal_eliminarinsumo').modal('hide');
+                    toastr.error("Insumo no puede ser eliminado.",'Error');
+                }
+                else{
+                    toastr.error("Insumo No existe",'Error');
+                }
+            }
+
+        })
+
+    }
+
+    $('#id_eliminar_btn').on('click', function(){
+        $('.loader').show();
+        $.ajax({
+            url: '{% url "trn:eliminar_solicitud_pedido" %}',
+            type: 'GET',
+            data: {'id_solicitud': '{{solicitud.id_solicitud}}'},
+            success: function(data){
+                console.log(data)
+                if(data.data.estado==1){
+                    url_list = '/inventario/list/'
+                    toastr.success('Se elimino la solicitud', 'Correcto');
+                    setTimeout(() => {
+                        window.location = url_list;
+                    }, 400)
+
+                }else if(data.data.estado==2){
+                    $('#modal_eliminarinsumo').modal('hide');
+                    toastr.error("Solcitiud no puede ser eliminada.",'Error');
+                }
+                else{
+                    toastr.error("Solicitud No existe",'Error');
+                }
+            }
+        })
+    })
 
 </script>
 

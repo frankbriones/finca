@@ -1,7 +1,8 @@
 from django.urls import path, include
 
 from .views import productos_list, detalle_producto, StockReporte, secciones_bodega, validar_cantidad_produccion,\
-    categorias_insumos_list, actualizar_categoria_insumo, editar_categoria
+    categorias_insumos_list, actualizar_categoria_insumo, editar_categoria, unidades_medidas_list,\
+    actualizar_unidad_medida, editar_unidad_medida
 
 urlpatterns = [
     path('productos_list/', productos_list, name="productos_list"),
@@ -30,4 +31,17 @@ urlpatterns = [
         editar_categoria,
         name="editar_categoria"
     ),
+    path('unidades-medida/list/',
+        unidades_medidas_list,
+        name="unidades_medidas_list"
+    ),
+    path('actualizar_unidad_medida/<int:id_categoria>',
+        actualizar_unidad_medida,
+        name="actualizar_unidad_medida"
+    ),
+    path('editar-unida-medida/',
+        editar_unidad_medida,
+        name="editar_unidad_medida"
+    ),
+
 ]

@@ -49,5 +49,8 @@ urlpatterns = [
     path('lista_categorias_productos_ajax/', lista_categorias_productos, name="lista_categorias_productos_ajax"),
     path('eliminar_insumo_solic_produccion/ajax/', eliminar_insumo_solic_produccion, name="eliminar_insumo_solic_produccion"),
     path('eliminar_solicitud_prod/ajax/', eliminar_solicitud_prod, name="eliminar_solicitud_prod"),
+    path('eliminar_solicitud_pedido/ajax/', eliminar_solicitud_pedido, name="eliminar_solicitud_pedido"),
+    
+    path('eliminar_insumo_solic_pedido/ajax/', eliminar_insumo_solic_pedido, name="eliminar_insumo_solic_pedido"),
 
 ]
