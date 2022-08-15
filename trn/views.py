@@ -16,6 +16,8 @@ from personal.models import *
 from trn.models import *
 from prd.models import *
 
+from trn.resources import *
+
 from prd.serializers import *
 
 from datetime import datetime, timedelta, timezone
@@ -981,3 +983,50 @@ def eliminar_solicitud_pedido(request):
             'estado': estado
         }
         return JsonResponse({'data': data})
+
+
+
+
+
+
+from rest_framework.views import APIView
+from datetime import datetime, timezone
+from django.http.response import HttpResponseRedirect, JsonResponse, HttpResponse
+
+
+class pedidos_reporte(APIView):
+    def post(self, request):
+        filtros = self.request
+        print(filtros)
+        productos = BusquedaPedidos(
+            filtros
+        )
+        productos_lista = []
+        if productos:
+            ahora = datetime.now(timezone.utc)
+            for producto in productos:
+                productos_lista.append(producto)
+            producto_resource = PedidosResource()
+            dataset = producto_resource.export(productos_lista)
+            nombre_archivo = 'Reporte_Pedidos_' + \
+                ahora.strftime('%d-%m-%Y') + '.xls'
+            response = HttpResponse(
+                dataset.xls,
+                content_type='application/vnd.ms-excel'
+            )
+            response['Content-Disposition'] = 'attachment; filename=' \
+                + nombre_archivo
+        else:
+            response = HttpResponse('No existen ordenes')
+        return response
+
+
+def BusquedaPedidos(filtros):
+    fecha_inicial = filtros.POST['query']
+    fecha_final = filtros.POST['query2']
+
+    productos = SolicitudPedido.objects.filter(
+        fecha_creacion__gte=fecha_inicial,
+        fecha_creacion__lte=fecha_final
+    ).order_by('-fecha_creacion')
+    return productos

@@ -89,10 +89,10 @@
                         <table class="table  table-hover" id="id_tabla_insumos">
                             <thead>
                                 <tr>
-                                    <th>CATEGORIA</th>
                                     <th>DESCRIPCION</th>
-                                    <th>SECCION</th>
+                                    <th>CATEGORIA</th>
                                     <th>UNIDAD MEDIDA</th>
+                                    <th>BODEGA</th>
                                     <th>ESTADO</th>
                                     <th>ACCION</th>
                                 </tr>
@@ -100,10 +100,10 @@
                             <tbody class="">
                                 {% for producto in productos %}
                                     <tr>
-                                        <td>{{producto.categoria}}</td>
                                         <td class="text-bold-500">{{producto.descripcion}}</td>
-                                        <td class="text-bold-500">{{producto.seccion}}</td>
+                                        <td>{{producto.categoria}}</td>
                                         <td class="text-bold-500">{{producto.unidad_medida}}</td>
+                                        <td class="text-bold-500">{{producto.bodega}}</td>
                                         {% if producto.estado.descripcion == 'NO DISPONIBLE' %}
                                             <td>
                                                 <span class="badge badge-danger text-white">

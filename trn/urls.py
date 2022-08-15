@@ -52,5 +52,8 @@ urlpatterns = [
     path('eliminar_solicitud_pedido/ajax/', eliminar_solicitud_pedido, name="eliminar_solicitud_pedido"),
     
     path('eliminar_insumo_solic_pedido/ajax/', eliminar_insumo_solic_pedido, name="eliminar_insumo_solic_pedido"),
+    path('pedidos_reporte/ajax/', pedidos_reporte.as_view(), name="pedidos_reporte"),
+    
+
 
 ]

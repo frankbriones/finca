@@ -208,10 +208,12 @@
                 <button data-id_orden="{{orden.id_solicitud}}" class="btn btn-primary revisar_orden">Marcar Revision</button>
             </div>
         {% endif %}
-        {% if orden.estado.descripcion == 'SOLICITUD DE PROD. REVISADA' and request.user.rol.descripcion == 'BODEGUERO' %}
+        {% if orden.estado.descripcion == 'SOLICITUD DE PROD. REVISADA' %}
+            {%  if request.user.rol.descripcion == 'BODEGUERO' or request.user.rol.descripcion == 'ADMINISTRADOR'%}
             <div class="modal-footer">
                 <button data-id_orden="{{orden.id_solicitud}}" class="btn btn-primary generar_orden_salida">Generar Orden Salida Bodega</button>
             </div>
+            {% endif %}
         {% endif %}
 
         {% endif %}

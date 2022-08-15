@@ -154,13 +154,14 @@ class StockReporte(APIView):
 
 
 def BusquedaProductos(filtros):
-    fecha_inicial = filtros.POST['query']
-    fecha_final = filtros.POST['query2']
+    # fecha_inicial = filtros.POST['query']
+    # fecha_final = filtros.POST['query2']
 
-    productos = Productos.objects.filter(
-        fecha_creacion__gte=fecha_inicial,
-        fecha_creacion__lte=fecha_final
-    ).order_by('-fecha_creacion')
+    # productos = Productos.objects.filter(
+    #     fecha_creacion__gte=fecha_inicial,
+    #     fecha_creacion__lte=fecha_final
+    # ).order_by('-fecha_creacion')
+    productos = Productos.objects.all().order_by('-fecha_creacion')
     return productos
 
 

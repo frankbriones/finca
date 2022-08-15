@@ -33,29 +33,34 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <div class="swiper-default swiper-container swiper-container-initialized swiper-container-horizontal">
-                                <div class="row d-flex justify-content-center align-items-center p-4 ">
+                                <div class="row ">
                                     {% if request.user.rol.descripcion != 'PROVEEDOR' %}
                                         {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR'  %}
-                                        <div class="col-md-6 col-12 text-center">
-                                            <button class="btn btn-primary btn-lg bx bx-file reporte_proveedores"><h3 class="text-white">REPORTE PROVEEDORES</h3></button>
+                                        <div class="col-12 alert alert-primary reporte_proveedores" role="alert" >
+                                            <span><h4 class="text-white"><i class="bx bx-file"></i> REPORTE PROVEEDORES<h4></span>
                                         </div>
+                                        
                                         {% endif %}
                                     {% endif %}
-                                    {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR'  %}
-                                        <div class="col-md-6 col-12 text-center">
-                                            <button class="btn btn-success btn-lg bx bx-file reporte_stock"><h3 class="text-white">REPORTE DE STOCK</h3></button>
-                                        </div>
+                                    <br>
+                                    {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR' or request.user.rol.descripcion == 'PRODUCCION'  or request.user.rol.descripcion == 'BODEGUERO'  %}
+                                    <div class="col-12 alert alert-secondary " onclick="generarReporteStockExcel()" role="alert" >
+                                        <span><h4 class="text-white"><i class="bx bx-file"></i> REPORTE STOCK<h4></span>
+                                    </div>
                                     {% endif %}
-                                        <div class="col-md-6 col-12 text-center p-2">
-                                            <button class="btn btn-success btn-lg bx bx-file reporte_pedidos"><h3 class="text-white">REPORTE DE PEDIDOS</h3></button>
-                                        </div>
-                                        <div class="col-md-6 col-12 text-center">
-                                        </div>
+                                    {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR' %}
+                                    <div class="col-12 alert alert-warning reporte_pedidos" role="alert" >
+                                        <span><h4 class="text-white"><i class="bx bx-file"></i> REPORTE PEDIDOS<h4></span>
+                                    </div>
+                                    {% endif %}
+                                    {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR' or request.user.rol.descripcion == 'BODEGUERO'   %}
+                                    <div class="col-12 alert alert-success reporte_bodega" role="alert" >
+                                        <span><h4 class="text-white"><i class="bx bx-file"></i> REPORTE BODEGA<h4></span>
+                                    </div>
+                                    {% endif %}
 
                                 </div>
                                 <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,8 +73,8 @@
 <div class="modal fade" id="modal_reporte_proveedores" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header ">
-                <h5 class="modal-title" id="exampleModalCenterTitle" >Generar reporte de Proveedores</h5>
+            <div class="modal-header bg-primary ">
+                <h5 class="modal-title text-white" id="exampleModalCenterTitle" >Generar reporte de Proveedores</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="bx bx-x "></i>
                 </button>
@@ -81,11 +86,13 @@
                     
                     <div class="row">
                         <div class="col-12 p-1">
+                            Fecha inicial de la busqueda
                             <input placeholder="Fecha donde inicia el reporte" type="date" id="query" name="query"  required class="form-control " />
 
                             
                         </div>
                         <div class="col-12 p-1">
+                            Fecha final de la busqueda
                             <input placeholder="Fecha donde finaliza el reporte" type="date"  id="query2" name="query2"  required  class="form-control"/>
                         </div>
                     </div>
@@ -113,8 +120,8 @@
 <div class="modal fade" id="modal_reporte_stock" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header ">
-                <h5 class="modal-title" id="exampleModalCenterTitle" >Generar reporte de Stock de Insumos</h5>
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="exampleModalCenterTitle" >Generar reporte de Pedido a Proveedores</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="bx bx-x "></i>
                 </button>
@@ -126,11 +133,13 @@
                     
                     <div class="row">
                         <div class="col-12 p-1">
+                            Fecha inicial de la busqueda
                             <input placeholder="Fecha donde inicia el reporte" type="date" id="fecha_inicial" name="query"  required class="form-control " />
 
                             
                         </div>
                         <div class="col-12 p-1">
+                            Fecha final de la busqueda
                             <input placeholder="Fecha donde finaliza el reporte" type="date"  id="fecha_final" name="query2"  required  class="form-control"/>
                         </div>
                     </div>
@@ -138,8 +147,8 @@
                     
                  </form>
                  <div class="row justify-content-center">
-                    <a onclick="generarReporteStockExcel()" id="btn_reporte">
-                        <label for="getFile" class="btn btn-primary btn-block glow my-2 add-file-btn text-capitalize"><i class="bx bx-file"></i>Exportar</label>
+                    <a onclick="generarReportePedidosExcel()" id="btn_reporte">
+                        <label for="getFile" class="btn btn-warning btn-block glow my-2 add-file-btn text-capitalize"><i class="bx bx-file"></i>Exportar</label>
                     </a>
                 </div>
 
@@ -152,6 +161,54 @@
         </div>
     </div>
 </div>
+
+
+<!-- modal de edicion de datos -->
+<div class="modal fade" id="modal_reporte_bodega" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title text-white" id="exampleModalCenterTitle" >Generar reporte de Bodega</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x "></i>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="modal-body">
+                    <br>
+                   <form id="form_proveedor">
+                    
+                    <div class="row">
+                        <div class="col-12 p-1">
+                            Fecha inicial de la busqueda
+                            <input placeholder="Fecha donde inicia el reporte" type="date" id="query" name="query"  required class="form-control " />
+
+                            
+                        </div>
+                        <div class="col-12 p-1">
+                            Fecha final de la busqueda
+                            <input placeholder="Fecha donde finaliza el reporte" type="date"  id="query2" name="query2"  required  class="form-control"/>
+                        </div>
+                    </div>
+                  
+                    
+                 </form>
+                 <div class="row justify-content-center">
+                    <a onclick="" id="btn_reporte">
+                        <label for="getFile" class="btn btn-success btn-block glow my-2 add-file-btn text-capitalize"><i class="bx bx-file"></i>Exportar</label>
+                    </a>
+                </div>
+
+
+
+
+           </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
 
 
 <!-- END: Content-->
@@ -202,8 +259,12 @@
         $('#modal_reporte_proveedores').modal('show');
     })
 
-    $('.reporte_stock').on('click', function(){
+    $('.reporte_pedidos').on('click', function(){
         $('#modal_reporte_stock').modal('show');
+    })
+
+    $('.reporte_bodega').on('click', function(){
+        $('#modal_reporte_bodega').modal('show');
     })
 
 
@@ -211,6 +272,10 @@
         // estadosBusqueda = []
         f_inicio = $('#query').val();
         f_fin = $('#query2').val();
+        if(f_inicio === '' || f_fin === ''){
+            toastr.error('Ingrese fechas correctas', 'Error');
+            return false;
+        }
         body = {
             'query': f_inicio,
             'query2': f_fin
@@ -265,14 +330,95 @@
 
     function generarReporteStockExcel(){
         // estadosBusqueda = []
+        // f_inicio = $('#fecha_inicial').val();
+        // f_fin = $('#fecha_final').val();
+        // if(f_inicio === '' || f_fin === ''){
+        //     toastr.error('Ingrese fechas correctas', 'Error');
+        //     return false;
+        // }
+        // f = new Date(f_fin)
+        // console.log(f)
+        // f_actual = new Date();
+        // if(f > f_actual){
+        //     toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+        //     return false
+        // }
+    
+        body = {
+        }
+       
+        var url = "{% url 'prd:stock_reporte' %}";
+
+        var token = '{{ csrf_token }}';
+
+        
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            type: "POST",
+            url: url,
+            data: body,
+            
+            success: function(res, textStatus, jqXHR) {
+                if(res.length != undefined){
+                    toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
+                    return false;
+                }
+                
+                $('#modal_reporte_stock').modal('hide');
+                let nombreArchivo = "";
+                let disposition = jqXHR.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    let matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) { 
+                        nombreArchivo = matches[1].replace(/['"]/g, '');
+                    }
+                }
+                var a = document.createElement('a');
+                
+                var url = window.URL.createObjectURL(res);
+                console.log(url)
+                a.href = url;
+                a.download = nombreArchivo;
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            },
+            // error: function(jqXHR, textStatus, errorThrow){
+            //     console.log('**********')
+            //     alert("error: " + errorThrow)
+            // }
+        });
+    }
+
+    
+    function generarReportePedidosExcel(){
+        estadosBusqueda = []
         f_inicio = $('#fecha_inicial').val();
         f_fin = $('#fecha_final').val();
+        if(f_inicio === '' || f_fin === ''){
+            toastr.error('Ingrese fechas correctas', 'Error');
+            return false;
+        }
+        f = new Date(f_fin)
+        f_actual = new Date();
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
+    
         body = {
             'query': f_inicio,
             'query2': f_fin
         }
        
-        var url = "{% url 'prd:stock_reporte' %}";
+        var url = "{% url 'trn:pedidos_reporte' %}";
 
         var token = '{{ csrf_token }}';
 
