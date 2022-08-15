@@ -48,7 +48,7 @@
                                         <span><h4 class="text-white"><i class="bx bx-file"></i> REPORTE STOCK<h4></span>
                                     </div>
                                     {% endif %}
-                                    {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR' %}
+                                    {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR' or request.user.rol.descripcion == 'PROVEEDOR'  %}
                                     <div class="col-12 alert alert-warning reporte_pedidos" role="alert" >
                                         <span><h4 class="text-white"><i class="bx bx-file"></i> REPORTE PEDIDOS<h4></span>
                                     </div>
