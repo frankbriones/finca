@@ -10,6 +10,7 @@ from asgiref.sync import async_to_sync
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 from trn.serializers import DetalleSolicitudSerializer, SolicitudSerializer
 from personal.models import *
@@ -137,7 +138,8 @@ def detalle_solicitud(request, id_solicitud=None):
                         solicitud_id=solicitud.id_solicitud
                     ).first()
                 insumo_obj = Productos.objects.filter(id_producto=insumo.get('id_insumo')).first()
-                if insumo_obj.estado.descripcion == 'NO DISPONIBLE':
+                
+                if insumo_obj:
                     if insumo.get('cantidad') != '':
                         if float(insumo_obj.cantidad_minima) > float(insumo.get('cantidad')):
                             return JsonResponse({'mensaje': 'Cantidad es menor a la minima.'}, status=500)
@@ -189,7 +191,7 @@ def detalle_solicitud(request, id_solicitud=None):
 
     return render(request, template_name, contexto)
 
-#@login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def pedidos_list(request):
     template_name = 'trn/pedidos_list.html'
     contexto = {}

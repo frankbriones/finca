@@ -244,6 +244,12 @@
         data = new FormData(form)
 
         validarInsumos()
+        for(var i of items){
+           if(i.cantidad === ''){
+                toastr.error('Verifique la cantidad en los insumos', 'Atencion');
+                return false;
+           }
+        }
         if(items.length >= 1 ){
             data.append('insumos[]', JSON.stringify(items))
 
@@ -251,6 +257,9 @@
             id_solicitud = '{{solicitud.id_solicitud}}'
             url = '{% url "trn:detalle_solicitud" 0 %}'
             url = url.replace(/0/, id_solicitud)
+            // for (var pair of data.entries()) {
+            //     console.log(pair[0]+ ', ' + pair[1]); 
+            // }
             $.ajax({
                 url: url,
                 type: 'POST',
