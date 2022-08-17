@@ -430,6 +430,7 @@
     
     
     <script>
+        var audio = null
         function abrir_modal(url){
             $("#popup").load(url, function(){
                 $(this).modal({
@@ -540,7 +541,7 @@
                     $('.loader').hide();
                     notificacion = response.data
                     if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.orden_prd != null && notificacion.orden_prv == null && notificacion.orden_id == null){
-                        
+                        audio.play();
                         alerta = $.confirm({
                             lazyOpen: true,
                             title: '{% trans "Solicitud de Insumos" %}',
@@ -559,6 +560,7 @@
                         alerta.open();
                     }
                     if(parseInt('{{request.user.proveedor.id_proveedor}}') === parseInt(notificacion.proveedor_id) && notificacion.orden_prd == null && notificacion.orden_prv != null && notificacion.orden_id == null){
+                        audio.play();
                         alerta = $.confirm({
                         lazyOpen: true,
                         title: '{% trans "Solicitud de pedido" %}',
@@ -580,6 +582,7 @@
                     }
                     
                     if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.estado_id === 16){
+                        audio.play();
                         alerta = $.confirm({
                         lazyOpen: true,
                         title: '{% trans "Solcitiud Despachada" %}',
@@ -601,6 +604,7 @@
                     }
 
                     if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'ENTRADA'){
+                        audio.play();
                         alerta = $.confirm({
                         lazyOpen: true,
                         title: '{% trans "Orden Ingreso a Bodega Generada" %}',
@@ -622,6 +626,7 @@
                     }
 
                     if(parseInt('{{request.user.id}}') === parseInt(notificacion.encargado) && notificacion.vista === false && notificacion.estado_id === 3 && notificacion.descripcion_bodega === 'SALIDA'){
+                        audio.play();
                         alerta = $.confirm({
                         lazyOpen: true,
                         title: '{% trans "Orden de Salida de Bodega Generada" %}',
