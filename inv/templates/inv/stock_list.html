@@ -78,7 +78,7 @@
                         
                     </div>
                     <div class="row m-2 bg-secondary ">
-                        <div class="col-12 text-center text-uppercase"> <h3 class="text-white">Inventario de Insumos</h3></div>
+                        <div class="col-12 text-center text-uppercase"> <h3 class="text-white">Stock de Insumos</h3></div>
                     </div>
                     <br>
                     <div class="table-responsive p-1">
@@ -88,7 +88,6 @@
                                     <th>DESCRIPCION</th>
                                     <th>CATEGORIA</th>
                                     <th>UNIDAD/MEDIDA</th>
-                                    <th>CANT MINIMA</th>
                                     <th>EXISTENCIA</th>
                                     <th>ESTADO</th>
                                     {% if request.user.rol.descripcion != 'BODEGUERO' %}
@@ -102,7 +101,6 @@
                                         <td class="text-bold-500">{{producto.descripcion}}</td>
                                         <td>{{producto.categoria.descripcion}}</td>
                                         <td>{{producto.unidad_medida.descripcion}}</td>
-                                        <td>{{producto.cantidad_minima}}</td>
                                         <td>{{producto.cantidad_existente}}</td>
                                         <td>
                                             {% if producto.estado.descripcion == 'DISPONIBLE' %}
