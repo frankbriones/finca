@@ -92,6 +92,7 @@ def detalle_producto(request, id_producto=None):
                 usuario_crea=request.user.id,
                 usuario_modifica = request.user.id,
                 estado_id=1
+                bodega_id=bodega
             )
             if infProducto:
                 infProducto.save()
