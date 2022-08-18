@@ -21,7 +21,7 @@ from trn.resources import *
 
 from prd.serializers import *
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, time, timedelta, timezone
 
 from trn.tasks import enviarCorreoPrv, notificacion, notificarOrdenProduccion, notificarOrdenProveedor, notificarSolicitudDespachada,\
     notificarBodega
@@ -995,31 +995,145 @@ from datetime import datetime, timezone
 from django.http.response import HttpResponseRedirect, JsonResponse, HttpResponse
 
 
-class pedidos_reporte(APIView):
-    def post(self, request):
-        filtros = self.request
-        print(filtros)
-        productos = BusquedaPedidos(
-            filtros
-        )
-        productos_lista = []
-        if productos:
-            ahora = datetime.now(timezone.utc)
-            for producto in productos:
-                productos_lista.append(producto)
-            producto_resource = PedidosResource()
-            dataset = producto_resource.export(productos_lista)
-            nombre_archivo = 'Reporte_Pedidos_' + \
-                ahora.strftime('%d-%m-%Y') + '.xls'
-            response = HttpResponse(
-                dataset.xls,
-                content_type='application/vnd.ms-excel'
-            )
-            response['Content-Disposition'] = 'attachment; filename=' \
-                + nombre_archivo
-        else:
-            response = HttpResponse('No existen ordenes')
+# class pedidos_reporte(APIView):
+#     def post(self, request):
+#         filtros = self.request
+#         print(filtros)
+#         productos = BusquedaPedidos(
+#             filtros
+#         )
+#         productos_lista = []
+#         if productos:
+#             ahora = datetime.now(timezone.utc)
+#             for producto in productos:
+#                 productos_lista.append(producto)
+#             producto_resource = PedidosResource()
+#             dataset = producto_resource.export(productos_lista)
+#             nombre_archivo = 'Reporte_Pedidos_' + \
+#                 ahora.strftime('%d-%m-%Y') + '.xls'
+#             response = HttpResponse(
+#                 dataset.xls,
+#                 content_type='application/vnd.ms-excel'
+#             )
+#             response['Content-Disposition'] = 'attachment; filename=' \
+#                 + nombre_archivo
+#         else:
+#             response = HttpResponse('No existen ordenes')
+#         return response
+
+
+
+def pedidos_reporte(request):
+    template_name = 'trn/reporte_pedidos.html'
+    contexto = {}
+    if request.method == 'POST':
+        fecha_inicial =  request.POST['query']
+        fecha_final = request.POST['query2']
+        pedidos = SolicitudPedido.objects.filter(
+            fecha_creacion__gte=fecha_inicial,
+            fecha_creacion__lte=fecha_final
+        ).order_by('-fecha_creacion')
+        lista = []
+        
+        for p  in pedidos:
+            fecha_recibida = p.fecha_recibida
+            if p.fecha_recibida == None:
+                fecha_recibida = '--------'
+            info = {
+                'fecha_creacion': p.fecha_creacion - timedelta(hours=5),
+                'descripcion': p.descripcion,
+                'estado': p.estado.descripcion,
+                'proveedor': str(p.proveedor.nombres+' '+p.proveedor.apellidos),
+                'fecha_recibida': fecha_recibida,
+                'cantidad': p.total_envio
+            }
+            lista.append(info)
+        contexto = {
+            'usuario_genera': request.user.get_full_name(),
+            'fecha_creado': datetime.now(),
+            'pedidos': lista,
+            'sUrl' : settings.BASE_DIR,
+            'fecha_1': fecha_inicial,
+            'fecha_2': fecha_final
+        }
+        
+        # # correo_proveedor = pedido_obj.proveedor.correo
+        # # correo = [str(correo_proveedor)]
+
+        # #ejemplo  pdf en response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="reporte_pedidos.pdf"'
+        # response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+        template = get_template(template_name)
+        html = template.render(contexto)
+
+        # create a pdf
+        pisaStatus = pisa.CreatePDF(
+            html, dest=response, link_callback=link_callback)
+        # if error then show some funy view
+        if pisaStatus.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        
         return response
+
+
+
+
+def reporte_bodega(request):
+    template_name = 'trn/reporte_bodega.html'
+    contexto = {}
+    if request.method == 'POST':
+        fecha_inicial =  request.POST['query']
+        fecha_final = request.POST['query2']
+        bodegas_transacciones = OrdenBodega.objects.filter(
+            fecha_creacion__gte=fecha_inicial,
+            fecha_creacion__lte=fecha_final
+        ).order_by('-fecha_creacion')
+        lista = []
+        for i in bodegas_transacciones:
+            detalles = DetalleOrdenBodega.objects.filter(orden_id=i.id_orden)
+            for detalle in detalles:
+                info = {
+                    'fecha_creacion': detalle.fecha_creacion,
+                    'tipo': i.tipo.descripcion,
+                    'insumos': [p.descripcion for p in Productos.objects.filter(id_producto=detalle.producto_id)],
+                    'encargado': i.encargado,
+                    'cantidad': detalle.cantidad
+
+                }
+                lista.append(info)
+
+        print(lista)
+        
+        
+        contexto = {
+            'usuario_genera': request.user.get_full_name(),
+            'fecha_creado': datetime.now(),
+            'bodegas': lista,
+            'sUrl' : settings.BASE_DIR,
+            'fecha_1': fecha_inicial,
+            'fecha_2': fecha_final
+        }
+        
+        # # correo_proveedor = pedido_obj.proveedor.correo
+        # # correo = [str(correo_proveedor)]
+
+        # #ejemplo  pdf en response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="reporte_pedidos.pdf"'
+        # response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+        template = get_template(template_name)
+        html = template.render(contexto)
+
+        # create a pdf
+        pisaStatus = pisa.CreatePDF(
+            html, dest=response, link_callback=link_callback)
+        # if error then show some funy view
+        if pisaStatus.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        
+        return response
+
 
 
 def BusquedaPedidos(filtros):

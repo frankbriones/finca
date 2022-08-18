@@ -158,7 +158,7 @@ TIME_ZONE = 'America/Guayaquil'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -194,6 +194,6 @@ EMAIL_USE_SSL = False
 
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 300  # Tiempo de caducidad de la sesión
+SESSION_COOKIE_AGE = 3000  # Tiempo de caducidad de la sesión
 # dado en segundos
 SESSION_SAVE_EVERY_REQUEST = True

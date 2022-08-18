@@ -1,3 +1,4 @@
+import re
 from django.db import models
 
 # Create your models here.
@@ -91,7 +92,7 @@ class OrdenBodega(ClaseModelo):
 
 class DetalleOrdenBodega(ClaseModelo):
     id_detalle = models.AutoField(primary_key=True)
-    orden = models.ForeignKey(OrdenBodega, on_delete=models.CASCADE, blank=True)
+    orden = models.ForeignKey(OrdenBodega, on_delete=models.CASCADE, blank=True, related_name='detalle_orden')
     producto = models.ForeignKey(Productos, on_delete=models.CASCADE, blank=True)
     cantidad = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 

@@ -229,20 +229,20 @@
                     <div class="row">
                         <div class="col-12 p-1">
                             Fecha inicial de la busqueda
-                            <input placeholder="Fecha donde inicia el reporte" type="date" id="query" name="query"  required class="form-control " />
+                            <input placeholder="Fecha donde inicia el reporte" type="date" id="query_bodega" name="query"  required class="form-control " />
 
                             
                         </div>
                         <div class="col-12 p-1">
                             Fecha final de la busqueda
-                            <input placeholder="Fecha donde finaliza el reporte" type="date"  id="query2" name="query2"  required  class="form-control"/>
+                            <input placeholder="Fecha donde finaliza el reporte" type="date"  id="query2_bodega" name="query2"  required  class="form-control"/>
                         </div>
                     </div>
                   
                     
                  </form>
                  <div class="row justify-content-center">
-                    <a onclick="" id="btn_reporte">
+                    <a onclick="generarReporteBodega()" id="btn_reporte">
                         <label for="getFile" class="btn btn-success btn-block glow my-2 add-file-btn text-capitalize"><i class="bx bx-file"></i>Exportar</label>
                     </a>
                 </div>
@@ -478,6 +478,79 @@
         }
        
         var url = "{% url 'trn:pedidos_reporte' %}";
+
+        var token = '{{ csrf_token }}';
+
+        
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            type: "POST",
+            url: url,
+            data: body,
+            
+            success: function(res, textStatus, jqXHR) {
+                if(res.length != undefined){
+                    toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
+                    return false;
+                }
+                
+                $('#modal_reporte_stock').modal('hide');
+                let nombreArchivo = "";
+                let disposition = jqXHR.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    let matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) { 
+                        nombreArchivo = matches[1].replace(/['"]/g, '');
+                    }
+                }
+                var a = document.createElement('a');
+                
+                var url = window.URL.createObjectURL(res);
+                console.log(url)
+                a.href = url;
+                a.download = nombreArchivo;
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            },
+            // error: function(jqXHR, textStatus, errorThrow){
+            //     console.log('**********')
+            //     alert("error: " + errorThrow)
+            // }
+        });
+    }
+
+
+
+
+    
+    function generarReporteBodega(){
+        f_inicio = $('#query_bodega').val();
+        f_fin = $('#query2_bodega').val();
+        if(f_inicio === '' || f_fin === ''){
+            toastr.error('Ingrese fechas correctas', 'Error');
+            return false;
+        }
+        f = new Date(f_fin)
+        f_actual = new Date();
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
+    
+        body = {
+            'query': f_inicio,
+            'query2': f_fin
+        }
+       
+        var url = "{% url 'trn:reporte_bodega' %}";
 
         var token = '{{ csrf_token }}';
 

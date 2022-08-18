@@ -1,0 +1,162 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head lang="{{ LANGUAGE_CODE }}">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="author" content="INNODE">
+    <title>Finca Bananera</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+    
+    <style type="text/css">
+    @page {
+        size: A4 ;
+        margin: 0.2cm;
+        
+    }
+    .tabla-encabezado {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+        border-spacing: 0px 0px 0px 0px;
+        background-color: #ffffff;
+        border-collapse: separate;
+        padding: 5px 0px 0px 0px;
+        /* border: solid #101b2d 0.5px; */
+        border-radius:30px;
+        -moz-border-radius:30px;
+    }
+    .tabla-detalles {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+        border: 1px solid black;
+        border-spacing: 1px 1px 1px 1px;
+        background-color: #ffffff;
+        /* border-collapse: separate; */
+        padding: 2px 1px 0px 1px;
+        /* border: solid #101b2d 0.5px; */
+        /* border-radius:30px; */
+        /* -moz-border-radius:30px; */
+    }
+    .td-titulo{
+        background-color: #000080;
+    }
+    .h1-titulo{
+        color: #ffffff;
+        text-align: center;
+        font-size:  11px;
+    }
+    .td-dato {
+        text-align: left;
+    }
+    .td-parrafo {
+        text-align: left;
+        font-size: 10px;
+        /* padding-top: 8px;
+        line-height: 12px; */
+    }
+    .titulo {
+        color: #5A8DEE;
+        padding-left: 10px;
+        font-weight: 500;
+        font-size: 70px;
+        float: left;
+    }
+    </style>
+</head>
+<body>
+    <div id="header_content">
+        <table class="tabla-encabezado " >
+            <tbody>
+                <tr>
+                    <td style="text-align: center; border: 0px;">
+                        <img id="id_img_tmp" name="imagentmp"  src="{{ sUrl }}/static/base/img/icons/banana.png" style="float: left; max-width: 100px;" width="200px">
+                    </td>
+                    <td style="text-align: center;">
+                        <h1 style="color: #010918;">FINCA BANANERA</h1>
+                    </td>
+                    <td style="text-align: right;">
+                       
+                    </td>
+                </tr>
+               
+            </tbody>
+        </table>
+        
+    </div>
+    <div >
+        <br>
+        <br>
+        <table class="tabla-encabezado " style="border: 1px solid black;" >
+            <tbody>
+                
+                <tr style="text-align: center; "">
+                    <td colspan="2"><h1>Datos del Reporte</h1></td>
+                </tr>
+
+                <tr >
+                    <td style="text-align: left; border: 0px;" >
+                        usuario generó : {{usuario_genera}}
+                    </td>
+                    <td> Fecha generó: {{fecha_creado|date:"M d, Y"}}</td>
+                    
+
+                    
+                </tr>
+                <tr>
+                    <td>Descripcion: Reporte de Bodega</td>
+                    <td>Rango de fecha: {{fecha_1}} - {{fecha_2}}</td>
+                </tr>
+             
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div >
+        <table class="tabla-encabezado " style="border: 1px solid black;" >
+            <tbody>
+                <thead>
+                    <th>Fecha Registro</th>
+                    <th>Tipo</th>
+                    <th>Insumos</th>
+                    <th>Encargado</th>
+                    <th>Cantidad</th>
+
+
+                </thead>
+                <tbody>
+                    {% for bodega in bodegas %}
+                        <tr >
+                            <td>{{bodega.fecha_creacion}}</td>
+                            <td>{{bodega.tipo}}</td>
+                            <td>
+                                {% for insumo in bodega.insumos %}
+                                    <ul>
+                                        <li>{{insumo}}</li>
+                                    </ul>
+                                {% endfor %}
+                            </td>
+                            <td>{{bodega.encargado}}</td>
+                            <td>{{bodega.cantidad}}</td>
+                            
+                        </tr>
+                        
+                        
+                    {% endfor %}
+                    
+                </tbody>
+               
+            </tbody>
+        </table>
+        
+    </div>
+
+</body>
+</html>

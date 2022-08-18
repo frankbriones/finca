@@ -139,7 +139,7 @@ def InventarioReporte(request):
 
         # #ejemplo  pdf en response
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename="reporte_proveedores.pdf"'
+        response['Content-Disposition'] = 'inline; filename="reporte_inventario.pdf"'
         # response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
         template = get_template(template_name)
         html = template.render(contexto)
