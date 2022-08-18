@@ -13,7 +13,7 @@ urlpatterns = [
         name="editar_proveedor_modal"
     ),
     path('proveedores-reporte/',
-        ProveedoresReporte.as_view(),
+        ProveedoresReporte,
         name="proveedores_reporte"
     ),
     path('proveedores-categorias/list/',

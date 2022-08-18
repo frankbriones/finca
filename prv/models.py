@@ -50,7 +50,7 @@ class Proveedores(ClaseModelo):
 
 class CategoriasProveedor(models.Model):
     id_categoria_proveedor = models.AutoField(primary_key=True)
-    proveedor = models.ForeignKey(Proveedores, on_delete=models.CASCADE, blank=True, null=True)
+    proveedor = models.ForeignKey(Proveedores, on_delete=models.CASCADE, blank=True, null=True, related_name='categoria_proveedor')
     categoria = models.ForeignKey(CategoriaProveedor, on_delete=models.CASCADE, blank=True, null=True)
 
 

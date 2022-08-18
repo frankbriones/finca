@@ -1,9 +1,15 @@
 import json
+import os
 from datetime import datetime, timezone
 from unittest import installHandler
 from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password
 from random import choice
+
+from django.conf import settings
+from django.template.loader import get_template
+
+
 
 from rest_framework.views import APIView
 
@@ -18,6 +24,38 @@ from usr.models import *
 from .forms import *
 from .serializers import *
 from .resources import *
+
+
+from xhtml2pdf import pisa
+
+
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
+    # use short variable names
+    sUrl = settings.STATIC_URL
+    sRoot = settings.STATIC_ROOT
+    mUrl = settings.MEDIA_URL
+    mRoot = settings.MEDIA_ROOT
+
+    # convert URIs to absolute system paths
+    if uri.startswith(mUrl):
+        path = os.path.join(mRoot, uri.replace(mUrl, ""))
+    elif uri.startswith(sUrl):
+        path = os.path.join(sRoot, uri.replace(sUrl, ""))
+    else:
+        return uri
+
+    # make sure that file exists
+    if not os.path.isfile(path):
+        raise Exception(
+            'media URI must start with %s or %s' % (sUrl, mUrl)
+        )
+    return path
+
+
 # Create your views here.
 
 @login_required(login_url='/login/')
@@ -350,31 +388,74 @@ def proveedores_ajax(request):
 
 
 
-class ProveedoresReporte(APIView):
-    def post(self, request):
-        filtros = self.request
-        print(filtros)
-        proveedores = BusquedaProveedores(
-            filtros
-        )
-        proveedores_lista = []
-        if proveedores:
-            ahora = datetime.now(timezone.utc)
-            for proveedor in proveedores:
-                proveedores_lista.append(proveedor)
-            proveedor_resource = ProveedoresResource()
-            dataset = proveedor_resource.export(proveedores_lista)
-            nombre_archivo = 'Reporte_Proveedores_' + \
-                ahora.strftime('%d-%m-%Y') + '.xls'
-            response = HttpResponse(
-                dataset.xls,
-                content_type='application/vnd.ms-excel'
-            )
-            response['Content-Disposition'] = 'attachment; filename=' \
-                + nombre_archivo
-        else:
-            response = HttpResponse('No existen ordenes')
+# class ProveedoresReporte(APIView):
+#     def post(self, request):
+#         filtros = self.request
+#         print(filtros)
+#         proveedores = BusquedaProveedores(
+#             filtros
+#         )
+#         proveedores_lista = []
+#         if proveedores:
+#             ahora = datetime.now(timezone.utc)
+#             for proveedor in proveedores:
+#                 proveedores_lista.append(proveedor)
+#             proveedor_resource = ProveedoresResource()
+#             dataset = proveedor_resource.export(proveedores_lista)
+#             nombre_archivo = 'Reporte_Proveedores_' + \
+#                 ahora.strftime('%d-%m-%Y') + '.xls'
+#             response = HttpResponse(
+#                 dataset.xls,
+#                 content_type='application/vnd.ms-excel'
+#             )
+#             response['Content-Disposition'] = 'attachment; filename=' \
+#                 + nombre_archivo
+#         else:
+#             response = HttpResponse('No existen ordenes')
+#         return response
+
+# nueva vista de reportes
+
+def ProveedoresReporte(request):
+    template_name = 'prv/reporte_proveedores.html'
+    contexto = {}
+    if request.method == 'POST':
+        fecha_inicial =  request.POST['query']
+        fecha_final = request.POST['query2']
+        proveedores = Proveedores.objects.filter(
+            estado__descripcion='ACTIVO',
+            fecha_creacion__gte=fecha_inicial,
+            fecha_creacion__lte=fecha_final
+        ).order_by('-fecha_creacion')
+            
+        contexto = {
+            'usuario_genera': request.user.get_full_name(),
+            'fecha_creado': datetime.now(),
+            'proveedores': proveedores,
+            'sUrl' : settings.BASE_DIR,
+            'fecha_1': fecha_inicial,
+            'fecha_2': fecha_final
+        }
+        
+        # # correo_proveedor = pedido_obj.proveedor.correo
+        # # correo = [str(correo_proveedor)]
+
+        # #ejemplo  pdf en response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="reporte_proveedores.pdf"'
+        # response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+        template = get_template(template_name)
+        html = template.render(contexto)
+
+        # create a pdf
+        pisaStatus = pisa.CreatePDF(
+            html, dest=response, link_callback=link_callback)
+        # if error then show some funy view
+        if pisaStatus.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        
         return response
+
 
 
 @login_required(login_url='/login/')

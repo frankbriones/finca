@@ -44,7 +44,7 @@
                                     {% endif %}
                                     <br>
                                     {% if request.user.tipo.descripcion == 'OPERADOR' or request.user.rol.descripcion == 'ADMINISTRADOR' or request.user.rol.descripcion == 'PRODUCCION'  or request.user.rol.descripcion == 'BODEGUERO'  %}
-                                    <div class="col-12 alert alert-secondary " onclick="generarReporteStockExcel()" role="alert" >
+                                    <div class="col-12 alert alert-secondary reporte_stock"  role="alert" >
                                         <span><h4 class="text-white"><i class="bx bx-file"></i> REPORTE STOCK<h4></span>
                                     </div>
                                     {% endif %}
@@ -101,6 +101,54 @@
                  </form>
                  <div class="row justify-content-center">
                     <a onclick="generarReporteExcel()" id="btn_reporte">
+                        <label for="getFile" class="btn btn-primary btn-block glow my-2 add-file-btn text-capitalize"><i class="bx bx-file"></i>Exportar</label>
+                    </a>
+                </div>
+
+
+
+
+           </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+<!-- modal de edicion de datos -->
+<div class="modal fade" id="modal_reporte_inventario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary ">
+                <h5 class="modal-title text-white" id="exampleModalCenterTitle" >Generar reporte de Inventario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x "></i>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="modal-body">
+                    <br>
+                   <form id="form_proveedor">
+                    
+                    <div class="row">
+                        <div class="col-12 p-1">
+                            Fecha inicial de la busqueda
+                            <input placeholder="Fecha donde inicia el reporte" type="date" id="fecha_inicial_stock" name="query"  required class="form-control " />
+
+                            
+                        </div>
+                        <div class="col-12 p-1">
+                            Fecha final de la busqueda
+                            <input placeholder="Fecha donde finaliza el reporte" type="date"  id="fecha_final_stock" name="query2"  required  class="form-control"/>
+                        </div>
+                    </div>
+                  
+                    
+                 </form>
+                 <div class="row justify-content-center">
+                    <a onclick="generarReporteStock()" id="btn_reporte">
                         <label for="getFile" class="btn btn-primary btn-block glow my-2 add-file-btn text-capitalize"><i class="bx bx-file"></i>Exportar</label>
                     </a>
                 </div>
@@ -267,8 +315,18 @@
         $('#modal_reporte_bodega').modal('show');
     })
 
+    $('.reporte_stock').on('click', function(){
+        $('#modal_reporte_inventario').modal('show');
+    })
+
 
     function generarReporteExcel(){
+        f = new Date($('#query2').val())
+        f_actual = new Date();
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
         // estadosBusqueda = []
         f_inicio = $('#query').val();
         f_fin = $('#query2').val();
@@ -328,26 +386,27 @@
         });
     }
 
-    function generarReporteStockExcel(){
+    function generarReporteStock(){
+        
+        f = new Date($('#query2').val())
+        f_actual = new Date();
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
         // estadosBusqueda = []
-        // f_inicio = $('#fecha_inicial').val();
-        // f_fin = $('#fecha_final').val();
-        // if(f_inicio === '' || f_fin === ''){
-        //     toastr.error('Ingrese fechas correctas', 'Error');
-        //     return false;
-        // }
-        // f = new Date(f_fin)
-        // console.log(f)
-        // f_actual = new Date();
-        // if(f > f_actual){
-        //     toastr.error('fecha final no puede ser mayor a la actual', 'Error')
-        //     return false
-        // }
-    
+        f_inicio = $('#fecha_inicial_stock').val();
+        f_fin = $('#fecha_final_stock').val();
+        if(f_inicio === '' || f_fin === ''){
+            toastr.error('Ingrese fechas correctas', 'Error');
+            return false;
+        }
         body = {
+            'query': f_inicio,
+            'query2': f_fin
         }
        
-        var url = "{% url 'prd:stock_reporte' %}";
+        var url = "{% url 'inv:reporte_stock' %}";
 
         var token = '{{ csrf_token }}';
 
