@@ -91,7 +91,7 @@ def detalle_producto(request, id_producto=None):
                 seccion_id = seccion,
                 usuario_crea=request.user.id,
                 usuario_modifica = request.user.id,
-                estado_id=1
+                estado=Estados.objects.filter(descripcion__iexact='NO DISPONIBLE').first(),
                 bodega_id=bodega
             )
             if infProducto:

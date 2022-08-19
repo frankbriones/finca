@@ -14,7 +14,7 @@
     
     <style type="text/css">
     @page {
-        size: A4 ;
+        size: A4 landscape;
         margin: 0.2cm;
         
     }
@@ -128,6 +128,7 @@
                     <th>Estado</th>
                     <th>Proveedor</th>
                     <th>Fecha Receptan insumos</th>
+                    <th>Insumos</th>
                     <th>Cant. Insumos solicitados</th>
 
                 </thead>
@@ -139,6 +140,15 @@
                             <td>{{p.estado}}</td>
                             <td>{{p.proveedor}}</td>
                             <td>{{p.fecha_recibida}}</td>
+                            <td>
+                                {% for insumo in p.insumos %}
+                                    <ul>
+                                        <li>
+                                            {{insumo.descripcion}}
+                                        </li>
+                                    </ul>
+                                {% endfor %}
+                            </td>
                             <td>{{p.cantidad}}</td>
                             
                         </tr>

@@ -69,6 +69,10 @@
     </div>
 </div>
 
+<div class="loader">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
 <!-- modal de edicion de datos -->
 <div class="modal fade" id="modal_reporte_proveedores" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -343,7 +347,7 @@
 
         var token = '{{ csrf_token }}';
 
-        
+        $('.loader').show();
         $.ajax({
             headers: {
                 "X-CSRFToken": token
@@ -356,6 +360,8 @@
             data: body,
             
             success: function(res, textStatus, jqXHR) {
+                $('#modal_reporte_proveedores').modal('hide');
+                $('.loader').hide();
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
@@ -387,7 +393,7 @@
     }
 
     function generarReporteStock(){
-        
+        $('.loader').show();
         f = new Date($('#query2').val())
         f_actual = new Date();
         if(f > f_actual){
@@ -423,6 +429,8 @@
             data: body,
             
             success: function(res, textStatus, jqXHR) {
+                $('.loader').hide();
+                $('#modal_reporte_stock').modal('hide');
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
@@ -458,6 +466,7 @@
 
     
     function generarReportePedidosExcel(){
+        $('.loader').hide();
         estadosBusqueda = []
         f_inicio = $('#fecha_inicial').val();
         f_fin = $('#fecha_final').val();
@@ -494,6 +503,8 @@
             data: body,
             
             success: function(res, textStatus, jqXHR) {
+                $('.loader').hide();
+                $('#modal_reporte_inventario').modal('hide');
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
@@ -532,6 +543,8 @@
 
     
     function generarReporteBodega(){
+        $('.loader').hide();
+
         f_inicio = $('#query_bodega').val();
         f_fin = $('#query2_bodega').val();
         if(f_inicio === '' || f_fin === ''){
@@ -567,6 +580,8 @@
             data: body,
             
             success: function(res, textStatus, jqXHR) {
+                $('.loader').hide();
+                $('#modal_reporte_bodega').modal('hide');
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;

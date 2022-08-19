@@ -1034,17 +1034,28 @@ def pedidos_reporte(request):
             fecha_creacion__lte=fecha_final
         ).order_by('-fecha_creacion')
         lista = []
+        nombre_proveedor = '----------'
         
         for p  in pedidos:
             fecha_recibida = p.fecha_recibida
             if p.fecha_recibida == None:
                 fecha_recibida = '--------'
+            if p.proveedor:
+                nombre_proveedor = str(p.proveedor.nombres+' '+p.proveedor.apellidos)
+            lista_inusmo = []
+            for detalle in ProductosSolicitud.objects.filter(solicitud_id=p.id_solicitud):
+                insumo = {
+                    'descripcion': detalle.producto.descripcion
+                }
+                lista_inusmo.append(insumo)
+
             info = {
                 'fecha_creacion': p.fecha_creacion - timedelta(hours=5),
                 'descripcion': p.descripcion,
                 'estado': p.estado.descripcion,
-                'proveedor': str(p.proveedor.nombres+' '+p.proveedor.apellidos),
+                'proveedor': nombre_proveedor,
                 'fecha_recibida': fecha_recibida,
+                'insumos': lista_inusmo,
                 'cantidad': p.total_envio
             }
             lista.append(info)
