@@ -366,7 +366,7 @@
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
                 }
-                $('#modal_reporte_proveedores').modal('hide');
+                
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -466,7 +466,7 @@
 
     
     function generarReportePedidosExcel(){
-        $('.loader').hide();
+        $('.loader').show();
         estadosBusqueda = []
         f_inicio = $('#fecha_inicial').val();
         f_fin = $('#fecha_final').val();
@@ -543,7 +543,7 @@
 
     
     function generarReporteBodega(){
-        $('.loader').hide();
+        $('.loader').show();
 
         f_inicio = $('#query_bodega').val();
         f_fin = $('#query2_bodega').val();
