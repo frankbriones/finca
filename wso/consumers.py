@@ -7,6 +7,7 @@ import json
 class Consumidor(AsyncWebsocketConsumer):
     
     async def connect(self):
+        print('**********')
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         print(self.room_name, 'room_name')
         self.room_group_name = 'ws_%s' % self.room_name
