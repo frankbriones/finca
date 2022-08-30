@@ -338,6 +338,19 @@
             toastr.error('Ingrese fechas correctas', 'Error');
             return false;
         }
+
+        f = new Date(f_fin)
+        f_actual = new Date();
+        inicial  = new Date(f_inicio)
+        if(f < inicial){
+            toastr.error('fecha final no puede ser menor a la inicial', 'Error')
+            return false
+        }
+
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
         body = {
             'query': f_inicio,
             'query2': f_fin
@@ -360,13 +373,17 @@
             data: body,
             
             success: function(res, textStatus, jqXHR) {
-                $('#modal_reporte_proveedores').modal('hide');
+                
                 $('.loader').hide();
+                if(res.size >= 1067000 || res.size <= 1068000){
+                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
+                    return false;
+                }
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
                 }
-                
+                $('#modal_reporte_proveedores').modal('hide');
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -393,8 +410,8 @@
     }
 
     function generarReporteStock(){
-        $('.loader').show();
-        f = new Date($('#query2').val())
+        
+        f = new Date($('#fecha_final_stock').val())
         f_actual = new Date();
         if(f > f_actual){
             toastr.error('fecha final no puede ser mayor a la actual', 'Error')
@@ -407,6 +424,21 @@
             toastr.error('Ingrese fechas correctas', 'Error');
             return false;
         }
+        
+        f = new Date(f_fin)
+        f_actual = new Date();
+        inicial  = new Date(f_inicio)
+        if(f < inicial){
+            toastr.error('fecha final no puede ser menor a la inicial', 'Error')
+            return false
+        }
+
+        if(f > f_actual){
+            toastr.error('fecha final no puede ser mayor a la actual', 'Error')
+            return false
+        }
+
+
         body = {
             'query': f_inicio,
             'query2': f_fin
@@ -416,7 +448,7 @@
 
         var token = '{{ csrf_token }}';
 
-        
+        $('.loader').show();
         $.ajax({
             headers: {
                 "X-CSRFToken": token
@@ -431,6 +463,10 @@
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
                 $('#modal_reporte_stock').modal('hide');
+                if(res.size >= 1067000 || res.size <= 1068000){
+                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
+                    return false;
+                }
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
@@ -466,7 +502,7 @@
 
     
     function generarReportePedidosExcel(){
-        $('.loader').show();
+        
         estadosBusqueda = []
         f_inicio = $('#fecha_inicial').val();
         f_fin = $('#fecha_final').val();
@@ -476,6 +512,12 @@
         }
         f = new Date(f_fin)
         f_actual = new Date();
+        inicial  = new Date(f_inicio)
+        if(f < inicial){
+            toastr.error('fecha final no puede ser menor a la inicial', 'Error')
+            return false
+        }
+
         if(f > f_actual){
             toastr.error('fecha final no puede ser mayor a la actual', 'Error')
             return false
@@ -490,7 +532,7 @@
 
         var token = '{{ csrf_token }}';
 
-        
+        $('.loader').show();
         $.ajax({
             headers: {
                 "X-CSRFToken": token
@@ -505,8 +547,12 @@
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
                 $('#modal_reporte_inventario').modal('hide');
+                if(res.size >= 1067000 || res.size <= 1068000){
+                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
+                    return false;
+                }
                 if(res.length != undefined){
-                    toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
+                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
                     return false;
                 }
                 
@@ -543,7 +589,7 @@
 
     
     function generarReporteBodega(){
-        $('.loader').show();
+        
 
         f_inicio = $('#query_bodega').val();
         f_fin = $('#query2_bodega').val();
@@ -553,6 +599,16 @@
         }
         f = new Date(f_fin)
         f_actual = new Date();
+        
+
+        f = new Date(f_fin)
+        f_actual = new Date();
+        inicial  = new Date(f_inicio)
+        if(f < inicial){
+            toastr.error('fecha final no puede ser menor a la inicial', 'Error')
+            return false
+        }
+
         if(f > f_actual){
             toastr.error('fecha final no puede ser mayor a la actual', 'Error')
             return false
@@ -567,7 +623,7 @@
 
         var token = '{{ csrf_token }}';
 
-        
+        $('.loader').show();
         $.ajax({
             headers: {
                 "X-CSRFToken": token
@@ -581,9 +637,8 @@
             
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
-                $('#modal_reporte_bodega').modal('hide');
-                if(res.length != undefined){
-                    toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
+                if(res.size >= 1067000 || res.size <= 1068000){
+                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
                     return false;
                 }
                 
