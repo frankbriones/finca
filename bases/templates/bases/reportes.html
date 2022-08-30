@@ -375,10 +375,10 @@
             success: function(res, textStatus, jqXHR) {
                 
                 $('.loader').hide();
-                if(res.size >= 1067000 || res.size <= 1068000){
-                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
-                    return false;
-                }
+                // if(res.size >= 1067000 || res.size <= 1068000){
+                //     toastr.error('No tenemos información para las fehas indicadas', 'Error');
+                //     return false;
+                // }
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
@@ -463,10 +463,10 @@
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
                 $('#modal_reporte_stock').modal('hide');
-                if(res.size >= 1067000 || res.size <= 1068000){
-                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
-                    return false;
-                }
+                // if(res.size >= 1067000 || res.size <= 1068000){
+                //     toastr.error('No tenemos información para las fehas indicadas', 'Error');
+                //     return false;
+                // }
                 if(res.length != undefined){
                     toastr.error('No tenemos informacion para las fehas indicadas', 'Error');
                     return false;
@@ -547,10 +547,10 @@
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
                 $('#modal_reporte_inventario').modal('hide');
-                if(res.size >= 1067000 || res.size <= 1068000){
-                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
-                    return false;
-                }
+                // if(res.size >= 1067000 || res.size <= 1068000){
+                //     toastr.error('No tenemos información para las fehas indicadas', 'Error');
+                //     return false;
+                // }
                 if(res.length != undefined){
                     toastr.error('No tenemos información para las fehas indicadas', 'Error');
                     return false;
@@ -637,10 +637,10 @@
             
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
-                if(res.size >= 1067000 || res.size <= 1068000){
-                    toastr.error('No tenemos información para las fehas indicadas', 'Error');
-                    return false;
-                }
+                // if(res.size >= 1067000 || res.size <= 1068000){
+                //     toastr.error('No tenemos información para las fehas indicadas', 'Error');
+                //     return false;
+                // }
                 
                 $('#modal_reporte_stock').modal('hide');
                 let nombreArchivo = "";
