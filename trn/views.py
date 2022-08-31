@@ -1098,9 +1098,12 @@ def reporte_bodega(request):
     if request.method == 'POST':
         fecha_inicial =  request.POST['query']
         fecha_final = request.POST['query2']
+        date_time = datetime.strptime(fecha_final, '%Y-%m-%d')
+        date_time = date_time + timedelta(hours=5)
+        print(date_time)
         bodegas_transacciones = OrdenBodega.objects.filter(
             fecha_creacion__gte=fecha_inicial,
-            fecha_creacion__lte=fecha_final
+            fecha_creacion__lte=date_time
         ).order_by('-fecha_creacion')
         lista = []
         for i in bodegas_transacciones:
