@@ -1037,7 +1037,8 @@ def pedidos_reporte(request):
         ).order_by('-fecha_creacion')
         lista = []
         nombre_proveedor = '----------'
-        
+        if len(pedidos) <= 0:
+            return JsonResponse({'mensaje': 'error'}, status=500)
         for p  in pedidos:
             fecha_recibida = p.fecha_recibida
             if p.fecha_recibida == None:
@@ -1106,6 +1107,9 @@ def reporte_bodega(request):
             fecha_creacion__lte=date_time
         ).order_by('-fecha_creacion')
         lista = []
+        if len(bodegas_transacciones) < 1:
+            return JsonResponse({'mensaje': 'No tenenmos informacion'}, status=500)
+
         for i in bodegas_transacciones:
             detalles = DetalleOrdenBodega.objects.filter(orden_id=i.id_orden)
             for detalle in detalles:

@@ -427,6 +427,8 @@ def ProveedoresReporte(request):
             fecha_creacion__gte=fecha_inicial,
             fecha_creacion__lte=fecha_final
         ).order_by('-fecha_creacion')
+        if len(proveedores) <= 0:
+            return JsonResponse({'mensaje': "error"}, status=500)
             
         contexto = {
             'usuario_genera': request.user.get_full_name(),

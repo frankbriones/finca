@@ -73,6 +73,8 @@ class Productos(ClaseModelo):
             ('crear_producto', ('Crear Producto')),
             ('editar_producto', ('Editar Prducto')),
             ('actualizar_producto', ('Actualizar Prducto')),
+            ('solicitar_producto', ('Solicitar Producto a Proveedores')),
+
         }
 
 

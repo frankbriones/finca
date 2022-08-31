@@ -399,8 +399,19 @@
                 a.remove();
                 window.URL.revokeObjectURL(url);
             },
-            error: function(a, b, c) {
-                console.log(a);
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
             }
         });
     }
@@ -488,10 +499,20 @@
                 a.remove();
                 window.URL.revokeObjectURL(url);
             },
-            // error: function(jqXHR, textStatus, errorThrow){
-            //     console.log('**********')
-            //     alert("error: " + errorThrow)
-            // }
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
+            }
         });
     }
 
@@ -571,10 +592,20 @@
                 a.remove();
                 window.URL.revokeObjectURL(url);
             },
-            // error: function(jqXHR, textStatus, errorThrow){
-            //     console.log('**********')
-            //     alert("error: " + errorThrow)
-            // }
+            error: function(response){
+                console.log(response)
+                $.confirm({
+                    title: 'Error',
+                    content: response.responseJSON.mensaje,
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
+            }
         });
     }
 
@@ -657,10 +688,21 @@
                 a.remove();
                 window.URL.revokeObjectURL(url);
             },
-            // error: function(jqXHR, textStatus, errorThrow){
-            //     console.log('**********')
-            //     alert("error: " + errorThrow)
-            // }
+            error: function(response){
+                console.log(response)
+                $('.loader').hide();
+                $.confirm({
+                    title: 'Nota',
+                    content: 'No existe data para las fechas indicadas',
+                    theme: 'material',
+                    type: 'red',
+                    buttons: {
+                        confirm: {
+                            text: 'Entendido'
+                        },
+                    }
+                });
+            }
         });
     }
 

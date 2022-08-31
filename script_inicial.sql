@@ -88,3 +88,8 @@ INSERT INTO auth_group_permissions(GROUP_ID, PERMISSION_ID) VALUES ((select id f
 INSERT INTO auth_group_permissions(GROUP_ID, PERMISSION_ID) VALUES ((select id from auth_group where name = 'ADMINISTRADOR'), (select id from auth_permission where codename = 'editar_ordenes_proveedor'));
 
 
+
+INSERT INTO auth_group_permissions(GROUP_ID, PERMISSION_ID) VALUES ((select id from auth_group where name = 'ADMINISTRADOR'), (select id from auth_permission where codename = 'crear_producto'));
+INSERT INTO auth_group_permissions(GROUP_ID, PERMISSION_ID) VALUES ((select id from auth_group where name = 'ADMINISTRADOR'), (select id from auth_permission where codename = 'editar_producto'));
+INSERT INTO auth_group_permissions(GROUP_ID, PERMISSION_ID) VALUES ((select id from auth_group where name = 'ADMINISTRADOR'), (select id from auth_permission where codename = 'actualizar_producto'));
+INSERT INTO auth_group_permissions(GROUP_ID, PERMISSION_ID) VALUES ((select id from auth_group where name = 'ADMINISTRADOR'), (select id from auth_permission where codename = 'solicitar_producto'));

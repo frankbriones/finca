@@ -111,7 +111,7 @@
                                                 <span class="badge badge-warning text-white">{{producto.estado}}</span>
                                             {% endif %}
                                         </td>
-                                        {% if request.user.rol.descripcion == 'ADMINISTRADOR' %}
+                                        {% if request.user.rol.descripcion == 'ADMINISTRADOR' or perms.prd.solicitar_producto  %}
                                         <td>
                                             <div class="row d-flex align-items-center justify-content-center">
                                                 <input value="{{producto.id_producto}}" {% if producto.estado.descripcion == 'NO DISPONIBLE' or producto.estado.descripcion == 'MENOR A EXISTENCIA MINIMA' %}{% else %} disabled="disabled"{% endif %}  class=" checkbox-input item-producto " type="checkbox" name="" id="checkbox1" data-descripcion="{{producto.descripcion}}" data-id="{{producto.id_producto}}">

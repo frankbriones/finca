@@ -75,7 +75,8 @@ def RolesPermisos(request, rol_id=None):
             'usr': 'Usuarios',
             'personal': 'Empleados',
             'ubc': 'Ubicaciones',
-            'bases': 'Configuracion'
+            'bases': 'Configuracion',
+            'prd' : 'Productos',
         }
         modulo = convertidor.get(modulo_tmp, 'ninguno')
         modulos.append([modulo_tmp, modulo])
