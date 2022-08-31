@@ -217,7 +217,7 @@
     $('#modal_editar_categoria .editar_categoria').click(function(){
         let categoria_id = $('#modal_editar_categoria .id_categoria').val();
         var descripcion = $('.categoria_descripcion').val();
-        console.log(typeof(descripcion))
+
         if(descripcion === ''){
             toastr.error('No puede estar el campo vacio')
             return false

@@ -755,7 +755,7 @@ def detalle_orden_produccion(request, id_orden=None):
             #     correo = [str(correo_proveedor)]
             
             encargado_obj = Usuarios.objects.filter(rol__descripcion='BODEGUERO').first()
-            notificarOrdenProduccion.delay(encargado_obj.id, request.user.id, orden.id_solicitud) 
+            notificarOrdenProduccion.delay(request.user.id, request.user.id, orden.id_solicitud) 
 
     return render(request, template_name, contexto)
 
