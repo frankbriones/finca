@@ -148,17 +148,12 @@
                             <input placeholder="Fecha donde finaliza el reporte" type="date"  id="fecha_final_stock" name="query2"  required  class="form-control"/>
                         </div>
                     </div>
-                  
-                    
                  </form>
                  <div class="row justify-content-center">
                     <a onclick="generarReporteStock()" id="btn_reporte">
                         <label for="getFile" class="btn btn-primary btn-block glow my-2 add-file-btn text-capitalize"><i class="bx bx-file"></i>Exportar</label>
                     </a>
                 </div>
-
-
-
 
            </div>
             </div>
@@ -169,6 +164,7 @@
 
 
 <!-- modal de edicion de datos -->
+
 <div class="modal fade" id="modal_reporte_stock" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -462,7 +458,6 @@
             
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
-                $('#modal_reporte_stock').modal('hide');
                 // if(res.size >= 1067000 || res.size <= 1068000){
                 //     toastr.error('No tenemos información para las fehas indicadas', 'Error');
                 //     return false;
@@ -546,7 +541,6 @@
             
             success: function(res, textStatus, jqXHR) {
                 $('.loader').hide();
-                $('#modal_reporte_inventario').modal('hide');
                 // if(res.size >= 1067000 || res.size <= 1068000){
                 //     toastr.error('No tenemos información para las fehas indicadas', 'Error');
                 //     return false;
@@ -556,7 +550,7 @@
                     return false;
                 }
                 
-                $('#modal_reporte_stock').modal('hide');
+                $('#modal_reporte_inventario').modal('hide');
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -642,7 +636,7 @@
                 //     return false;
                 // }
                 
-                $('#modal_reporte_stock').modal('hide');
+                $('#modal_reporte_bodega').modal('hide');
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
