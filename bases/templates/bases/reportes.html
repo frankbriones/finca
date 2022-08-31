@@ -467,7 +467,7 @@
                     return false;
                 }
                 
-                $('#modal_reporte_stock').modal('hide');
+                $('#modal_reporte_inventario').modal('hide');
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -550,7 +550,7 @@
                     return false;
                 }
                 
-                $('#modal_reporte_inventario').modal('hide');
+                $('#modal_reporte_stock').modal('hide');
                 let nombreArchivo = "";
                 let disposition = jqXHR.getResponseHeader('Content-Disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
