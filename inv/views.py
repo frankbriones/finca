@@ -104,6 +104,8 @@ def InventarioReporte(request):
             fecha_creacion__lte=fecha_final
         ).order_by('-fecha_creacion').values('id_solicitud')
 
+        if len(solicitudes_prv) <=0 and len(ordenes_prod):
+            return JsonResponse({'mensaje': 'error'}, status=500)
         for j in ProductosSolicitud.objects.filter(solicitud_id__in=solicitudes_prv):
             info = {
                 'codigo': j.producto.id_producto,
